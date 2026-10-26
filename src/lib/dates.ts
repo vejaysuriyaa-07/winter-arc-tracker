@@ -76,6 +76,10 @@ export function daysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }
 
+export function dayOfMonth(ymd: YMD): number {
+  return parts(ymd)[2];
+}
+
 export function monthOf(ymd: YMD): YearMonth {
   const [year, month] = parts(ymd);
   return { year, month };

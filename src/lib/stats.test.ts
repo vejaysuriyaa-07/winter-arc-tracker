@@ -3,6 +3,8 @@ import {
   CHECKOFFS_PER_LEVEL,
   TREE_STAGES,
   arcDayNumber,
+  arcMonths,
+  bucketFor,
   arcDaysSoFar,
   arcEnd,
   arcPhase,
@@ -283,5 +285,32 @@ describe("dailySeries", () => {
     expect(s[5]).toEqual({ date: "2026-10-10", percent: 0, logged: false, isToday: false });
     expect(s[9]).toMatchObject({ date: "2026-10-14", logged: true, isToday: true });
     expect(s[9]!.percent).toBeCloseTo(33.33, 1);
+  });
+});
+
+describe("calendar buckets", () => {
+  it("maps a day to its shading bucket", () => {
+    expect(bucketFor({ percent: null, logged: false })).toBe("unlogged");
+    expect(bucketFor({ percent: 0, logged: false })).toBe("unlogged");
+    expect(bucketFor({ percent: 0, logged: true })).toBe("zero");
+    expect(bucketFor({ percent: null, logged: true })).toBe("zero"); // logged, nothing scheduled
+    expect(bucketFor({ percent: 1, logged: true })).toBe("low");
+    expect(bucketFor({ percent: 49.9, logged: true })).toBe("low");
+    expect(bucketFor({ percent: 50, logged: true })).toBe("mid");
+    expect(bucketFor({ percent: 79.9, logged: true })).toBe("mid");
+    expect(bucketFor({ percent: 80, logged: true })).toBe("high");
+    expect(bucketFor({ percent: 99.9, logged: true })).toBe("high");
+    expect(bucketFor({ percent: 100, logged: true })).toBe("full");
+  });
+  it("lists the months that overlap the arc", () => {
+    const s = fixtureState();
+    expect(arcMonths(s.settings)).toEqual([{ year: 2026, month: 10 }]);
+    s.settings.lengthDays = 90; // 10-05 .. 2027-01-02
+    expect(arcMonths(s.settings)).toEqual([
+      { year: 2026, month: 10 },
+      { year: 2026, month: 11 },
+      { year: 2026, month: 12 },
+      { year: 2027, month: 1 },
+    ]);
   });
 });

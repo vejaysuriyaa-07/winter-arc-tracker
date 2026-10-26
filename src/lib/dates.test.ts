@@ -3,6 +3,7 @@ import {
   addDays,
   addMonths,
   compareDays,
+  dayOfMonth,
   daysInMonth,
   diffDays,
   formatLocal,
@@ -104,6 +105,7 @@ describe("months", () => {
   });
   it("extracts and shifts months", () => {
     expect(monthOf("2026-10-25")).toEqual({ year: 2026, month: 10 });
+    expect(dayOfMonth("2026-10-05")).toBe(5);
     expect(addMonths({ year: 2026, month: 12 }, 1)).toEqual({ year: 2027, month: 1 });
     expect(addMonths({ year: 2026, month: 1 }, -1)).toEqual({ year: 2025, month: 12 });
   });

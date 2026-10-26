@@ -3,11 +3,13 @@
 import type { AppState, ArcSettings, DayLog, Habit } from "../types";
 import {
   addDays,
+  addMonths,
   diffDays,
   eachDay,
   firstOfMonth,
   lastOfMonth,
   minDay,
+  monthOf,
   weekdayMonFirst,
   type YMD,
   type YearMonth,
@@ -318,4 +320,31 @@ export function dailySeries(state: AppState, today: YMD): DayPoint[] {
 /** Last `n` points of the series (or all when n is null). */
 export function windowed<T>(points: readonly T[], n: number | null): T[] {
   return n === null ? [...points] : points.slice(Math.max(0, points.length - n));
+}
+
+// ---------- calendar ----------
+
+export type Bucket = "unlogged" | "zero" | "low" | "mid" | "high" | "full";
+
+/** Shading bucket for a calendar cell. Zero-scheduled logged days read as "zero". */
+export function bucketFor(d: { percent: number | null; logged: boolean }): Bucket {
+  if (!d.logged) return "unlogged";
+  const p = d.percent ?? 0;
+  if (p >= 100) return "full";
+  if (p >= 80) return "high";
+  if (p >= 50) return "mid";
+  if (p > 0) return "low";
+  return "zero";
+}
+
+/** Every month that overlaps the arc, first to last. */
+export function arcMonths(settings: ArcSettings): YearMonth[] {
+  const out: YearMonth[] = [];
+  const last = monthOf(arcEnd(settings));
+  let ym = monthOf(settings.startDate);
+  while (ym.year < last.year || (ym.year === last.year && ym.month <= last.month)) {
+    out.push(ym);
+    ym = addMonths(ym, 1);
+  }
+  return out;
 }
