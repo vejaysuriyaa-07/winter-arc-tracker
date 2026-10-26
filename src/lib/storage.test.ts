@@ -142,6 +142,9 @@ describe("validateState", () => {
     const s = valid();
     s.goals.push({ id: "g", name: "Books", target: -1, current: 0, createdAt: TODAY });
     expect(validateState(s).ok).toBe(false);
+    const t = valid();
+    t.goals.push({ id: "g", name: "Books", target: 0, current: 0, createdAt: TODAY });
+    expect(validateState(t).ok).toBe(false); // 0 would make progress 0/0
   });
 });
 

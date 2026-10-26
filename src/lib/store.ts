@@ -64,7 +64,7 @@ export function useAppState(): AppState {
 
 // ---------- actions ----------
 import * as m from "./mutations";
-import type { Rating } from "../types";
+import type { ArcSettings, Rating } from "../types";
 import type { YMD } from "./dates";
 
 export const actions = {
@@ -75,4 +75,15 @@ export const actions = {
   setMood: (date: YMD, mood: Rating | undefined) => update((s) => m.setMood(s, date, mood)),
   setSleep: (date: YMD, input: m.SleepInput) => update((s) => m.setSleep(s, date, input)),
   setJournalWin: (date: YMD, text: string | undefined) => update((s) => m.setJournalWin(s, date, text)),
+  addGoal: (today: YMD, input: { name: string; target: number }) => update((s) => m.addGoal(s, today, input)),
+  incGoal: (goalId: string, delta: number) => update((s) => m.incGoal(s, goalId, delta)),
+  removeGoal: (goalId: string) => update((s) => m.removeGoal(s, goalId)),
+  updateSettings: (patch: Partial<ArcSettings>) => update((s) => m.updateSettings(s, patch)),
+  editHabit: (habitId: string, patch: m.HabitPatch) => update((s) => m.editHabit(s, habitId, patch)),
+  moveHabit: (habitId: string, dir: -1 | 1) => update((s) => m.moveHabit(s, habitId, dir)),
+  deleteHabit: (today: YMD, habitId: string) => update((s) => m.deleteHabit(s, today, habitId)),
+  resetArc: (today: YMD) => update((s) => m.resetArc(s, today)),
+  importState: (next: AppState) => replaceState(next),
+  markCelebratedLevel: (level: number) =>
+    update((s) => (s.ui.lastCelebratedLevel === level ? s : { ...s, ui: { lastCelebratedLevel: level } })),
 };

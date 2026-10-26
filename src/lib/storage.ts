@@ -110,7 +110,7 @@ function validateGoal(v: unknown, i: number): Goal | string {
   if (!isRecord(v)) return `goals[${i}] is not an object`;
   if (!isStr(v.id) || v.id === "") return `goals[${i}].id is missing`;
   if (!isStr(v.name)) return `goals[${i}].name is missing`;
-  if (!isFiniteNum(v.target) || v.target < 0) return `goals[${i}].target is not a non-negative number`;
+  if (!isFiniteNum(v.target) || v.target <= 0) return `goals[${i}].target must be above 0`;
   if (!isFiniteNum(v.current) || v.current < 0) return `goals[${i}].current is not a non-negative number`;
   if (!isValidYMD(v.createdAt)) return `goals[${i}].createdAt is not a YYYY-MM-DD day`;
   return { id: v.id, name: v.name, target: v.target, current: v.current, createdAt: v.createdAt };
