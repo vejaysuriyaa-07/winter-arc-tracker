@@ -55,6 +55,24 @@ describe("store", () => {
     expect(notified).toBe(1);
     expect(store.lastSaveFailed()).toBe(true);
   });
+  it("clears the save-failed flag on the next successful save and notifies both times", async () => {
+    const original = localStorage.setItem.bind(localStorage);
+    let fail = true;
+    localStorage.setItem = (k: string, v: string) => {
+      if (fail) throw new Error("QuotaExceededError");
+      original(k, v);
+    };
+    const store = await import("./store");
+    const flags: boolean[] = [];
+    store.subscribe(() => flags.push(store.lastSaveFailed()));
+    store.update((s) => ({ ...s, goals: [] }));
+    expect(store.lastSaveFailed()).toBe(true);
+    fail = false;
+    store.update((s) => ({ ...s, habits: [] }));
+    expect(store.lastSaveFailed()).toBe(false);
+    expect(flags).toEqual([true, false]);
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).habits).toEqual([]);
+  });
   it("replaceState persists an imported state", async () => {
     const store = await import("./store");
     const next = defaultState(TODAY);

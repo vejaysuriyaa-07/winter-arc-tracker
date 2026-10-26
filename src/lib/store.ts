@@ -70,6 +70,11 @@ export function useAppState(): AppState {
   return useSyncExternalStore(subscribe, getState, getState);
 }
 
+/** Reactive view of lastSaveFailed(): flips with every save attempt. */
+export function useSaveFailed(): boolean {
+  return useSyncExternalStore(subscribe, lastSaveFailed, lastSaveFailed);
+}
+
 // ---------- actions ----------
 
 export const actions = {

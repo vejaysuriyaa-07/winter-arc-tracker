@@ -1,6 +1,7 @@
 import { MotionConfig } from "motion/react";
 import { HashRouter, NavLink, Route, Routes } from "react-router";
 import Toast from "./components/Toast";
+import { useSaveFailed } from "./lib/store";
 import { useLevelUp } from "./lib/useLevelUp";
 import Today from "./pages/Today";
 import Calendar from "./pages/Calendar";
@@ -49,6 +50,20 @@ function TabBar() {
   );
 }
 
+function SaveBanner() {
+  const failed = useSaveFailed();
+  if (!failed) return null;
+  return (
+    <div
+      role="alert"
+      data-testid="save-banner"
+      className="mb-3 rounded-xl border border-red/50 bg-red/10 px-3 py-2 text-sm text-red"
+    >
+      Couldn't save your last change. Export a backup in Settings.
+    </div>
+  );
+}
+
 function LevelToast() {
   const { toast, dismiss } = useLevelUp();
   return <Toast toast={toast} onDismiss={dismiss} />;
@@ -60,6 +75,7 @@ export default function App() {
       <HashRouter>
         <LevelToast />
         <div className="mx-auto min-h-dvh max-w-md px-4 pb-24" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
+        <SaveBanner />
         <Routes>
           <Route path="/" element={<Today />} />
           <Route path="/calendar" element={<Calendar />} />
