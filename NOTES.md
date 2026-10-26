@@ -11,7 +11,8 @@ Resume point for the Winter Arc Tracker build. Spec: `docs/SPEC.md`. Decisions: 
 - Phase 5 (Insights): done. Consistency with formula, streaks, sleep (avg hours, avg score, sparkline), leaderboard, WaveChart (catmull-rom, gradient, draw-in with a forced flush, tooltip, hollow/today markers, 7/30/all keyed), weekday bars with weakest in red. Leaderboard, wave and weekday cards show empty states until the first check-off. e2e asserts hand-computed 67%, tie order, 7/13 markers, tooltip, reduced-motion instant line.
 - Phase 6 (Goals, Settings): done. Goals with +1/-1, progress bar, remove with confirm; TreeGrowth (five hand-drawn stages from `TREE_STAGES`); Settings with draft-based number fields (commit on blur/Enter), habit edit/reorder/delete (DECISIONS 3 via `isHardDeletable`), export (Blob download), import (validate, error, confirm, replace), reset, scoring sheet. Review fixes: number fields no longer snap mid-typing; goal target must be > 0 in the validator; extra mutation tests. `store.ts` also gained `markCelebratedLevel`, used by Phase 7.
 - Phase 7 (polish + PWA): done. Check pop (Motion, `initial={false}`), wave splash (crest scaleY keyframe restarted via classList), gold + confetti + % pulse on a live crossing only, level-up toast (`useLevelUp`: silent sync on first load and on import), CountUp numbers via rAF to refs, `MotionConfig reducedMotion="user"`, PWA manifest + service worker (latin fonts precached), icons rendered by `scripts/make-icons.mjs`. e2e: gold/confetti, toast once, silent sync, import no-toast, manifest + SW, reduced motion.
-- Next: Phase 8: smoke and rollover specs and the deploy workflow are written and passing; commit and run the final screenshot pass, then the acceptance checklist.
+- Phase 8 (final): done. `e2e/smoke.spec.ts` (SPEC 10.8 end to end), `e2e/rollover.spec.ts` (fake clock with an explicit PST offset; proves rollover, not reset), `.github/workflows/deploy.yml` (typecheck, unit, Playwright e2e, build, Pages deploy). Every screen screenshotted at 390x844 and reviewed. First deploy needs the repo's Pages source set to GitHub Actions; nothing has been pushed.
+- All eight phases complete. Acceptance checklist delivered in the session summary.
 
 ## Open issues
 
@@ -26,3 +27,4 @@ Phase 4: 80 unit tests, 12 e2e (counts at the phase 4 file set; working tree hol
 Phase 5: 83 unit tests, 15 e2e (at the phase 5 file set).
 Phase 6: 94 unit tests, 19 e2e (at the phase 6 file set).
 Phase 7: 95 unit tests, 25 e2e (at the phase 7 file set).
+Phase 8: 95 unit tests, 27 e2e. typecheck, test, build, e2e all green.
