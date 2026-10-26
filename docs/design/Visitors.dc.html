@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, visitors</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1240px; box-sizing: border-box; padding: 20px 16px 104px; background: #070B14; color: #E8EEF8; font-family: Inter, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; gap: 16px">
+<header style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.14em; line-height: 1">GROVE</div>
+<h1 style="margin: 4px 0 0; font-size: 24px; font-weight: 600">Visitors</h1>
+<span style="font-size: 14px; color: #8C99B0">4 of 9 found this winter</span>
+</header>
+
+<div style="display: flex; gap: 8px">
+<button type="button" aria-pressed="true" style="height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #22D3EE; background: rgba(34, 211, 238, 0.14); color: #67E8F9; font: 600 14px Inter, system-ui, sans-serif; cursor: pointer">Winter 4/9</button>
+<button type="button" aria-pressed="false" style="height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #1B2539; background: #0D1424; color: #8C99B0; font: 600 14px Inter, system-ui, sans-serif; cursor: pointer">Spring</button>
+<button type="button" aria-pressed="false" style="height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #1B2539; background: #0D1424; color: #8C99B0; font: 600 14px Inter, system-ui, sans-serif; cursor: pointer">Summer</button>
+<button type="button" aria-pressed="false" style="height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #1B2539; background: #0D1424; color: #8C99B0; font: 600 14px Inter, system-ui, sans-serif; cursor: pointer">Autumn</button>
+</div>
+
+<section aria-label="Next visitor" style="position: relative; display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 22px; border: 1px solid rgba(245, 184, 61, 0.35); background: radial-gradient(circle at 18% 50%, rgba(245, 184, 61, 0.18) 0%, rgba(13, 20, 36, 0) 55%), #0D1424; overflow: hidden">
+<div style="width: 96px; height: 96px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 20px; background: #0A101D; border: 1px dashed rgba(245, 184, 61, 0.45)">
+<svg width="80" height="80" viewBox="0 0 64 64" role="img" aria-label="Locked visitor silhouette"><path d="{{fox.d1}}" fill="#2A3550"></path><path d="{{fox.d2}}" fill="#2A3550"></path></svg>
+</div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 12px; font-weight: 600; color: #F5B83D">Next visitor</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; line-height: 1">Red fox</span>
+<span style="font-size: 13px; color: #8C99B0">Arrives after 7 full days in a row</span>
+<span style="height: 6px; border-radius: 999px; background: #1B2539; overflow: hidden; margin-top: 2px"><span style="display: block; width: 43%; height: 100%; border-radius: 999px; background: #F5B83D"></span></span>
+<span style="font-size: 12px; font-weight: 600; color: #F5B83D">3 of 7, keep the chain going</span>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{creatures}}" as="cr" hint-placeholder-count="9">
+<button type="button" style="display: flex; flex-direction: column; align-items: stretch; gap: 8px; padding: 8px 8px 12px; border-radius: 18px; border: 1px {{cr.borderStyle}} {{cr.border}}; background: #0D1424; color: #E8EEF8; text-align: left; cursor: pointer; font: inherit">
+<span style="height: 84px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: {{cr.artBg}}">
+<svg width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="{{cr.alt}}"><path d="{{cr.d1}}" fill="{{cr.c1}}"></path><path d="{{cr.d2}}" fill="{{cr.c2}}"></path><path d="{{cr.d3}}" fill="{{cr.c3}}"></path></svg>
+</span>
+<span style="font-size: 14px; font-weight: 600; padding: 0 2px">{{cr.name}}</span>
+<span style="font-size: 12px; line-height: 1.3; color: #8C99B0; padding: 0 2px; min-height: 31px">{{cr.line}}</span>
+<span style="height: 4px; margin: 0 2px; border-radius: 999px; background: {{cr.track}}; overflow: hidden"><span style="display: block; width: {{cr.pct}}%; height: 100%; border-radius: 999px; background: #22D3EE"></span></span>
+</button>
+</sc-for>
+</div>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 8px 22px; background: #0A101D; border-top: 1px solid #1B2539; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11M12 11C12 7 9 5 5 5C5 9 8 11 12 11ZM12 14C12 11 14.5 9 18 9C18 12 15.5 14 12 14ZM6 21H18"></path></svg>
+<span>Garden</span>
+</button>
+<button type="button" aria-current="page" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #22D3EE; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5.5"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+<span>Progress</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18C6 10 18 10 21 18M7 18C9 14 15 14 17 18"></path></svg>
+<span>Arcs</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7H13M19 7H20M4 17H6M12 17H20"></path><circle cx="16" cy="7" r="2.5"></circle><circle cx="9" cy="17" r="2.5"></circle></svg>
+<span>Settings</span>
+</button>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const art = {
+      robin: {
+        d1: 'M14 38C14 26 24 20 34 20C44 20 52 28 50 38C48 48 40 52 30 52C20 52 14 46 14 38ZM14 40L4 46L14 46Z',
+        d2: 'M18 38C18 32 24 28 30 30C34 32 36 38 34 44C32 49 24 50 20 46C18 44 18 41 18 38Z',
+        d3: 'M50 34L58 36L50 38ZM40 30A2 2 0 1 0 44 30A2 2 0 1 0 40 30Z',
+        c1: '#6B5B4D', c2: '#F97316', c3: '#0F172A'
+      },
+      cardinal: {
+        d1: 'M14 40C14 28 24 22 34 22C44 22 52 30 50 40C48 50 40 54 30 54C20 54 14 48 14 40ZM14 42L4 48L14 48ZM36 22L40 8L45 23Z',
+        d2: 'M43 27C48 27 52 31 52 35L44 37Z',
+        d3: 'M52 34L60 36L52 38Z',
+        c1: '#DC2626', c2: '#111827', c3: '#F59E0B'
+      },
+      rabbit: {
+        d1: 'M16 46C16 34 26 28 36 30C46 32 50 40 48 48C46 54 38 56 30 56C20 56 16 52 16 46ZM31 28A9 9 0 1 0 49 28A9 9 0 1 0 31 28ZM36 20C34 10 36 4 38 4C40 4 41 12 40 20ZM43 20C44 10 47 5 49 6C51 7 48 14 46 21ZM12 44A4 4 0 1 0 20 44A4 4 0 1 0 12 44Z',
+        d2: 'M37 18C36 11 37 7 38 7C39 7 39 13 39 18Z',
+        d3: 'M42 27A1.6 1.6 0 1 0 45.2 27A1.6 1.6 0 1 0 42 27Z',
+        c1: '#E5E7EB', c2: '#F9A8D4', c3: '#0F172A'
+      },
+      squirrel: {
+        d1: 'M20 52C6 48 4 30 12 20C18 13 30 16 29 26C28 33 21 34 20 30C24 34 22 44 26 50ZM26 50C26 40 32 34 40 34C48 34 52 42 50 50C48 56 30 56 26 50ZM38 34A8 8 0 1 0 54 34A8 8 0 1 0 38 34ZM48 26L50 20L53 27Z',
+        d2: 'M40 48C40 43 44 40 47 42C49 46 46 52 42 52C40 52 40 50 40 48Z',
+        d3: 'M48 33A1.6 1.6 0 1 0 51.2 33A1.6 1.6 0 1 0 48 33Z',
+        c1: '#B45309', c2: '#FDE68A', c3: '#0F172A'
+      },
+      fox: {
+        d1: 'M14 46C14 36 24 32 34 34C44 36 48 42 46 50C44 54 20 56 14 46ZM38 22L42 14L46 22L54 30L44 38L36 32ZM14 44C6 40 4 30 10 26C10 34 14 38 20 40Z',
+        d2: 'M8 28C6 30 6 33 8 35C9 31 10 29 8 28ZM44 34L54 30L46 38Z',
+        d3: 'M44 27A1.5 1.5 0 1 0 47 27A1.5 1.5 0 1 0 44 27Z',
+        c1: '#EA580C', c2: '#FFF7ED', c3: '#0F172A'
+      },
+      deer: {
+        d1: 'M14 44C14 36 22 32 32 32H44C50 32 52 38 50 44C48 48 18 50 14 44ZM44 34L48 18L56 20L52 36ZM18 46H21V58H18ZM26 46H29V58H26ZM40 46H43V58H40ZM46 46H49V58H46Z',
+        d2: 'M47 18L45 8L46.5 8L48.5 17ZM50 17L53 9L54.5 9.5L51.5 18Z',
+        d3: 'M50 23A1.3 1.3 0 1 0 52.6 23A1.3 1.3 0 1 0 50 23Z',
+        c1: '#A16207', c2: '#78350F', c3: '#0F172A'
+      },
+      owl: {
+        d1: 'M18 52C14 40 16 24 32 20C48 24 50 40 46 52C40 58 24 58 18 52ZM20 22L22 14L27 20ZM44 22L42 14L37 20Z',
+        d2: 'M24 40H27V42H24ZM34 44H37V46H34ZM28 48H31V50H28ZM38 38H41V40H38Z',
+        d3: 'M24 30A4 4 0 1 0 32 30A4 4 0 1 0 24 30ZM32 30A4 4 0 1 0 40 30A4 4 0 1 0 32 30Z',
+        c1: '#F8FAFC', c2: '#94A3B8', c3: '#FACC15'
+      },
+      aurora: {
+        d1: 'M6 40C16 26 26 34 36 22C44 14 52 18 58 12V30C50 34 44 30 36 38C26 46 16 40 6 52Z',
+        d2: 'M6 52C16 40 26 46 36 38C44 30 50 34 58 30V44C50 46 42 44 34 50C24 56 16 52 6 58Z',
+        d3: 'M12.5 14A1.5 1.5 0 1 0 15.5 14A1.5 1.5 0 1 0 12.5 14ZM26.8 10A1.2 1.2 0 1 0 29.2 10A1.2 1.2 0 1 0 26.8 10ZM44.6 24A1.4 1.4 0 1 0 47.4 24A1.4 1.4 0 1 0 44.6 24Z',
+        c1: '#34D399', c2: '#A78BFA', c3: '#F8FAFC'
+      },
+      star: {
+        d1: 'M44 14L47 22L56 23L49 28L51 37L44 32L37 37L39 28L32 23L41 22Z',
+        d2: 'M6 54L36 28L38 31L9 56Z',
+        d3: 'M0 0',
+        c1: '#FDE68A', c2: '#F59E0B', c3: '#000000'
+      }
+    };
+    const list = [
+      ['robin', 'Robin', true, 'Came on day 3', 100],
+      ['cardinal', 'Cardinal', true, 'Came on day 9', 100],
+      ['rabbit', 'Rabbit', true, 'Came on day 12', 100],
+      ['squirrel', 'Squirrel', true, 'Came on day 21', 100],
+      ['fox', 'Red fox', false, '7 full days in a row', 43],
+      ['deer', 'Deer', false, 'A perfect week, Mon to Sun', 71],
+      ['owl', 'Snowy owl', false, '30 full days this arc', 80],
+      ['aurora', 'Northern lights', false, '2 perfect weeks', 50],
+      ['star', 'Shooting star', false, 'Rare, any full day', 0]
+    ];
+    const sky = 'linear-gradient(180deg, #5A8DC2 0%, #C3DBF0 100%)';
+    const creatures = list.map((c) => {
+      const a = art[c[0]];
+      const found = c[2];
+      return {
+        name: found ? c[1] : c[1],
+        alt: found ? c[1] : c[1] + ', not found yet',
+        line: c[3],
+        d1: a.d1, d2: a.d2, d3: found ? a.d3 : 'M0 0',
+        c1: found ? a.c1 : '#1F2A40',
+        c2: found ? a.c2 : '#1F2A40',
+        c3: found ? a.c3 : 'transparent',
+        artBg: found ? sky : '#0A101D',
+        border: found ? '#1B2539' : '#2A3550',
+        borderStyle: found ? 'solid' : 'dashed',
+        pct: found ? 0 : c[4],
+        track: found ? 'transparent' : '#1B2539'
+      };
+    });
+    return { creatures: creatures, fox: art.fox };
+  }
+}
+</script>
+</body>
+</html>

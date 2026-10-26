@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, today's bloom</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 980px; box-sizing: border-box; padding: 20px 16px 104px; background: #070B14; color: #E8EEF8; font-family: Inter, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; gap: 16px">
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.14em; line-height: 1">GROVE</div>
+<div style="font-size: 13px; color: #8C99B0">Monday, Oct 26</div>
+</div>
+<span style="height: 36px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-radius: 999px; background: rgba(245, 184, 61, 0.14); color: #F5B83D; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3C13 7 18 9 18 14A6 6 0 0 1 6 14C6 11 8 9.5 9 8.5C9.3 10.5 10.3 11.5 11.5 12C11.5 9 10.5 6 12 3Z"></path></svg>
+<span>{{chain}} day chain</span>
+</span>
+</header>
+
+<section aria-label="Today's bloom" style="position: relative; display: flex; flex-direction: column; align-items: center; padding: 8px 0 4px; border-radius: 28px; background: radial-gradient(circle at 50% 46%, {{glow}} 0%, rgba(13, 20, 36, 0) 62%), #0D1424; border: 1px solid #1B2539; overflow: hidden">
+<div style="position: relative; width: 280px; height: 280px">
+<sc-for list="{{particles}}" as="pt" hint-placeholder-count="18">
+<span aria-hidden="true" style="position: absolute; left: 136px; top: 136px; width: 8px; height: 8px; border-radius: 999px; background: {{pt.color}}; opacity: {{pt.op}}; transform: translate({{pt.dx}}px, {{pt.dy}}px) scale({{pt.s}}); transition: {{pt.tr}}"></span>
+</sc-for>
+<sc-for list="{{petals}}" as="p" hint-placeholder-count="9">
+<span aria-hidden="true" style="position: absolute; left: 120px; top: 34px; width: 40px; height: 106px; box-sizing: border-box; border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; transform-origin: 50% 100%; transform: rotate({{p.deg}}deg) scale({{p.scale}}); background: {{p.bg}}; border: {{p.border}}; box-shadow: {{p.shadow}}; transition: transform 480ms cubic-bezier(0.34, 1.56, 0.64, 1), background 300ms, box-shadow 300ms"></span>
+</sc-for>
+<div style="position: absolute; left: 100px; top: 100px; width: 80px; height: 80px; box-sizing: border-box; border-radius: 999px; background: {{centerBg}}; border: 3px solid #070B14; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: scale({{centerScale}}); transition: transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1), background 300ms">
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1; color: {{centerText}}">{{centerTop}}</span>
+<span style="font-size: 11px; font-weight: 600; color: {{centerText}}">{{centerSub}}</span>
+</div>
+</div>
+<p role="status" style="margin: 0 0 14px; font-size: 15px; font-weight: 600; color: {{statusColor}}">{{status}}</p>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{habits}}" as="h" hint-placeholder-count="9">
+<button type="button" aria-pressed="{{h.done}}" onClick="{{h.toggle}}" style="height: 52px; box-sizing: border-box; padding: 0 8px; display: flex; align-items: center; justify-content: center; gap: 5px; border-radius: 14px; border: 1px solid {{h.border}}; background: {{h.bg}}; color: {{h.color}}; font: 600 13px Inter, system-ui, sans-serif; cursor: pointer; transition: background 200ms, border-color 200ms">
+<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity: {{h.checkOp}}" aria-hidden="true"><path d="M5 12.5L9.5 17L19 7"></path></svg>
+<span>{{h.label}}</span>
+</button>
+</sc-for>
+</div>
+
+<section aria-label="Bloom chain" style="display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 20px; border: 1px solid #1B2539; background: #0D1424">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Bloom chain</h2>
+<span style="font-size: 13px; color: #8C99B0">Full days in a row</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{week}}" as="w" hint-placeholder-count="7">
+<span style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" style="opacity: {{w.op}}">
+<g fill="{{w.fill}}" stroke="{{w.stroke}}" stroke-width="0.8">
+<circle cx="12" cy="6.2" r="4.2"></circle><circle cx="17.6" cy="10.3" r="4.2"></circle><circle cx="15.5" cy="17" r="4.2"></circle><circle cx="8.5" cy="17" r="4.2"></circle><circle cx="6.4" cy="10.3" r="4.2"></circle>
+</g>
+<circle cx="12" cy="12" r="3" fill="{{w.center}}"></circle>
+</svg>
+<span style="font-size: 12px; font-weight: 600; color: {{w.label}}">{{w.day}}</span>
+</span>
+</sc-for>
+</div>
+<a href="Visitors.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 48px; box-sizing: border-box; padding: 8px 12px; border-radius: 14px; background: rgba(245, 184, 61, 0.1); color: #F5B83D; font-size: 14px; font-weight: 600; text-decoration: none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L8 8L12 14L16 4L20 20Z"></path></svg>
+<span style="flex: 1">{{teaser}}</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"></path></svg>
+</a>
+</section>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 8px 22px; background: #0A101D; border-top: 1px solid #1B2539; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<button type="button" aria-current="page" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #22D3EE; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11M12 11C12 7 9 5 5 5C5 9 8 11 12 11ZM12 14C12 11 14.5 9 18 9C18 12 15.5 14 12 14ZM6 21H18"></path></svg>
+<span>Garden</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5.5"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+<span>Progress</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18C6 10 18 10 21 18M7 18C9 14 15 14 17 18"></path></svg>
+<span>Arcs</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7H13M19 7H20M4 17H6M12 17H20"></path><circle cx="16" cy="7" r="2.5"></circle><circle cx="9" cy="17" r="2.5"></circle></svg>
+<span>Settings</span>
+</button>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":980}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const base = [
+      ['wake', '5 AM'], ['med', 'Meditate'], ['gym', 'Gym'], ['read', 'Read'], ['eat', 'Eat well'],
+      ['plan', 'Plan'], ['journal', 'Journal'], ['cold', 'Cold shower'], ['social', 'No socials']
+    ];
+    const s = this.state || {};
+    const done = s.done || ['wake', 'med', 'read', 'eat', 'cold', 'plan'];
+    const burst = s.burst || 0;
+    const n = base.length;
+    const count = base.filter((b) => done.indexOf(b[0]) !== -1).length;
+    const full = count === n;
+
+    const toggle = (id) => {
+      const cur = (this.state && this.state.done) || done;
+      const next = cur.indexOf(id) !== -1 ? cur.filter((x) => x !== id) : cur.concat([id]);
+      const nowFull = base.every((b) => next.indexOf(b[0]) !== -1);
+      if (nowFull) {
+        this.setState({ done: next, burst: 1 });
+        requestAnimationFrame(() => requestAnimationFrame(() => this.setState({ burst: 2 })));
+      } else {
+        this.setState({ done: next, burst: 0 });
+      }
+    };
+
+    const petals = base.map((b, i) => {
+      const d = done.indexOf(b[0]) !== -1;
+      return {
+        deg: Math.round((360 / n) * i),
+        scale: d ? (full ? 1.06 : 1) : 0.84,
+        bg: d ? (full ? 'linear-gradient(180deg, #FDE68A 0%, #F5B83D 55%, #D97706 100%)' : 'linear-gradient(180deg, #A5F3FC 0%, #22D3EE 55%, #0E7490 100%)') : 'rgba(34, 211, 238, 0.07)',
+        border: d ? 'none' : '1.5px solid rgba(34, 211, 238, 0.3)',
+        shadow: d ? (full ? '0 0 22px rgba(245, 184, 61, 0.45)' : '0 0 16px rgba(34, 211, 238, 0.3)') : 'none'
+      };
+    });
+
+    const colors = ['#22D3EE', '#F5B83D', '#FFFFFF', '#A78BFA'];
+    const particles = [];
+    for (let i = 0; i < 18; i++) {
+      const a = (Math.PI * 2 * i) / 18 + (i % 2) * 0.12;
+      const dist = 118 + (i % 3) * 14;
+      const out = burst === 2;
+      particles.push({
+        color: colors[i % colors.length],
+        dx: out ? Math.round(Math.cos(a) * dist) : 0,
+        dy: out ? Math.round(Math.sin(a) * dist) : 0,
+        s: out ? 0.5 : 1,
+        op: burst === 1 ? 1 : 0,
+        tr: out ? 'transform 1100ms cubic-bezier(0.16, 1, 0.3, 1), opacity 1100ms ease-out' : 'none'
+      });
+    }
+
+    const habits = base.map((b) => {
+      const d = done.indexOf(b[0]) !== -1;
+      return {
+        label: b[1],
+        done: d,
+        border: d ? '#22D3EE' : '#1B2539',
+        bg: d ? 'rgba(34, 211, 238, 0.14)' : '#0D1424',
+        color: d ? '#67E8F9' : '#C2CCDB',
+        checkOp: d ? 1 : 0,
+        toggle: () => toggle(b[0])
+      };
+    });
+
+    const chainBefore = 3;
+    const chain = chainBefore + (full ? 1 : 0);
+    const past = [['T', true], ['W', true], ['T', false], ['F', true], ['S', true], ['S', true]];
+    const week = past.map((p) => ({
+      day: p[0],
+      fill: p[1] ? '#22D3EE' : 'rgba(34, 211, 238, 0.12)',
+      stroke: p[1] ? '#0E7490' : 'rgba(34, 211, 238, 0.35)',
+      center: p[1] ? '#F5B83D' : '#1B2539',
+      op: 1,
+      label: '#8C99B0'
+    }));
+    week.push({
+      day: 'M',
+      fill: full ? '#F5B83D' : 'rgba(245, 184, 61, 0.12)',
+      stroke: full ? '#B45309' : 'rgba(245, 184, 61, 0.45)',
+      center: full ? '#FFFFFF' : '#1B2539',
+      op: 1,
+      label: '#F5B83D'
+    });
+
+    const left = n - count;
+    return {
+      chain: chain,
+      glow: full ? 'rgba(245, 184, 61, 0.28)' : 'rgba(34, 211, 238, ' + (0.04 + (count / n) * 0.16).toFixed(3) + ')',
+      particles: particles,
+      petals: petals,
+      centerBg: full ? 'linear-gradient(180deg, #FDE68A, #F5B83D)' : '#0D1424',
+      centerScale: burst === 1 ? 1.18 : 1,
+      centerText: full ? '#3B2503' : '#E8EEF8',
+      centerTop: full ? 'Full' : count + '/' + n,
+      centerSub: full ? 'bloom' : 'today',
+      status: full ? 'Full bloom. Your chain is ' + chain + ' days.' : left === 1 ? 'One petal left' : left + ' petals to full bloom',
+      statusColor: full ? '#F5B83D' : '#8C99B0',
+      habits: habits,
+      week: week,
+      teaser: chain >= 4 ? '3 more full days and a Red fox visits' : '4 more full days and a Red fox visits'
+    };
+  }
+}
+</script>
+</body>
+</html>

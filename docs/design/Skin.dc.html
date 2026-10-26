@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, Today in a new look</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Young+Serif&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; isolation: isolate; width: 390px; height: 1340px; box-sizing: border-box; padding: 16px 16px 104px; background: {{bgImage}}; color: {{t.text}}; font-family: {{f.body}}; overflow: hidden; display: flex; flex-direction: column; gap: 18px">
+
+<sc-if value="{{isNight}}" hint-placeholder-val="{{ false }}">
+<div ref="{{refAurora}}" aria-hidden="true" style="position: absolute; z-index: -1; left: -30px; top: -90px; width: 450px; height: 300px; border-radius: 50%; background: {{auroraBg}}; filter: blur(34px); opacity: {{auroraOp}}; pointer-events: none"></div>
+<sc-for list="{{stars}}" as="st" hint-placeholder-count="0">
+<span ref="{{st.ref}}" aria-hidden="true" style="position: absolute; z-index: -1; left: {{st.x}}px; top: {{st.y}}px; width: {{st.s}}px; height: {{st.s}}px; border-radius: 999px; background: #F3EDE0; opacity: {{st.o}}; pointer-events: none"></span>
+</sc-for>
+</sc-if>
+
+<header style="display: flex; justify-content: space-between; align-items: center; height: 44px">
+<span style="font-family: {{f.display}}; font-style: {{f.wmStyle}}; font-weight: {{f.wmWeight}}; font-size: {{f.wmSize}}px; line-height: 1">{{f.wordmark}}</span>
+<button type="button" aria-label="Switch arc" style="height: 40px; display: flex; align-items: center; gap: 6px; padding: 0 {{chip.padX}}px; border-radius: 999px; border: {{chip.border}}; background: {{chip.bg}}; color: {{t.text}}; font-family: {{f.body}}; font-size: 15px; font-weight: 500; cursor: pointer">
+<span>Winter Arc</span>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9L12 15L18 9"></path></svg>
+</button>
+</header>
+
+<div style="display: flex; flex-direction: column; gap: 4px; margin-top: -6px">
+<h1 style="margin: 0; align-self: flex-start; font-family: {{f.display}}; font-weight: {{f.dateWeight}}; font-size: 48px; line-height: 1.05; letter-spacing: -0.01em; background: {{dateInk}}; -webkit-background-clip: text; background-clip: text; color: transparent">Monday</h1>
+<span style="font-size: 15px; color: {{t.muted}}">October 26</span>
+</div>
+
+<div style="position: relative; flex: none; height: 300px; box-sizing: border-box; border-radius: {{fr.r}}px; overflow: hidden; border: {{fr.border}}; box-shadow: {{fr.shadow}}">
+<div style="position: absolute; left: -17px; top: -85px; width: 390px; height: 1300px">
+<dc-import name="Garden" season="{{season}}" mood="{{mood}}" day="40" start-done="{{doneCount}}" arc-name="Winter Arc" hint-size="390px,1300px"></dc-import>
+</div>
+</div>
+
+<section aria-label="Mood" style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-size: 15px; font-weight: 500; color: {{t.muted}}">How are you feeling?</h2>
+<span style="font-family: {{f.display}}; font-style: italic; font-size: 16px">{{moodLabel}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: {{mw.gap}}px; padding: {{mw.pad}}px; border-radius: {{mw.r}}px; background: {{mw.bg}}; box-shadow: {{mw.shadow}}">
+<sc-for list="{{moods}}" as="m" hint-placeholder-count="5">
+<button type="button" aria-label="{{m.label}}" aria-pressed="{{m.sel}}" onClick="{{m.pick}}" style="height: 48px; border-radius: {{m.r}}px; border: {{m.border}}; background: {{m.bg}}; color: {{m.color}}; box-shadow: {{m.shadow}}; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: color 200ms, box-shadow 200ms">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.icon}}"></path></svg>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section aria-label="Habits" style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-family: {{f.display}}; font-weight: {{f.dateWeight}}; font-size: 26px; line-height: 1">Today <span style="font-family: {{f.body}}; font-size: 15px; color: {{t.muted}}">{{doneCount}} of 9</span></h2>
+<button type="button" style="height: 40px; padding: 0 2px 0 12px; background: transparent; border: none; color: {{accentText}}; font-family: {{f.body}}; font-size: 15px; font-weight: 600; cursor: pointer">Edit</button>
+</div>
+<div aria-hidden="true" style="height: 4px; border-radius: 999px; background: {{track}}; overflow: hidden; margin-top: -2px">
+<div style="height: 100%; width: {{pct}}%; border-radius: 999px; background: {{fill}}; transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1)"></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: {{L.gap}}px; background: {{L.wrapBg}}; border-radius: {{L.wrapR}}px; border-top: {{L.wrapTop}}; box-shadow: {{L.wrapShadow}}">
+<sc-for list="{{habits}}" as="h" hint-placeholder-count="9">
+<button type="button" aria-pressed="{{h.done}}" onClick="{{h.toggle}}" style="position: relative; display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; box-sizing: border-box; padding: 6px {{L.padR}}px 6px {{L.padL}}px; border: none; border-bottom: {{h.divider}}; border-radius: {{h.radius}}; background: {{h.bg}}; box-shadow: {{h.shadow}}; color: {{t.text}}; font-family: {{f.body}}; font-size: 16px; text-align: left; cursor: pointer; transition: box-shadow 300ms">
+<span aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none">
+<span style="position: absolute; top: 0; bottom: 0; left: 0; width: 60%; background: {{sweepBg}}; opacity: {{h.sweepOp}}; transform: translateX({{h.sweepX}}%); transition: {{h.sweepTr}}"></span>
+</span>
+<span style="position: relative; width: 24px; height: 24px; flex: none">
+<span aria-hidden="true" style="position: absolute; left: -7px; top: -7px; width: 38px; height: 38px; box-sizing: border-box; border-radius: 999px; border: 2px solid {{ripple}}; opacity: {{h.ripOp}}; transform: scale({{h.ripS}}); transition: {{h.ripTr}}"></span>
+<sc-for list="{{h.sparks}}" as="sp" hint-placeholder-count="0">
+<span aria-hidden="true" style="position: absolute; left: 9px; top: 9px; width: 6px; height: 6px; border-radius: 999px; background: {{sp.color}}; box-shadow: {{sp.glow}}; opacity: {{sp.op}}; transform: translate({{sp.x}}px, {{sp.y}}px) scale({{sp.s}}); transition: {{sp.tr}}"></span>
+</sc-for>
+<span style="position: relative; width: 24px; height: 24px; box-sizing: border-box; border-radius: 999px; border: 1.5px solid {{h.ring}}; background: {{h.fill}}; display: flex; align-items: center; justify-content: center; transform: scale({{h.popS}}); transition: {{h.popTr}}">
+<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{t.onAccent}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity: {{h.checkOp}}" aria-hidden="true"><path d="M5 12.5L9.5 17L19 7"></path></svg>
+</span>
+</span>
+<span style="position: relative; flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0">
+<span style="font-weight: 500">{{h.label}}</span>
+<sc-if value="{{h.detail}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: {{t.muted}}">{{h.detail}}</span></sc-if>
+</span>
+<span style="position: relative; display: flex; align-items: center; gap: 3px; color: {{h.streakColor}}; font-family: {{f.display}}; font-size: 17px">
+<span style="display: inline-flex; transform: scale({{h.leafS}}) rotate({{h.leafR}}deg); transform-origin: 50% 90%; transition: {{h.leafTr}}">
+<svg width="18" height="20" viewBox="0 0 18 20" aria-hidden="true" style="overflow: visible; filter: {{h.iconFilter}}">
+<defs><linearGradient id="{{h.gid}}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{flameTop}}"></stop><stop offset="1" stop-color="{{flameBottom}}"></stop></linearGradient></defs>
+<ellipse ref="{{h.r.sd}}" cx="9" cy="15.5" rx="2.6" ry="1.9" fill="{{h.seedColor}}" opacity="{{h.seedOp}}"></ellipse>
+<g ref="{{h.r.sp}}" opacity="{{h.sproutOp}}"><path d="M9 18V10.5M9 10.5C9 7.6 7 6 4.2 6C4.2 8.9 6.2 10.5 9 10.5ZM9 13C9 10.5 10.9 8.8 13.6 8.8C13.6 11.3 11.7 13 9 13Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></g>
+<g ref="{{h.r.fl}}" opacity="{{h.flameOp}}"><path d="M9 2.5C10.2 5.2 13.8 6.8 13.8 11.2C13.8 14.6 11.6 18 9 18C6.4 18 4.2 14.6 4.2 11.6C4.2 9.2 5.6 7.8 6.6 6.8C6.8 8.6 7.6 9.6 8.6 10C8.8 7.2 7.8 5.2 9 2.5Z" fill="url(#{{h.gid}})"></path><path ref="{{h.r.fi}}" d="M9 9.5C9.8 11 11.4 12 11.4 14.2C11.4 16.2 10.3 17.6 9 17.6C7.7 17.6 6.6 16.3 6.6 14.6C6.6 13.2 7.4 12.4 8 11.8C8.1 12.9 8.6 13.4 9.2 13.6C9.4 12.2 8.6 10.9 9 9.5Z" fill="{{flameCore}}"></path></g>
+<g opacity="{{h.dropOn}}"><path ref="{{h.r.dr}}" d="M0 -3C1 -1.5 1.6 -0.4 1.6 0.6A1.6 1.6 0 0 1 -1.6 0.6C-1.6 -0.4 -1 -1.5 0 -3Z" fill="{{dropColor}}" opacity="0"></path></g>
+<g opacity="{{h.flakeOn}}"><path ref="{{h.r.fk}}" d="M0 -2.4V2.4M-2.1 -1.2L2.1 1.2M-2.1 1.2L2.1 -1.2" fill="none" stroke="{{flakeColor}}" stroke-width="1.1" stroke-linecap="round" opacity="0"></path></g>
+<g opacity="{{h.sparkOn}}"><path ref="{{h.r.sk}}" d="M0 -3L0.8 -0.8L3 0L0.8 0.8L0 3L-0.8 0.8L-3 0L-0.8 -0.8Z" fill="{{sparkIcon}}" transform="translate(15 3.5) scale(0)"></path></g>
+<g opacity="{{h.boltOn}}"><path ref="{{h.r.bt}}" d="M1 -4L-1.6 0.4H0.6L-0.8 4L2 -0.6H-0.2Z" fill="{{sparkIcon}}" transform="translate(15.5 5)" opacity="0"></path></g>
+<g opacity="{{h.cloudOn}}"><path ref="{{h.r.cl}}" d="M-3 1.2H3.4A1.8 1.8 0 0 0 3 -2.2A2.6 2.6 0 0 0 -2 -1.6A1.6 1.6 0 0 0 -3 1.2Z" fill="{{cloudColor}}" transform="translate(12 3.5)"></path></g>
+</svg>
+</span>
+<span>{{h.streak}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 8px; align-items: center; margin-top: 2px">
+<input type="text" aria-label="New habit name" placeholder="Add a habit" style="flex: 1; min-width: 0; height: 48px; box-sizing: border-box; padding: 0 {{inp.padX}}px; border: none; border-bottom: {{inp.underline}}; border-radius: {{inp.r}}px; background: {{inp.bg}}; color: {{t.text}}; font-family: {{f.body}}; font-size: 15px">
+<button type="button" aria-label="Add habit" style="width: 48px; height: 48px; flex: none; border-radius: {{inp.r}}px; border: none; background: {{inp.btnBg}}; color: {{inp.btnColor}}; box-shadow: {{inp.btnShadow}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5V19M5 12H19"></path></svg>
+</button>
+</div>
+</section>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 8px 22px; background: {{navBg}}; border-top: 1px solid {{t.line}}; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<sc-for list="{{tabs}}" as="tb" hint-placeholder-count="4">
+<button type="button" aria-current="{{tb.current}}" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: {{tb.color}}; font-family: {{f.body}}; font-size: 11px; font-weight: 600; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{tb.icon}}"></path></svg>
+<span>{{tb.label}}</span>
+</button>
+</sc-for>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"look":{"editor":"enum","options":["journal","night","greenhouse"],"default":"journal"},"season":{"editor":"enum","options":["winter","spring","summer","autumn"],"default":"winter"},"$preview":{"width":390,"height":1340}}'>
+class Component extends DCLogic {
+  rgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+
+  rgba(hex, a) {
+    const c = this.rgb(hex);
+    return 'rgba(' + c[0] + ', ' + c[1] + ', ' + c[2] + ', ' + a + ')';
+  }
+
+  mix(a, b, k) {
+    const x = this.rgb(a);
+    const y = this.rgb(b);
+    const h = (v) => ('0' + Math.round(v).toString(16)).slice(-2);
+    return '#' + h(x[0] + (y[0] - x[0]) * k) + h(x[1] + (y[1] - x[1]) * k) + h(x[2] + (y[2] - x[2]) * k);
+  }
+
+  rnd(i, k) {
+    const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453;
+    return v - Math.floor(v);
+  }
+
+  componentDidMount() {
+    this.reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (this.reduce) return;
+    const start = performance.now();
+    const tick = (now) => {
+      if (this.isNight) {
+        const t = (now - start) / 1000;
+        const p = this.progress || 0;
+        const flare = this.flareAt ? Math.max(0, 1 - (now - this.flareAt) / 1400) : 0;
+        if (this.auroraEl) {
+          const x = Math.sin(t * 0.18) * 26;
+          const sy = 1 + Math.sin(t * 0.45) * 0.08;
+          this.auroraEl.style.transform = 'translateX(' + x.toFixed(1) + 'px) scaleY(' + sy.toFixed(3) + ')';
+          this.auroraEl.style.opacity = Math.min(1, (0.22 + 0.5 * p) * (1 + 0.9 * flare)).toFixed(3);
+        }
+        (this.starMeta || []).forEach((m, i) => {
+          const el = this.starEls[i];
+          if (!el) return;
+          const tw = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * m.sp + i));
+          el.style.opacity = (m.o * tw * (0.3 + 0.7 * p) * (1 + 0.6 * flare)).toFixed(3);
+        });
+      }
+      this.animIcons((now - start) / 1000);
+      this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+
+  animIcons(t) {
+    const metas = this.iconMeta || [];
+    const w = this.windMul || 1;
+    for (let i = 0; i < metas.length; i++) {
+      const m = metas[i];
+      const e = this.iconEls && this.iconEls[i];
+      if (!m || !e) continue;
+      const ph = m.phase;
+      if (e.sp && m.kind === 'sprout') {
+        let deg = Math.sin(t * (1.6 + 0.4 * w) + ph) * 7 * w;
+        if (m.rough) deg += Math.sin(t * 13 + ph * 3) * 4;
+        e.sp.setAttribute('transform', 'rotate(' + deg.toFixed(2) + ' 9 18)');
+      }
+      if (e.fl && m.kind === 'flame') {
+        const damp = m.wet ? 0.82 : 1;
+        const sy = (1 + 0.13 * Math.sin(t * 9 + ph) + 0.07 * Math.sin(t * 15.3 + ph * 2)) * damp;
+        const sx = (1 - 0.06 * Math.sin(t * 7.1 + ph)) * damp;
+        const k = Math.sin(t * 4.6 + ph) * 5 * Math.min(2, w);
+        e.fl.setAttribute('transform', 'translate(9 18) scale(' + sx.toFixed(3) + ' ' + sy.toFixed(3) + ') skewX(' + k.toFixed(2) + ') translate(-9 -18)');
+        if (e.fi) e.fi.setAttribute('opacity', (0.75 + 0.25 * Math.sin(t * 17 + ph * 4)).toFixed(2));
+      }
+      if (e.sd && m.kind === 'seed') {
+        const s = 1 + 0.06 * Math.sin(t * 1.4 + ph);
+        e.sd.setAttribute('transform', 'translate(9 15.5) scale(' + s.toFixed(3) + ') translate(-9 -15.5)');
+      }
+      if (e.dr && m.drop) {
+        const per = m.rough ? 0.9 : 1.5;
+        const u = ((t + ph) % per) / per;
+        e.dr.setAttribute('transform', 'translate(' + (11.5 - u * 1.5).toFixed(2) + ' ' + (-4 + u * 14).toFixed(2) + ')');
+        e.dr.setAttribute('opacity', (u < 0.15 ? u / 0.15 : u > 0.8 ? (1 - u) / 0.2 : 1).toFixed(2));
+      }
+      if (e.fk && m.flake) {
+        const per = m.rough ? 1.4 : 2.8;
+        const u = ((t + ph) % per) / per;
+        const x = 12 + Math.sin(t * 2 + ph) * 2.2;
+        e.fk.setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + (-4 + u * 18).toFixed(2) + ') rotate(' + (u * 180).toFixed(1) + ')');
+        e.fk.setAttribute('opacity', (u < 0.15 ? u / 0.15 : u > 0.8 ? (1 - u) / 0.2 : 1).toFixed(2));
+      }
+      if (e.sk && m.spark) {
+        const u = ((t + ph * 0.7) % 2.6) / 2.6;
+        const s = u < 0.35 ? Math.sin((u / 0.35) * Math.PI) : 0;
+        e.sk.setAttribute('transform', 'translate(15 3.5) scale(' + s.toFixed(3) + ') rotate(' + (u * 90).toFixed(1) + ')');
+      }
+      if (e.bt && m.bolt) {
+        const u = ((t + ph * 1.3) % 3.4) / 3.4;
+        e.bt.setAttribute('opacity', (u > 0.02 && u < 0.06) || (u > 0.09 && u < 0.12) ? '1' : '0');
+      }
+      if (e.cl && m.cloud) {
+        e.cl.setAttribute('transform', 'translate(' + (12 + Math.sin(t * 0.6 + ph) * 2.5).toFixed(2) + ' 3.5)');
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.raf) cancelAnimationFrame(this.raf);
+    if (this.fxTimer) clearTimeout(this.fxTimer);
+  }
+
+  renderVals() {
+    const looks = {
+      journal: {
+        t: { text: '#272520', muted: '#6B6555', line: '#DCD3C2', surface: '#FBF8F1', onAccent: '#FBF8F1', ring: '#B6AC98' },
+        accents: { winter: '#3E5F75', spring: '#9E4C66', summer: '#7D5A0C', autumn: '#9C4A26' },
+        tints: { winter: '#D3E3EE', spring: '#F2D6DE', summer: '#F3E2B8', autumn: '#F1D4C0' },
+        base: ['#F8F4EB', '#EFE8DB'],
+        f: { display: "'Fraunces', Georgia, serif", body: "'Instrument Sans', system-ui, sans-serif", wordmark: 'Grove', wmStyle: 'italic', wmWeight: 500, wmSize: 24, dateWeight: 500 },
+        list: 'divider', mood: 'circles', chip: 'text', input: 'underline', night: false
+      },
+      greenhouse: {
+        t: { text: '#1D2820', muted: '#5B675C', line: '#CBD2C2', surface: '#F2F4ED', onAccent: '#F6F8F2', ring: '#A3AD98' },
+        accents: { winter: '#355A6E', spring: '#8E4560', summer: '#76600F', autumn: '#8E4423' },
+        tints: { winter: '#C9DCE4', spring: '#E8D0DA', summer: '#E7DFB8', autumn: '#E8CDBE' },
+        base: ['#ECEFE6', '#DDE2D3'],
+        f: { display: "'Young Serif', Georgia, serif", body: "'Hanken Grotesk', system-ui, sans-serif", wordmark: 'grove', wmStyle: 'normal', wmWeight: 400, wmSize: 24, dateWeight: 400 },
+        list: 'tiles', mood: 'tiles', chip: 'pill', input: 'field', night: false
+      },
+      night: {
+        t: { text: '#EDE6D5', muted: '#A39D8C', line: '#2A3026', surface: '#1A1E17', onAccent: '#121510', ring: '#4A5244' },
+        accents: { winter: '#A9C6D6', spring: '#E4A7B6', summer: '#E6BA62', autumn: '#DD9260' },
+        tints: { winter: '#A9C6D6', spring: '#E4A7B6', summer: '#E6BA62', autumn: '#DD9260' },
+        base: ['#151913', '#0D100B'],
+        f: { display: "'Instrument Serif', Georgia, serif", body: "'Geist', system-ui, sans-serif", wordmark: 'Grove', wmStyle: 'italic', wmWeight: 400, wmSize: 28, dateWeight: 400 },
+        list: 'grouped', mood: 'segmented', chip: 'pill', input: 'field', night: true
+      }
+    };
+    const key = looks[this.props.look] ? this.props.look : 'journal';
+    const L0 = looks[key];
+    const t = L0.t;
+    const night = L0.night;
+    this.isNight = night;
+    const season = ['winter', 'spring', 'summer', 'autumn'].indexOf(this.props.season) !== -1 ? this.props.season : 'winter';
+    const accent = L0.accents[season];
+    const tint = L0.tints[season];
+    const s = this.state || {};
+    const mood = s.mood || 'good';
+    const done = s.done || ['wake', 'med', 'read', 'eat', 'cold', 'plan'];
+    const fx = s.fx || null;
+
+    const base = [
+      { id: 'wake', label: 'Wake up at 5 AM', detail: '', streak: 5 },
+      { id: 'med', label: 'Meditation', detail: '10 min', streak: 3 },
+      { id: 'gym', label: 'Gym', detail: '', streak: 2 },
+      { id: 'read', label: 'Read', detail: '10 pages', streak: 10 },
+      { id: 'eat', label: 'Eat healthy', detail: '', streak: 2 },
+      { id: 'plan', label: 'Plan next day', detail: '', streak: 9 },
+      { id: 'journal', label: 'Journaling', detail: '', streak: 1 },
+      { id: 'cold', label: 'Cold shower', detail: '', streak: 4 },
+      { id: 'social', label: 'No social media', detail: '', streak: 0 }
+    ];
+    const doneCount = base.filter((h) => done.indexOf(h.id) !== -1).length;
+    const p = doneCount / base.length;
+    this.progress = p;
+
+    const toggle = (id) => {
+      const cur = (this.state && this.state.done) || done;
+      const was = cur.indexOf(id) !== -1;
+      const next = was ? cur.filter((x) => x !== id) : cur.concat([id]);
+      if (was || this.reduce) {
+        this.setState({ done: next, fx: null });
+        return;
+      }
+      const n = ((this.state && this.state.fx && this.state.fx.n) || 0) + 1;
+      this.flareAt = performance.now();
+      this.setState({ done: next, fx: { id: id, phase: 1, n: n } });
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (this.state && this.state.fx && this.state.fx.n === n) this.setState({ fx: { id: id, phase: 2, n: n } });
+      }));
+      if (this.fxTimer) clearTimeout(this.fxTimer);
+      this.fxTimer = setTimeout(() => {
+        if (this.state && this.state.fx && this.state.fx.n === n) this.setState({ fx: null });
+      }, 950);
+    };
+
+    const sparkColor = night ? '#F6E7A8' : accent;
+    const sparkGlow = night ? '0 0 10px 3px rgba(246, 231, 168, 0.7)' : 'none';
+    const listCfg = {
+      divider: { gap: 0, wrapBg: 'transparent', wrapR: 0, wrapTop: '1px solid ' + t.line, wrapShadow: 'none', padL: 4, padR: 4 },
+      grouped: { gap: 0, wrapBg: 'linear-gradient(180deg, #1C2119 0%, #171B14 100%)', wrapR: 20, wrapTop: 'none', wrapShadow: '0 0 0 1px rgba(237, 230, 213, 0.05), 0 24px 40px -24px rgba(0, 0, 0, 0.8)', padL: 16, padR: 14 },
+      tiles: { gap: 6, wrapBg: 'transparent', wrapR: 0, wrapTop: 'none', wrapShadow: 'none', padL: 16, padR: 14 }
+    }[L0.list];
+
+    const winterish = season === 'winter';
+    const ov = {
+      spark: mood === 'great',
+      cloud: mood === 'okay',
+      drop: (mood === 'low' || mood === 'rough') && !winterish,
+      flake: (mood === 'low' || mood === 'rough') && winterish,
+      bolt: mood === 'rough'
+    };
+    this.windMul = { great: 0.8, good: 1, okay: 0.9, low: 1.3, rough: 2.3 }[mood];
+    if (!this.iconEls) this.iconEls = [];
+    if (!this.iconRefFns) this.iconRefFns = [];
+    this.iconMeta = [];
+    const habits = base.map((h, i) => {
+      const d = done.indexOf(h.id) !== -1;
+      const last = i === base.length - 1;
+      const shown = h.streak + (d ? 1 : 0);
+      const kind = shown === 0 ? 'seed' : shown >= 7 ? 'flame' : 'sprout';
+      this.iconMeta[i] = { kind: kind, phase: i * 0.83, rough: mood === 'rough', wet: ov.drop, drop: ov.drop && kind !== 'seed', flake: ov.flake, spark: ov.spark, bolt: ov.bolt, cloud: ov.cloud };
+      if (!this.iconRefFns[i]) {
+        const box = {};
+        this.iconEls[i] = box;
+        this.iconRefFns[i] = {
+          sp: (el) => { box.sp = el; }, fl: (el) => { box.fl = el; }, fi: (el) => { box.fi = el; },
+          dr: (el) => { box.dr = el; }, fk: (el) => { box.fk = el; }, sk: (el) => { box.sk = el; },
+          bt: (el) => { box.bt = el; }, cl: (el) => { box.cl = el; }, sd: (el) => { box.sd = el; }
+        };
+      }
+      const on = fx && fx.id === h.id;
+      const ph = on ? fx.phase : 0;
+      let bg = 'transparent';
+      let shadow = 'none';
+      if (L0.list === 'divider') {
+        bg = d ? 'linear-gradient(90deg, ' + this.rgba(tint, 0.75) + ' 0%, ' + this.rgba(tint, 0) + ' 85%)' : 'transparent';
+      } else if (L0.list === 'tiles') {
+        bg = d ? 'linear-gradient(135deg, ' + t.surface + ' 0%, ' + this.rgba(tint, 0.95) + ' 100%)' : 'linear-gradient(180deg, ' + t.surface + ' 0%, ' + this.mix(t.surface, '#DDE2D3', 0.35) + ' 100%)';
+        shadow = d ? '0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 8px 18px -12px ' + this.rgba(accent, 0.55) : '0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 6px 14px -12px rgba(29, 40, 32, 0.35)';
+      } else {
+        bg = d ? 'linear-gradient(90deg, ' + this.rgba(accent, 0.16) + ' 0%, ' + this.rgba(accent, 0) + ' 80%)' : 'transparent';
+        shadow = d ? 'inset 3px 0 0 ' + accent : 'none';
+      }
+      const sparks = [];
+      for (let k = 0; k < 7; k++) {
+        const a = (Math.PI * 2 * k) / 7 - Math.PI / 2;
+        const dist = 20 + (k % 3) * 6;
+        sparks.push({
+          color: sparkColor,
+          glow: sparkGlow,
+          x: ph === 2 ? Math.round(Math.cos(a) * dist) : 0,
+          y: ph === 2 ? Math.round(Math.sin(a) * dist) : 0,
+          s: ph === 2 ? 0.4 : 1,
+          op: ph === 1 ? 1 : 0,
+          tr: ph === 2 ? 'transform 700ms cubic-bezier(0.16, 1, 0.3, 1), opacity 700ms ease-out' : 'none'
+        });
+      }
+      return {
+        label: h.label,
+        detail: h.detail,
+        done: d,
+        streak: h.streak + (d ? 1 : 0),
+        fill: d ? 'linear-gradient(145deg, ' + this.mix(accent, '#FFFFFF', 0.28) + ' 0%, ' + accent + ' 70%)' : 'transparent',
+        ring: d ? accent : t.ring,
+        checkOp: d ? 1 : 0,
+        streakColor: d ? (night ? accent : this.mix(accent, '#000000', 0.05)) : t.muted,
+        bg: bg,
+        shadow: shadow,
+        radius: L0.list === 'tiles' ? '16px' : '0',
+        divider: L0.list === 'tiles' ? 'none' : (L0.list === 'grouped' && last ? 'none' : '1px solid ' + t.line),
+        sweepX: ph === 2 ? 190 : -100,
+        sweepOp: ph === 0 ? 0 : 1,
+        sweepTr: ph === 2 ? 'transform 750ms cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none',
+        ripS: ph === 2 ? 2.3 : 0.55,
+        ripOp: ph === 1 ? 0.9 : 0,
+        ripTr: ph === 2 ? 'transform 650ms ease-out, opacity 650ms ease-out' : 'none',
+        popS: ph === 1 ? 0.55 : 1,
+        popTr: ph === 2 ? 'transform 480ms cubic-bezier(0.34, 1.56, 0.64, 1)' : 'none',
+        leafS: ph === 2 ? 1.35 : 1,
+        leafR: ph === 2 ? -12 : 0,
+        leafTr: ph === 2 ? 'transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1)' : 'transform 500ms ease-out',
+        sparks: sparks,
+        gid: 'fl-' + h.id,
+        r: this.iconRefFns[i],
+        seedOp: kind === 'seed' ? 1 : 0,
+        seedColor: t.muted,
+        sproutOp: kind === 'sprout' ? 1 : 0,
+        flameOp: kind === 'flame' ? 1 : 0,
+        dropOn: ov.drop && kind !== 'seed' ? 1 : 0,
+        flakeOn: ov.flake ? 1 : 0,
+        sparkOn: ov.spark ? 1 : 0,
+        boltOn: ov.bolt ? 1 : 0,
+        cloudOn: ov.cloud ? 1 : 0,
+        iconFilter: night && kind === 'flame' ? 'drop-shadow(0 0 3px rgba(240, 138, 60, 0.65))' : 'none',
+        streakColor: kind === 'flame' ? (night ? '#F2B061' : '#B5561F') : (d ? (night ? accent : this.mix(accent, '#000000', 0.05)) : t.muted),
+        toggle: () => toggle(h.id)
+      };
+    });
+
+    const moodDefs = [
+      { key: 'great', label: 'Great', text: 'Great, sunny', icon: 'M12 7.5A4.5 4.5 0 1 0 12 16.5A4.5 4.5 0 1 0 12 7.5ZM12 2V4M12 20V22M4.9 4.9L6.3 6.3M17.7 17.7L19.1 19.1M2 12H4M20 12H22M4.9 19.1L6.3 17.7M17.7 6.3L19.1 4.9' },
+      { key: 'good', label: 'Good', text: 'Good, clear skies', icon: 'M8 3V4.5M3.5 7.5H5M4.8 4.3L5.8 5.3M11.2 4.3L10.2 5.3M5.4 10.6A3 3 0 0 1 10.6 7.8M17 20H8A4 4 0 1 1 9.2 12.2A5 5 0 0 1 18.8 13.6A3.2 3.2 0 0 1 17 20Z' },
+      { key: 'okay', label: 'Okay', text: 'Okay, cloudy', icon: 'M17.5 19H8A5 5 0 1 1 9.6 9.3A6 6 0 0 1 20.8 12.5A3.5 3.5 0 0 1 17.5 19Z' },
+      { key: 'low', label: 'Low', text: season === 'winter' ? 'Low, snowing' : 'Low, rainy', icon: 'M17.5 14H8A4.5 4.5 0 1 1 9.5 5.3A5.5 5.5 0 0 1 19.8 8.2A3 3 0 0 1 17.5 14ZM8 17V19M12 18V20M16 17V19' },
+      { key: 'rough', label: 'Rough', text: season === 'winter' ? 'Rough, blizzard' : 'Rough, stormy', icon: 'M17.5 13H8A4.5 4.5 0 1 1 9.5 4.3A5.5 5.5 0 0 1 19.8 7.2A3 3 0 0 1 17.5 13ZM13 14L10.5 18H14L11.5 22' }
+    ];
+    const moodStyle = (sel) => {
+      if (L0.mood === 'circles') {
+        return {
+          r: 999,
+          border: '1px solid ' + (sel ? t.text : t.line),
+          bg: sel ? 'linear-gradient(160deg, #3D3A33 0%, #1C1B17 100%)' : 'linear-gradient(180deg, #FBF8F1 0%, ' + this.rgba(tint, 0.5) + ' 100%)',
+          color: sel ? '#FBF8F1' : t.muted,
+          shadow: sel ? '0 8px 16px -10px rgba(39, 37, 32, 0.8)' : 'none'
+        };
+      }
+      if (L0.mood === 'segmented') {
+        return {
+          r: 12,
+          border: 'none',
+          bg: sel ? 'linear-gradient(180deg, #2C3227 0%, #22271F 100%)' : 'transparent',
+          color: sel ? accent : t.muted,
+          shadow: sel ? '0 0 18px -4px ' + this.rgba(accent, 0.55) : 'none'
+        };
+      }
+      return {
+        r: 16,
+        border: 'none',
+        bg: sel ? 'linear-gradient(150deg, ' + this.mix(accent, '#FFFFFF', 0.22) + ' 0%, ' + accent + ' 100%)' : 'linear-gradient(180deg, ' + t.surface + ' 0%, ' + this.mix(t.surface, '#DDE2D3', 0.45) + ' 100%)',
+        color: sel ? t.onAccent : t.muted,
+        shadow: sel ? '0 10px 18px -10px ' + this.rgba(accent, 0.8) : '0 1px 0 rgba(255, 255, 255, 0.7) inset'
+      };
+    };
+    const moods = moodDefs.map((m) => Object.assign({ label: m.label, icon: m.icon, sel: m.key === mood, pick: () => this.setState({ mood: m.key }) }, moodStyle(m.key === mood)));
+    const mw = L0.mood === 'segmented'
+      ? { gap: 4, pad: 4, r: 16, bg: 'linear-gradient(180deg, #1C2119 0%, #161A13 100%)', shadow: '0 0 0 1px rgba(237, 230, 213, 0.05)' }
+      : { gap: 8, pad: 0, r: 0, bg: 'transparent', shadow: 'none' };
+
+    const inp = L0.input === 'underline'
+      ? { padX: 4, underline: '1px solid ' + t.line, r: 0, bg: 'transparent', btnBg: 'transparent', btnColor: accent, btnShadow: 'none' }
+      : night
+        ? { padX: 16, underline: 'none', r: 14, bg: '#1A1E17', btnBg: 'linear-gradient(150deg, ' + this.mix(accent, '#FFFFFF', 0.2) + ' 0%, ' + accent + ' 100%)', btnColor: t.onAccent, btnShadow: '0 0 20px -6px ' + this.rgba(accent, 0.7) }
+        : { padX: 16, underline: 'none', r: 14, bg: t.surface, btnBg: 'linear-gradient(150deg, ' + this.mix(accent, '#FFFFFF', 0.22) + ' 0%, ' + accent + ' 100%)', btnColor: t.onAccent, btnShadow: '0 10px 18px -10px ' + this.rgba(accent, 0.8) };
+    const chip = L0.chip === 'text'
+      ? { padX: 4, bg: 'transparent', border: 'none' }
+      : night
+        ? { padX: 14, bg: '#1A1E17', border: '1px solid rgba(237, 230, 213, 0.06)' }
+        : { padX: 14, bg: 'linear-gradient(180deg, ' + t.surface + ' 0%, ' + this.rgba(tint, 0.6) + ' 100%)', border: 'none' };
+
+    const tabDefs = [
+      { label: 'Garden', icon: 'M12 21V11M12 11C12 7 9 5 5 5C5 9 8 11 12 11ZM12 14C12 11 14.5 9 18 9C18 12 15.5 14 12 14ZM6 21H18' },
+      { label: 'Progress', icon: 'M12 3A9 9 0 1 0 12.01 3ZM12 6.5A5.5 5.5 0 1 0 12.01 6.5ZM12 10A2 2 0 1 0 12.01 10Z' },
+      { label: 'Arcs', icon: 'M3 18C6 10 18 10 21 18M7 18C9 14 15 14 17 18' },
+      { label: 'Settings', icon: 'M4 7H13M19 7H20M4 17H6M12 17H20M16 4.5A2.5 2.5 0 1 0 16.01 4.5ZM9 14.5A2.5 2.5 0 1 0 9.01 14.5Z' }
+    ];
+    const tabs = tabDefs.map((tb, i) => ({ label: tb.label, icon: tb.icon, current: i === 0 ? 'page' : 'false', color: i === 0 ? accent : t.muted }));
+
+    const bgImage = night
+      ? 'radial-gradient(120% 45% at 50% -8%, ' + this.rgba(accent, (0.08 + 0.12 * p).toFixed(3)) + ' 0%, rgba(18, 21, 16, 0) 62%), linear-gradient(180deg, ' + L0.base[0] + ' 0%, ' + L0.base[1] + ' 100%)'
+      : 'radial-gradient(130% 50% at 50% -6%, ' + this.rgba(tint, (0.55 + 0.45 * p).toFixed(3)) + ' 0%, ' + this.rgba(tint, 0) + ' 64%), radial-gradient(90% 40% at 100% 100%, ' + this.rgba(tint, 0.35) + ' 0%, ' + this.rgba(tint, 0) + ' 70%), linear-gradient(180deg, ' + L0.base[0] + ' 0%, ' + L0.base[1] + ' 100%)';
+
+    let stars = [];
+    if (night) {
+      if (!this.starEls) this.starEls = [];
+      this.starMeta = [];
+      for (let i = 0; i < 46; i++) {
+        const o = 0.35 + this.rnd(i, 3) * 0.65;
+        const sp = 0.6 + this.rnd(i, 4) * 2.2;
+        this.starMeta.push({ o: o, sp: sp });
+        stars.push({
+          x: Math.round(this.rnd(i, 1) * 384),
+          y: Math.round(this.rnd(i, 2) * 1240),
+          s: this.rnd(i, 5) > 0.85 ? 2.5 : 1.5,
+          o: (o * (0.3 + 0.7 * p)).toFixed(3),
+          ref: (el) => { this.starEls[i] = el; }
+        });
+      }
+    }
+    if (!this.setAurora) this.setAurora = (el) => { this.auroraEl = el; };
+
+    const frames = {
+      journal: { r: 20, border: '1px solid ' + t.line, shadow: '0 22px 36px -26px rgba(39, 37, 32, 0.55)' },
+      greenhouse: { r: 26, border: 'none', shadow: '0 1px 0 rgba(255, 255, 255, 0.8), 0 18px 32px -16px rgba(29, 40, 32, 0.4)' },
+      night: { r: 22, border: 'none', shadow: '0 0 0 1px rgba(237, 230, 213, 0.06), 0 24px 48px -22px ' + this.rgba(accent, 0.45) }
+    };
+
+    return {
+      t: t,
+      f: L0.f,
+      fr: frames[key],
+      isNight: night,
+      bgImage: bgImage,
+      auroraBg: 'radial-gradient(closest-side, ' + this.rgba(accent, 0.55) + ' 0%, ' + this.rgba('#B49FD8', 0.35) + ' 45%, rgba(18, 21, 16, 0) 100%)',
+      auroraOp: (0.22 + 0.5 * p).toFixed(3),
+      refAurora: this.setAurora,
+      stars: stars,
+      dateInk: night
+        ? 'linear-gradient(180deg, #F6F0E3 25%, ' + accent + ' 140%)'
+        : 'linear-gradient(180deg, ' + t.text + ' 35%, ' + accent + ' 150%)',
+      accentText: night ? accent : accent,
+      season: season,
+      mood: mood,
+      moodLabel: moodDefs.filter((m) => m.key === mood)[0].text,
+      moods: moods,
+      mw: mw,
+      L: listCfg,
+      habits: habits,
+      doneCount: doneCount,
+      pct: Math.round(p * 100),
+      track: night ? 'rgba(237, 230, 213, 0.08)' : this.rgba(t.line, 0.7),
+      fill: 'linear-gradient(90deg, ' + this.mix(accent, night ? '#FFFFFF' : '#FFFFFF', 0.35) + ' 0%, ' + accent + ' 100%)',
+      sweepBg: 'linear-gradient(90deg, ' + this.rgba(night ? accent : tint, 0) + ' 0%, ' + this.rgba(night ? accent : tint, night ? 0.32 : 0.9) + ' 50%, ' + this.rgba(night ? accent : tint, 0) + ' 100%)',
+      ripple: night ? '#F6E7A8' : accent,
+      inp: inp,
+      chip: chip,
+      flameTop: night ? '#FFE3A1' : '#F2B648',
+      flameBottom: night ? '#F0823A' : '#C9541F',
+      flameCore: night ? '#FFF6D8' : '#FBE3A6',
+      dropColor: night ? '#A9C6D6' : '#5E8FAE',
+      flakeColor: night ? '#EAF2F8' : '#6F95B0',
+      sparkIcon: night ? '#FFE3A1' : '#D99A1E',
+      cloudColor: night ? '#7D877A' : '#B3AC9C',
+      navBg: night ? 'rgba(13, 16, 11, 0.92)' : this.rgba(L0.base[1], 0.94),
+      tabs: tabs
+    };
+  }
+}
+</script>
+</body>
+</html>

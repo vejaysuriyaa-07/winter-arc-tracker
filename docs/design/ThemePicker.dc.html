@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, garden theme picker</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Young+Serif&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1120px; box-sizing: border-box; padding: 10px 16px 24px; background: {{bg}}; color: {{tk.text}}; font-family: {{tk.body}}; overflow: hidden; display: flex; flex-direction: column; gap: 18px; transition: color 300ms">
+<div aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 999px; background: {{tk.line}}"></div>
+
+<header style="display: grid; grid-template-columns: 80px minmax(0, 1fr) 80px; align-items: center">
+<button type="button" style="height: 44px; padding: 0; background: transparent; border: none; color: {{tk.muted}}; font-family: {{tk.body}}; font-size: 15px; text-align: left; cursor: pointer">Cancel</button>
+<h1 style="margin: 0; font-family: {{tk.display}}; font-weight: 400; font-size: 22px; text-align: center">Garden theme</h1>
+<button type="button" style="height: 44px; padding: 0; background: transparent; border: none; color: {{accent}}; font-family: {{tk.body}}; font-size: 15px; font-weight: 600; text-align: right; cursor: pointer">Done</button>
+</header>
+
+<div style="position: relative; height: 330px; border-radius: 24px; overflow: hidden; background: {{tk.surface}}; box-shadow: {{tk.cardShadow}}">
+<div style="position: absolute; left: 50%; top: 0; width: 390px; height: 1340px; margin-left: -121px; transform: scale(0.62); transform-origin: 0 0">
+<dc-import name="Skin" look="{{look}}" season="{{season}}" hint-size="390px,1340px"></dc-import>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(180deg, {{fadeFrom}} 0%, {{fadeTo}} 100%)"></div>
+<span style="position: absolute; left: 16px; bottom: 14px; font-family: {{tk.display}}; font-size: 18px">{{previewLabel}}</span>
+</div>
+
+<section aria-label="Look" style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 500; color: {{tk.muted}}">Look</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{looks}}" as="l" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{l.sel}}" onClick="{{l.pick}}" style="padding: 0; display: flex; flex-direction: column; gap: 8px; background: transparent; border: none; color: {{tk.text}}; text-align: left; cursor: pointer">
+<span style="position: relative; display: block; height: 128px; box-sizing: border-box; border-radius: 16px; overflow: hidden; background: {{l.bg}}; border: 2px solid {{l.border}}; box-shadow: {{l.shadow}}">
+<sc-for list="{{l.stars}}" as="st" hint-placeholder-count="0">
+<span style="position: absolute; left: {{st.x}}px; top: {{st.y}}px; width: 2px; height: 2px; border-radius: 999px; background: #EDE6D5; opacity: {{st.o}}"></span>
+</sc-for>
+<span style="position: absolute; left: 10px; top: 10px; font-family: {{l.font}}; font-size: 24px; line-height: 1; color: {{l.ink}}">Mon</span>
+<span style="position: absolute; left: 10px; right: 10px; top: 44px; height: 30px; border-radius: 8px; background: {{l.scene}}"></span>
+<span style="position: absolute; left: 10px; right: 10px; top: 82px; display: flex; flex-direction: column; gap: 5px">
+<span style="height: 12px; border-radius: {{l.rowR}}; background: {{l.row}}; box-shadow: {{l.rowLine}}"></span>
+<span style="height: 12px; border-radius: {{l.rowR}}; background: {{l.row}}; box-shadow: {{l.rowLine}}"></span>
+</span>
+<span style="position: absolute; right: 8px; bottom: 8px; width: 12px; height: 12px; border-radius: 999px; background: {{l.dot}}"></span>
+</span>
+<span style="font-size: 14px; font-weight: 600; padding-left: 2px">{{l.name}}</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section aria-label="Season" style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 500; color: {{tk.muted}}">Season</h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{seasons}}" as="s" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{s.sel}}" onClick="{{s.pick}}" style="padding: 0; display: flex; flex-direction: column; gap: 6px; background: transparent; border: none; color: {{tk.text}}; cursor: pointer">
+<span style="position: relative; display: block; width: 100%; height: 64px; box-sizing: border-box; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg, {{s.sky0}} 0%, {{s.sky1}} 100%); border: 2px solid {{s.border}}">
+<svg width="80" height="64" viewBox="0 0 80 64" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%"><path d="M0 46C20 40 44 44 62 40C70 38 76 40 80 39L80 64L0 64Z" fill="{{s.ground}}"></path><path d="{{s.tree}}" fill="{{s.leaf}}"></path></svg>
+</span>
+<span style="font-size: 13px; font-weight: 600">{{s.name}}</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 16px; background: {{tk.surface}}; box-shadow: {{tk.cardShadow}}">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 500">Night look in dark mode</span><span style="font-size: 13px; color: {{tk.muted}}">Switches when your iPhone does</span></span>
+<button type="button" role="switch" aria-checked="{{autoNight}}" aria-label="Night look in dark mode" onClick="{{toggleAuto}}" style="position: relative; width: 52px; height: 32px; flex: none; padding: 0; border-radius: 999px; border: none; background: {{switchBg}}; cursor: pointer; transition: background 200ms"><span style="position: absolute; top: 3px; left: {{knobX}}px; width: 26px; height: 26px; border-radius: 999px; background: {{knobBg}}; transition: left 200ms"></span></button>
+</div>
+
+<button type="button" style="margin-top: auto; height: 54px; border-radius: 16px; border: none; background: {{btnBg}}; color: {{btnText}}; font-family: {{tk.body}}; font-size: 16px; font-weight: 600; box-shadow: {{btnShadow}}; cursor: pointer">Use this theme</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1120}}'>
+class Component extends DCLogic {
+  rgba(hex, a) {
+    const n = parseInt(hex.slice(1), 16);
+    return 'rgba(' + ((n >> 16) & 255) + ', ' + ((n >> 8) & 255) + ', ' + (n & 255) + ', ' + a + ')';
+  }
+
+  rnd(i, k) {
+    const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453;
+    return v - Math.floor(v);
+  }
+
+  renderVals() {
+    const s = this.state || {};
+    const look = s.look || 'journal';
+    const season = s.season || 'winter';
+    const autoNight = s.autoNight !== undefined ? s.autoNight : true;
+
+    const T = {
+      journal: { name: 'Field journal', base: ['#F8F4EB', '#EFE8DB'], text: '#272520', muted: '#6B6555', line: '#DCD3C2', surface: '#FBF8F1', display: "'Fraunces', Georgia, serif", body: "'Instrument Sans', system-ui, sans-serif", onAccent: '#FBF8F1', cardShadow: '0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 14px 28px -20px rgba(39, 37, 32, 0.5)', accents: { winter: '#3E5F75', spring: '#9E4C66', summer: '#7D5A0C', autumn: '#9C4A26' }, tints: { winter: '#D3E3EE', spring: '#F2D6DE', summer: '#F3E2B8', autumn: '#F1D4C0' } },
+      greenhouse: { name: 'Greenhouse', base: ['#ECEFE6', '#DDE2D3'], text: '#1D2820', muted: '#5B675C', line: '#CBD2C2', surface: '#F2F4ED', display: "'Young Serif', Georgia, serif", body: "'Hanken Grotesk', system-ui, sans-serif", onAccent: '#F6F8F2', cardShadow: '0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 14px 28px -18px rgba(29, 40, 32, 0.45)', accents: { winter: '#355A6E', spring: '#8E4560', summer: '#76600F', autumn: '#8E4423' }, tints: { winter: '#C9DCE4', spring: '#E8D0DA', summer: '#E7DFB8', autumn: '#E8CDBE' } },
+      night: { name: 'Night', base: ['#151913', '#0D100B'], text: '#EDE6D5', muted: '#A39D8C', line: '#2A3026', surface: '#1A1E17', display: "'Instrument Serif', Georgia, serif", body: "'Geist', system-ui, sans-serif", onAccent: '#121510', cardShadow: '0 0 0 1px rgba(237, 230, 213, 0.06)', accents: { winter: '#A9C6D6', spring: '#E4A7B6', summer: '#E6BA62', autumn: '#DD9260' }, tints: { winter: '#A9C6D6', spring: '#E4A7B6', summer: '#E6BA62', autumn: '#DD9260' } }
+    };
+    const tk = T[look];
+    const accent = tk.accents[season];
+    const tint = tk.tints[season];
+    const night = look === 'night';
+
+    const scenes = {
+      winter: { name: 'Winter', sky0: '#5A8DC2', sky1: '#C3DBF0', ground: '#E6EEF7', leaf: '#1E5F6B', tree: 'M24 44L30 30L36 44ZM26 36L30 26L34 36ZM50 42L55 31L60 42ZM52 35L55 27L58 35Z' },
+      spring: { name: 'Spring', sky0: '#86BFE6', sky1: '#EAF4FB', ground: '#7FBF6A', leaf: '#F9A8D4', tree: 'M30 30A7 7 0 1 0 30.01 30ZM56 32A6 6 0 1 0 56.01 32Z' },
+      summer: { name: 'Summer', sky0: '#2F96E8', sky1: '#BFE6FF', ground: '#8BC34A', leaf: '#2E7D32', tree: 'M30 29A8 8 0 1 0 30.01 29ZM56 31A7 7 0 1 0 56.01 31Z' },
+      autumn: { name: 'Autumn', sky0: '#E9A35E', sky1: '#FCE3C2', ground: '#C49A5A', leaf: '#E07A2E', tree: 'M30 30A7 7 0 1 0 30.01 30ZM56 32A6 6 0 1 0 56.01 32Z' }
+    };
+
+    const looks = ['journal', 'greenhouse', 'night'].map((k) => {
+      const L = T[k];
+      const sel = k === look;
+      const n = k === 'night';
+      const stars = [];
+      if (n) {
+        for (let i = 0; i < 14; i++) stars.push({ x: Math.round(6 + this.rnd(i, 1) * 90), y: Math.round(6 + this.rnd(i, 2) * 110), o: (0.3 + this.rnd(i, 3) * 0.6).toFixed(2) });
+      }
+      return {
+        name: L.name,
+        sel: sel,
+        stars: stars,
+        bg: n
+          ? 'radial-gradient(120% 50% at 50% -10%, ' + this.rgba(L.accents[season], 0.22) + ' 0%, rgba(18, 21, 16, 0) 60%), linear-gradient(180deg, ' + L.base[0] + ' 0%, ' + L.base[1] + ' 100%)'
+          : 'radial-gradient(130% 55% at 50% -10%, ' + this.rgba(L.tints[season], 0.9) + ' 0%, ' + this.rgba(L.tints[season], 0) + ' 65%), linear-gradient(180deg, ' + L.base[0] + ' 0%, ' + L.base[1] + ' 100%)',
+        border: sel ? L.accents[season] : 'transparent',
+        shadow: sel ? '0 10px 22px -14px ' + this.rgba(L.accents[season], 0.9) : (n ? '0 0 0 1px rgba(237, 230, 213, 0.08)' : '0 0 0 1px ' + this.rgba(L.line, 0.9)),
+        font: L.display,
+        ink: L.text,
+        scene: 'linear-gradient(180deg, ' + scenes[season].sky0 + ' 0%, ' + scenes[season].sky1 + ' 60%, ' + scenes[season].ground + ' 61%)',
+        row: k === 'greenhouse' ? L.surface : 'transparent',
+        rowR: k === 'greenhouse' ? '4px' : '0',
+        rowLine: k === 'greenhouse' ? 'none' : 'inset 0 -1px 0 ' + L.line,
+        dot: L.accents[season],
+        pick: () => this.setState({ look: k })
+      };
+    });
+
+    const seasons = ['winter', 'spring', 'summer', 'autumn'].map((k) => {
+      const sc = scenes[k];
+      return Object.assign({}, sc, {
+        sel: k === season,
+        border: k === season ? accent : 'transparent',
+        pick: () => this.setState({ season: k })
+      });
+    });
+
+    const fadeBase = night ? '#1A1E17' : tk.surface;
+    return {
+      look: look,
+      season: season,
+      tk: tk,
+      accent: accent,
+      bg: night
+        ? 'radial-gradient(120% 40% at 50% -6%, ' + this.rgba(accent, 0.16) + ' 0%, rgba(18, 21, 16, 0) 60%), linear-gradient(180deg, ' + tk.base[0] + ' 0%, ' + tk.base[1] + ' 100%)'
+        : 'radial-gradient(130% 45% at 50% -6%, ' + this.rgba(tint, 0.85) + ' 0%, ' + this.rgba(tint, 0) + ' 64%), linear-gradient(180deg, ' + tk.base[0] + ' 0%, ' + tk.base[1] + ' 100%)',
+      fadeFrom: this.rgba(fadeBase, 0),
+      fadeTo: this.rgba(fadeBase, 0.95),
+      previewLabel: tk.name + ', ' + scenes[season].name.toLowerCase(),
+      looks: looks,
+      seasons: seasons,
+      autoNight: autoNight,
+      toggleAuto: () => this.setState({ autoNight: !((this.state && this.state.autoNight !== undefined) ? this.state.autoNight : true) }),
+      switchBg: autoNight ? accent : tk.line,
+      knobBg: autoNight ? tk.onAccent : (night ? '#A39D8C' : '#FBF8F1'),
+      knobX: autoNight ? 23 : 3,
+      btnBg: 'linear-gradient(150deg, ' + accent + ' 0%, ' + accent + ' 100%)',
+      btnText: tk.onAccent,
+      btnShadow: night ? '0 0 24px -6px ' + this.rgba(accent, 0.7) : '0 12px 22px -12px ' + this.rgba(accent, 0.9)
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, start a new arc</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1060px; box-sizing: border-box; padding: 10px 16px 24px; background: #070B14; color: #E8EEF8; font-family: Inter, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; gap: 18px">
+<div aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 999px; background: #2A3550"></div>
+
+<header style="display: grid; grid-template-columns: 80px minmax(0, 1fr) 80px; align-items: center">
+<button type="button" style="height: 44px; padding: 0; background: transparent; border: none; color: #F472B6; font: 500 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer">Cancel</button>
+<h1 style="margin: 0; font-size: 17px; font-weight: 600; text-align: center">New arc</h1>
+<span></span>
+</header>
+
+<label style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 600; color: #8C99B0">Name</span>
+<input type="text" placeholder="Spring Arc" style="height: 50px; box-sizing: border-box; padding: 0 14px; border-radius: 14px; border: 1px solid #F472B6; background: #0D1424; color: #E8EEF8; font: 500 16px Inter, system-ui, sans-serif">
+</label>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 600; color: #8C99B0">Garden theme</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{themes}}" as="t" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{t.sel}}" style="position: relative; padding: 0; border-radius: 16px; overflow: hidden; border: 2px solid {{t.border}}; background: #0D1424; color: #E8EEF8; text-align: left; cursor: pointer; font: inherit">
+<span aria-hidden="true" style="position: relative; display: block; height: 72px; background: linear-gradient(180deg, {{t.sky0}} 0%, {{t.sky1}} 100%); overflow: hidden">
+<svg width="171" height="72" viewBox="0 0 171 72" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%"><path d="M0 54C40 46 90 52 130 47C150 45 162 48 171 47L171 72L0 72Z" fill="{{t.ground}}"></path></svg>
+<svg width="24" height="34" viewBox="0 0 24 34" style="position: absolute; left: 22px; bottom: 12px"><path d="M12 34V20" stroke="{{t.trunk}}" stroke-width="2.2" stroke-linecap="round"></path><path d="{{t.crown}}" fill="{{t.leafA}}"></path></svg>
+<svg width="24" height="34" viewBox="0 0 24 34" style="position: absolute; left: 70px; bottom: 16px; transform: scale(0.8); transform-origin: 50% 100%"><path d="M12 34V20" stroke="{{t.trunk}}" stroke-width="2.2" stroke-linecap="round"></path><path d="{{t.crown}}" fill="{{t.leafB}}"></path></svg>
+<svg width="24" height="34" viewBox="0 0 24 34" style="position: absolute; left: 112px; bottom: 13px; transform: scale(1.1); transform-origin: 50% 100%"><path d="M12 34V20" stroke="{{t.trunk}}" stroke-width="2.2" stroke-linecap="round"></path><path d="{{t.crown}}" fill="{{t.leafA}}"></path></svg>
+</span>
+<span style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; font-size: 15px; font-weight: 600">
+<span>{{t.name}}</span>
+<span style="width: 12px; height: 12px; border-radius: 999px; background: {{t.accent}}"></span>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 600; color: #8C99B0">Length</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<button type="button" aria-pressed="false" style="height: 44px; border-radius: 12px; border: 1px solid #1B2539; background: #0D1424; color: #E8EEF8; font: 500 15px Inter, system-ui, sans-serif; cursor: pointer">30 days</button>
+<button type="button" aria-pressed="true" style="height: 44px; border-radius: 12px; border: 1px solid #F472B6; background: rgba(244, 114, 182, 0.16); color: #F472B6; font: 600 15px Inter, system-ui, sans-serif; cursor: pointer">60 days</button>
+<button type="button" aria-pressed="false" style="height: 44px; border-radius: 12px; border: 1px solid #1B2539; background: #0D1424; color: #E8EEF8; font: 500 15px Inter, system-ui, sans-serif; cursor: pointer">90 days</button>
+<button type="button" aria-pressed="false" style="height: 44px; border-radius: 12px; border: 1px solid #1B2539; background: #0D1424; color: #E8EEF8; font: 500 15px Inter, system-ui, sans-serif; cursor: pointer">Custom</button>
+</div>
+</div>
+
+<button type="button" style="min-height: 52px; box-sizing: border-box; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; border-radius: 14px; border: 1px solid #1B2539; background: #0D1424; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; cursor: pointer">
+<span>Starts</span>
+<span style="display: flex; align-items: center; gap: 6px; color: #8C99B0">Today, Oct 26<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"></path></svg></span>
+</button>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px">Bring habits from Winter Arc</span><span style="font-size: 13px; color: #8C99B0">Each one gets a fresh seed</span></span>
+<button type="button" role="switch" aria-checked="true" aria-label="Bring habits from Winter Arc" style="position: relative; width: 52px; height: 32px; flex: none; padding: 0; border-radius: 999px; border: none; background: #F472B6; cursor: pointer"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 999px; background: #22071A"></span></button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{habits}}" as="h" hint-placeholder-count="8">
+<button type="button" aria-pressed="{{h.on}}" style="height: 40px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-radius: 999px; border: 1px solid {{h.border}}; background: {{h.bg}}; color: {{h.color}}; font: 500 14px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="opacity: {{h.checkOp}}" aria-hidden="true"><path d="M5 12.5L9.5 17L19 7"></path></svg>
+<span>{{h.label}}</span>
+</button>
+</sc-for>
+<button type="button" style="height: 40px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-radius: 999px; border: 1px dashed #2A3550; background: transparent; color: #8C99B0; font: 500 14px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5V19M5 12H19"></path></svg>
+<span>Add a habit</span>
+</button>
+</div>
+</div>
+
+<button type="button" style="margin-top: auto; height: 56px; border-radius: 16px; border: none; background: #F472B6; color: #22071A; font: 600 16px Inter, system-ui, sans-serif; cursor: pointer">Plant this arc</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pine = 'M12 1L19 13H5ZM12 6L21 22H3Z';
+    const round = 'M12 2A9 9 0 1 1 11.99 2Z';
+    const themes = [
+      { name: 'Winter', sel: false, accent: '#22D3EE', sky0: '#5A8DC2', sky1: '#C3DBF0', ground: '#E6EEF7', trunk: '#5B4636', crown: pine, leafA: '#1E5F6B', leafB: '#2B7A86' },
+      { name: 'Spring', sel: true, accent: '#F472B6', sky0: '#86BFE6', sky1: '#EAF4FB', ground: '#7FBF6A', trunk: '#6B4E3A', crown: round, leafA: '#5DAA5A', leafB: '#F9A8D4' },
+      { name: 'Summer', sel: false, accent: '#F59E0B', sky0: '#2F96E8', sky1: '#BFE6FF', ground: '#8BC34A', trunk: '#6D4C35', crown: round, leafA: '#2E7D32', leafB: '#43A047' },
+      { name: 'Autumn', sel: false, accent: '#FB923C', sky0: '#E9A35E', sky1: '#FCE3C2', ground: '#C49A5A', trunk: '#5C4030', crown: round, leafA: '#E07A2E', leafB: '#C2410C' }
+    ].map((t) => Object.assign({}, t, { border: t.sel ? '#F472B6' : '#1B2539' }));
+    const picked = ['Wake up at 5 AM', 'Meditation', 'Read', 'Gym', 'Journaling', 'Plan next day'];
+    const all = ['Wake up at 5 AM', 'Meditation', 'Gym', 'Read', 'Eat healthy', 'Plan next day', 'Journaling', 'Cold shower', 'No social media'];
+    const habits = all.map((label) => {
+      const on = picked.indexOf(label) !== -1;
+      return {
+        label: label,
+        on: on,
+        border: on ? '#F472B6' : '#1B2539',
+        bg: on ? 'rgba(244, 114, 182, 0.14)' : '#0D1424',
+        color: on ? '#F9A8D4' : '#8C99B0',
+        checkOp: on ? 1 : 0.35
+      };
+    });
+    return { themes: themes, habits: habits };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1160px; box-sizing: border-box; padding: 20px 16px 104px; background: #070B14; color: #E8EEF8; font-family: Inter, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; gap: 16px">
+<header style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.14em; line-height: 1">GROVE</div>
+<h1 style="margin: 4px 0 0; font-size: 24px; font-weight: 600">Settings</h1>
+</header>
+
+<section aria-label="This arc" style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; color: #8C99B0">This arc</h2>
+<div style="border-radius: 18px; border: 1px solid #1B2539; background: #0D1424; overflow: hidden">
+<button type="button" style="width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: transparent; border: none; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer"><span>Name</span><span style="display: flex; align-items: center; gap: 6px; color: #8C99B0">Winter Arc<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"></path></svg></span></button>
+<div style="min-height: 52px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #1B2539; font-size: 15px">
+<span>Garden theme</span>
+<span style="display: flex; gap: 8px">
+<button type="button" aria-label="Winter theme, selected" aria-pressed="true" style="width: 30px; height: 30px; box-sizing: border-box; border-radius: 999px; border: 2px solid #E8EEF8; background: #22D3EE; cursor: pointer"></button>
+<button type="button" aria-label="Spring theme" aria-pressed="false" style="width: 30px; height: 30px; box-sizing: border-box; border-radius: 999px; border: 2px solid transparent; background: #F472B6; cursor: pointer"></button>
+<button type="button" aria-label="Summer theme" aria-pressed="false" style="width: 30px; height: 30px; box-sizing: border-box; border-radius: 999px; border: 2px solid transparent; background: #F59E0B; cursor: pointer"></button>
+<button type="button" aria-label="Autumn theme" aria-pressed="false" style="width: 30px; height: 30px; box-sizing: border-box; border-radius: 999px; border: 2px solid transparent; background: #FB923C; cursor: pointer"></button>
+</span>
+</div>
+<button type="button" style="width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: transparent; border: none; border-top: 1px solid #1B2539; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer"><span>Length</span><span style="display: flex; align-items: center; gap: 6px; color: #8C99B0">90 days<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"></path></svg></span></button>
+<button type="button" style="width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: transparent; border: none; border-top: 1px solid #1B2539; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer"><span>Started</span><span style="display: flex; align-items: center; gap: 6px; color: #8C99B0">Sep 17<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"></path></svg></span></button>
+<button type="button" style="width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: transparent; border: none; border-top: 1px solid #1B2539; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer"><span>A day counts when</span><span style="display: flex; align-items: center; gap: 6px; color: #8C99B0">80% is done<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"></path></svg></span></button>
+<button type="button" style="width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: transparent; border: none; border-top: 1px solid #1B2539; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer"><span>Habits</span><span style="display: flex; align-items: center; gap: 6px; color: #8C99B0">9 habits<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"></path></svg></span></button>
+</div>
+</section>
+
+<section aria-label="Feel" style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; color: #8C99B0">Feel</h2>
+<div style="border-radius: 18px; border: 1px solid #1B2539; background: #0D1424; overflow: hidden">
+<div style="min-height: 52px; box-sizing: border-box; padding: 0 12px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px">
+<span>Haptics</span>
+<button type="button" role="switch" aria-checked="true" aria-label="Haptics" style="position: relative; width: 52px; height: 32px; padding: 0; border-radius: 999px; border: none; background: #22D3EE; cursor: pointer"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 999px; background: #04121A"></span></button>
+</div>
+<div style="min-height: 52px; box-sizing: border-box; padding: 0 12px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #1B2539; font-size: 15px">
+<span>Sounds</span>
+<button type="button" role="switch" aria-checked="false" aria-label="Sounds" style="position: relative; width: 52px; height: 32px; padding: 0; border-radius: 999px; border: none; background: #1B2539; cursor: pointer"><span style="position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 999px; background: #8C99B0"></span></button>
+</div>
+<div style="min-height: 52px; box-sizing: border-box; padding: 0 12px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #1B2539; font-size: 15px">
+<span>Wind and animations</span>
+<button type="button" role="switch" aria-checked="true" aria-label="Wind and animations" style="position: relative; width: 52px; height: 32px; padding: 0; border-radius: 999px; border: none; background: #22D3EE; cursor: pointer"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 999px; background: #04121A"></span></button>
+</div>
+</div>
+</section>
+
+<section aria-label="Sync" style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; color: #8C99B0">Sync</h2>
+<div style="border-radius: 18px; border: 1px solid #1B2539; background: #0D1424; overflow: hidden">
+<button type="button" style="width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: transparent; border: none; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer"><span>Account</span><span style="display: flex; align-items: center; gap: 6px; color: #8C99B0">Signed in with Apple<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"></path></svg></span></button>
+<div style="min-height: 52px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #1B2539; font-size: 15px">
+<span>Last synced</span>
+<span style="display: flex; align-items: center; gap: 6px; color: #8C99B0"><span style="width: 8px; height: 8px; border-radius: 999px; background: #22D3EE"></span>Just now, all devices</span>
+</div>
+</div>
+</section>
+
+<section aria-label="Your data" style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; color: #8C99B0">Your data</h2>
+<div style="border-radius: 18px; border: 1px solid #1B2539; background: #0D1424; overflow: hidden">
+<button type="button" style="width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 12px; background: transparent; border: none; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8C99B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4V15M7 10L12 15L17 10M5 20H19"></path></svg><span>Export a backup</span></button>
+<button type="button" style="width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 12px; background: transparent; border: none; border-top: 1px solid #1B2539; color: #E8EEF8; font: 400 15px Inter, system-ui, sans-serif; text-align: left; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8C99B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9L12 4L17 9M5 20H19"></path></svg><span>Import a backup</span></button>
+</div>
+</section>
+
+<button type="button" style="min-height: 52px; border-radius: 18px; border: 1px solid #1B2539; background: #0D1424; color: #F87171; font: 500 15px Inter, system-ui, sans-serif; cursor: pointer">Reset this arc</button>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 8px 22px; background: #0A101D; border-top: 1px solid #1B2539; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11M12 11C12 7 9 5 5 5C5 9 8 11 12 11ZM12 14C12 11 14.5 9 18 9C18 12 15.5 14 12 14ZM6 21H18"></path></svg>
+<span>Garden</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18C6 10 18 10 21 18M7 18C9 14 15 14 17 18"></path></svg>
+<span>Arcs</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"></rect><path d="M3.5 10H20.5M8 3V7M16 3V7"></path></svg>
+<span>Calendar</span>
+</button>
+<button type="button" aria-current="page" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #22D3EE; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7H13M19 7H20M4 17H6M12 17H20"></path><circle cx="16" cy="7" r="2.5"></circle><circle cx="9" cy="17" r="2.5"></circle></svg>
+<span>Settings</span>
+</button>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1160}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

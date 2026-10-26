@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, Read plant details</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1080px; box-sizing: border-box; padding: 10px 16px 24px; background: #070B14; color: #E8EEF8; font-family: Inter, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; gap: 16px">
+<div aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 999px; background: #2A3550"></div>
+
+<header style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h1 style="margin: 0; font-size: 24px; font-weight: 600">Read</h1>
+<span style="font-size: 14px; color: #8C99B0">10 pages a day</span>
+</div>
+<a href="ProgressArc.dc.html" aria-label="Close" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #0D1424; border: 1px solid #1B2539; color: #E8EEF8">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6L18 18M18 6L6 18"></path></svg>
+</a>
+</header>
+
+<div role="img" aria-label="The Read tree, a tall pine" style="position: relative; height: 240px; border-radius: 24px; overflow: hidden; border: 1px solid #1B2539; background: linear-gradient(180deg, #5A8DC2 0%, #C3DBF0 100%)">
+<svg aria-hidden="true" width="358" height="240" viewBox="0 0 358 240" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%">
+<path d="M0 200C80 186 170 194 250 186C300 181 336 188 358 184L358 240L0 240Z" fill="#E6EEF7"></path>
+<circle cx="60" cy="214" r="3.5" fill="#F87171"></circle><circle cx="88" cy="224" r="3" fill="#93C5FD"></circle><circle cx="268" cy="218" r="3.5" fill="#F87171"></circle><circle cx="300" cy="228" r="3" fill="#FFFFFF" stroke="rgba(15,23,42,0.15)"></circle><circle cx="232" cy="230" r="3" fill="#93C5FD"></circle>
+</svg>
+<div style="position: absolute; left: 79px; bottom: 30px; width: 200px; height: 200px; transform-origin: 50% 100%">
+<div ref="{{refTree}}" style="width: 200px; height: 200px; transform-origin: 50% 100%">
+<svg width="200" height="200" viewBox="0 0 200 200" aria-hidden="true">
+<path d="M100 200L100 160" stroke="#5B4636" stroke-width="9" stroke-linecap="round"></path>
+<path d="M38 168L100 88L162 168Z" fill="#1E5F6B"></path>
+<path d="M50 128L100 52L150 128Z" fill="#2B7A86"></path>
+<path d="M64 90L100 18L136 90Z" fill="#1E5F6B"></path>
+<path d="M88 36L100 18L112 36Z" fill="#F8FAFC"></path>
+<path d="M58 128Q74 122 86 127M114 127Q128 121 142 127M72 90Q84 85 94 89M108 89Q118 85 128 90M46 168Q64 161 80 167M120 167Q138 160 156 167" fill="none" stroke="#F8FAFC" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"></path>
+</svg>
+</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 16px; border: 1px solid #1B2539; background: #0D1424"><span style="font-size: 12px; color: #8C99B0">Done this arc</span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1">37 <span style="font-size: 18px; color: #8C99B0">of 39</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 16px; border: 1px solid #1B2539; background: #0D1424"><span style="font-size: 12px; color: #8C99B0">Streak</span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1">11 <span style="font-size: 18px; color: #8C99B0">days</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 16px; border: 1px solid #1B2539; background: #0D1424"><span style="font-size: 12px; color: #8C99B0">Best streak</span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1">18 <span style="font-size: 18px; color: #8C99B0">days</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 16px; border: 1px solid #1B2539; background: #0D1424"><span style="font-size: 12px; color: #8C99B0">Planted</span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1">Sep 17</span></div>
+</div>
+
+<section aria-label="Every day this arc" style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 20px; border: 1px solid #1B2539; background: #0D1424">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Every day this arc</h2>
+<span style="font-size: 13px; color: #8C99B0">2 missed</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 5px">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="39">
+<span style="height: 18px; box-sizing: border-box; border-radius: 5px; background: {{d.bg}}; border: {{d.border}}"></span>
+</sc-for>
+</div>
+</section>
+
+<section aria-label="Across your arcs" style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600; color: #8C99B0">Across your arcs</h2>
+<sc-for list="{{arcs}}" as="a" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 10px; font-size: 14px">
+<span style="width: 10px; height: 10px; flex: none; border-radius: 999px; background: {{a.color}}"></span>
+<span style="width: 96px; flex: none">{{a.name}}</span>
+<span style="flex: 1; height: 6px; border-radius: 999px; background: #1B2539; overflow: hidden"><span style="display: block; width: {{a.pct}}%; height: 100%; border-radius: 999px; background: {{a.color}}"></span></span>
+<span style="width: 40px; flex: none; text-align: right; color: #8C99B0">{{a.pct}}%</span>
+</div>
+</sc-for>
+</section>
+
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto">
+<button type="button" style="height: 50px; border-radius: 14px; border: 1px solid #1B2539; background: #0D1424; color: #E8EEF8; font: 500 15px Inter, system-ui, sans-serif; cursor: pointer">Edit habit</button>
+<button type="button" style="height: 50px; border-radius: 14px; border: 1px solid #1B2539; background: #0D1424; color: #F87171; font: 500 15px Inter, system-ui, sans-serif; cursor: pointer">Remove from this arc</button>
+<span style="font-size: 12px; color: #8C99B0; text-align: center">Its tree stops growing. Past days stay as they were.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1080}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    const reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = (now - start) / 1000;
+      const gust = Math.pow(Math.max(0, Math.sin(t * 0.42) * Math.sin(t * 0.17 + 1)), 1.5) * 2.2;
+      const deg = Math.sin(t * 1.4) * (1 + 1.6 * gust) + Math.sin(t * 9) * 0.35 * gust;
+      if (this.treeEl) this.treeEl.style.transform = 'rotate(' + deg.toFixed(2) + 'deg)';
+      this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+
+  componentWillUnmount() {
+    if (this.raf) cancelAnimationFrame(this.raf);
+  }
+
+  renderVals() {
+    if (!this.setTree) this.setTree = (el) => { this.treeEl = el; };
+    const missed = [13, 25];
+    const days = [];
+    for (let i = 0; i < 39; i++) {
+      const miss = missed.indexOf(i) !== -1;
+      days.push({
+        bg: miss ? 'transparent' : (i === 38 ? 'rgba(34, 211, 238, 0.55)' : '#22D3EE'),
+        border: miss ? '1px solid #2A3550' : 'none'
+      });
+    }
+    return {
+      refTree: this.setTree,
+      days: days,
+      arcs: [
+        { name: 'Winter Arc', pct: 95, color: '#22D3EE' },
+        { name: 'Study Arc', pct: 91, color: '#F472B6' },
+        { name: 'Summer Arc', pct: 88, color: '#F59E0B' },
+        { name: 'Fall Reset', pct: 90, color: '#FB923C' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

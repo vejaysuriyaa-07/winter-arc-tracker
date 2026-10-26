@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, garden for today</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1300px; box-sizing: border-box; padding: 20px 16px 104px; background: {{c.bg}}; color: {{c.text}}; font-family: Inter, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; gap: 16px">
+
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.14em; line-height: 1">GROVE</div>
+<div style="font-size: 13px; color: {{c.muted}}">Monday, Oct 26</div>
+</div>
+<button type="button" aria-label="Switch arc" style="height: 44px; display: flex; align-items: center; gap: 6px; padding: 0 14px; border-radius: 999px; border: 1px solid {{c.border}}; background: {{c.card}}; color: {{c.text}}; font: 600 14px Inter, system-ui, sans-serif; cursor: pointer">
+<span>{{arcName}}</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9L12 15L18 9"></path></svg>
+</button>
+</header>
+
+<section aria-label="{{gardenLabel}}" style="position: relative; flex: none; height: 300px; border-radius: 24px; overflow: hidden; border: 1px solid {{c.border}}; background: linear-gradient(180deg, {{sky0}} 0%, {{sky1}} 100%)">
+<sc-if value="{{showSun}}" hint-placeholder-val="{{ true }}">
+<div aria-hidden="true" style="position: absolute; top: 28px; right: 44px; width: 44px; height: 44px; border-radius: 999px; background: #FDE68A; box-shadow: 0 0 48px 16px rgba(253, 230, 138, 0.45)"></div>
+</sc-if>
+<sc-if value="{{showMoon}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="position: absolute; top: 24px; right: 48px; width: 34px; height: 34px; border-radius: 999px; background: #F1F5F9; box-shadow: 0 0 36px 10px rgba(241, 245, 249, 0.3)"></div>
+</sc-if>
+<sc-for list="{{stars}}" as="st" hint-placeholder-count="0">
+<span ref="{{st.ref}}" aria-hidden="true" style="position: absolute; left: {{st.x}}px; top: {{st.y}}px; width: {{st.s}}px; height: {{st.s}}px; border-radius: 999px; background: #F8FAFC; opacity: {{st.o}}"></span>
+</sc-for>
+<sc-for list="{{auroraBands}}" as="au" hint-placeholder-count="0">
+<div ref="{{au.ref}}" aria-hidden="true" style="position: absolute; left: {{au.left}}px; top: {{au.top}}px; width: {{au.w}}px; height: {{au.h}}px; background: {{au.bg}}; filter: blur(14px); transform: skewX(-18deg); opacity: 0.7"></div>
+</sc-for>
+<sc-if value="{{showRainbow}}" hint-placeholder-val="{{ false }}">
+<svg aria-hidden="true" width="358" height="300" viewBox="0 0 358 300" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0.6">
+<g fill="none" stroke-width="7">
+<path d="M20 230A160 160 0 0 1 340 230" stroke="#F87171"></path>
+<path d="M27 230A153 153 0 0 1 333 230" stroke="#FB923C"></path>
+<path d="M34 230A146 146 0 0 1 326 230" stroke="#FACC15"></path>
+<path d="M41 230A139 139 0 0 1 319 230" stroke="#4ADE80"></path>
+<path d="M48 230A132 132 0 0 1 312 230" stroke="#38BDF8"></path>
+<path d="M55 230A125 125 0 0 1 305 230" stroke="#818CF8"></path>
+<path d="M62 230A118 118 0 0 1 298 230" stroke="#C084FC"></path>
+</g>
+</svg>
+</sc-if>
+<sc-for list="{{clouds}}" as="cl" hint-placeholder-count="2">
+<div ref="{{cl.ref}}" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 90px; height: 34px; opacity: {{cl.op}}; transform: translate({{cl.x}}px, {{cl.y}}px)">
+<svg width="90" height="34" viewBox="0 0 90 34"><path d="M10 30Q0 30 2 22Q4 14 14 15Q18 4 32 6Q42 -2 54 6Q66 4 70 14Q84 13 86 22Q88 30 78 30Z" fill="{{cloudColor}}"></path></svg>
+</div>
+</sc-for>
+
+<svg aria-hidden="true" width="358" height="300" viewBox="0 0 358 300" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%">
+<path d="M0 186C80 160 180 176 260 164C300 158 340 168 358 162L358 300L0 300Z" fill="{{g.ground2}}"></path>
+</svg>
+
+<sc-for list="{{backPlants}}" as="p" hint-placeholder-count="5">
+<div style="position: absolute; left: {{p.left}}px; bottom: {{p.bottom}}px; width: 120px; height: 160px; transform: scale({{p.scale}}); transform-origin: 50% 100%; pointer-events: none">
+<div ref="{{p.ref}}" style="width: 120px; height: 160px; transform-origin: 50% 100%; transform: rotate({{p.lean}}deg)">
+<svg width="120" height="160" viewBox="0 0 120 160" aria-hidden="true" style="overflow: visible">
+<ellipse cx="60" cy="157" rx="{{p.moundRx}}" ry="4" fill="{{g.mound}}"></ellipse>
+<path d="{{p.trunk}}" fill="none" stroke="{{p.trunkColor}}" stroke-width="{{p.trunkW}}" stroke-linecap="round"></path>
+<path d="{{p.sprout}}" fill="{{g.stem}}"></path>
+<g opacity="{{p.canopyOp}}">
+<circle cx="{{p.c2x}}" cy="{{p.c2y}}" r="{{p.r2}}" fill="{{p.leafB}}"></circle>
+<circle cx="{{p.c3x}}" cy="{{p.c3y}}" r="{{p.r3}}" fill="{{p.leafA}}"></circle>
+<circle cx="60" cy="{{p.c1y}}" r="{{p.r1}}" fill="{{p.leafA}}"></circle>
+<circle cx="{{p.c4x}}" cy="{{p.c4y}}" r="{{p.r4}}" fill="{{p.leafB}}"></circle>
+<path d="{{p.t1}}" fill="{{p.leafA}}"></path>
+<path d="{{p.t2}}" fill="{{p.leafB}}"></path>
+<path d="{{p.t3}}" fill="{{p.leafA}}"></path>
+<path d="{{p.cap}}" fill="#F8FAFC"></path>
+</g>
+</svg>
+</div>
+</div>
+</sc-for>
+
+<svg aria-hidden="true" width="358" height="300" viewBox="0 0 358 300" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%">
+<path d="M0 236C70 220 150 232 220 222C280 214 330 226 358 220L358 300L0 300Z" fill="{{g.ground1}}"></path>
+<g fill="none" stroke="{{g.grass}}" stroke-width="1.6" stroke-linecap="round">
+<path d="M14 262L16 252M18 262L18 250M22 262L20 253"></path>
+<path d="M96 270L98 260M100 270L100 257M104 270L102 261"></path>
+<path d="M188 258L190 248M192 258L192 246M196 258L194 249"></path>
+<path d="M262 276L264 266M266 276L266 263M270 276L268 267"></path>
+<path d="M336 262L338 252M340 262L340 250M344 262L342 253"></path>
+<path d="M58 288L60 279M62 288L62 277M66 288L64 280"></path>
+<path d="M300 292L302 283M304 292L304 281M308 292L306 284"></path>
+</g>
+</svg>
+
+<sc-for list="{{flowers}}" as="f" hint-placeholder-count="20">
+<span aria-hidden="true" style="position: absolute; left: {{f.x}}px; bottom: {{f.y}}px; width: {{f.s}}px; height: {{f.s}}px; border-radius: 999px; background: {{f.color}}; box-shadow: 0 0 0 1.5px {{f.ring}}"></span>
+</sc-for>
+
+<sc-for list="{{frontPlants}}" as="p" hint-placeholder-count="4">
+<div style="position: absolute; left: {{p.left}}px; bottom: {{p.bottom}}px; width: 120px; height: 160px; transform: scale({{p.scale}}); transform-origin: 50% 100%; pointer-events: none">
+<div ref="{{p.ref}}" style="width: 120px; height: 160px; transform-origin: 50% 100%; transform: rotate({{p.lean}}deg)">
+<svg width="120" height="160" viewBox="0 0 120 160" aria-hidden="true" style="overflow: visible">
+<ellipse cx="60" cy="157" rx="{{p.moundRx}}" ry="4" fill="{{g.mound}}"></ellipse>
+<path d="{{p.trunk}}" fill="none" stroke="{{p.trunkColor}}" stroke-width="{{p.trunkW}}" stroke-linecap="round"></path>
+<path d="{{p.sprout}}" fill="{{g.stem}}"></path>
+<g opacity="{{p.canopyOp}}">
+<circle cx="{{p.c2x}}" cy="{{p.c2y}}" r="{{p.r2}}" fill="{{p.leafB}}"></circle>
+<circle cx="{{p.c3x}}" cy="{{p.c3y}}" r="{{p.r3}}" fill="{{p.leafA}}"></circle>
+<circle cx="60" cy="{{p.c1y}}" r="{{p.r1}}" fill="{{p.leafA}}"></circle>
+<circle cx="{{p.c4x}}" cy="{{p.c4y}}" r="{{p.r4}}" fill="{{p.leafB}}"></circle>
+<path d="{{p.t1}}" fill="{{p.leafA}}"></path>
+<path d="{{p.t2}}" fill="{{p.leafB}}"></path>
+<path d="{{p.t3}}" fill="{{p.leafA}}"></path>
+<path d="{{p.cap}}" fill="#F8FAFC"></path>
+</g>
+</svg>
+</div>
+</div>
+</sc-for>
+
+<div aria-hidden="true" style="position: absolute; left: 160px; bottom: 58px; width: 40px; height: 52px; transform-origin: 50% 100%; transform: scale({{bloomScale}}); transition: transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1)">
+<svg width="40" height="52" viewBox="0 0 40 52">
+<path d="M20 52C20 40 19 32 20 22" fill="none" stroke="{{g.stem}}" stroke-width="2.4" stroke-linecap="round"></path>
+<path d="M20 40Q12 37 10 30Q17 31 20 37Z" fill="{{g.stem}}"></path>
+<circle cx="20" cy="6" r="6" fill="{{g.bloomA}}"></circle>
+<circle cx="28" cy="12" r="6" fill="{{g.bloomA}}"></circle>
+<circle cx="25" cy="21" r="6" fill="{{g.bloomA}}"></circle>
+<circle cx="15" cy="21" r="6" fill="{{g.bloomA}}"></circle>
+<circle cx="12" cy="12" r="6" fill="{{g.bloomA}}"></circle>
+<circle cx="20" cy="14" r="4" fill="{{g.bloomB}}"></circle>
+</svg>
+</div>
+
+<sc-if value="{{nightOverlay}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 120px; bottom: 0; background: linear-gradient(180deg, rgba(8, 12, 32, 0) 0%, {{overlayColor}} 35%); pointer-events: none"></div>
+</sc-if>
+<sc-for list="{{flies}}" as="ff" hint-placeholder-count="0">
+<span ref="{{ff.ref}}" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 5px; height: 5px; border-radius: 999px; background: #FDE68A; box-shadow: 0 0 10px 4px rgba(253, 230, 138, 0.65); transform: translate({{ff.x}}px, {{ff.y}}px)"></span>
+</sc-for>
+<sc-for list="{{birds}}" as="b" hint-placeholder-count="2">
+<div ref="{{b.ref}}" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 18px; height: 10px; transform: translate({{b.x}}px, {{b.y}}px)">
+<svg width="18" height="10" viewBox="0 0 18 10"><path d="M1 6Q5 1 9 6Q13 1 17 6" fill="none" stroke="{{birdColor}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+</sc-for>
+
+<sc-for list="{{drops}}" as="d" hint-placeholder-count="10">
+<span ref="{{d.ref}}" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: {{d.w}}px; height: {{d.h}}px; border-radius: {{d.rad}}; background: {{d.color}}; transform: translate({{d.x}}px, {{d.y}}px)"></span>
+</sc-for>
+</section>
+
+<section aria-label="Mood" style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600; color: {{c.muted}}">How are you feeling?</h2>
+<span style="font-size: 13px; color: {{c.muted}}">{{moodLabel}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{moods}}" as="m" hint-placeholder-count="5">
+<button type="button" aria-label="{{m.label}}" aria-pressed="{{m.sel}}" onClick="{{m.pick}}" style="height: 48px; border-radius: 14px; border: 1px solid {{m.border}}; background: {{m.bg}}; color: {{m.color}}; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 200ms, border-color 200ms">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.icon}}"></path></svg>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section aria-label="Habits" style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600; color: {{c.muted}}">Today, {{doneCount}} of {{total}}</h2>
+<button type="button" onClick="{{toggleEdit}}" style="height: 44px; padding: 0 4px 0 16px; background: transparent; border: none; color: {{c.accent}}; font: 600 15px Inter, system-ui, sans-serif; cursor: pointer">{{editLabel}}</button>
+</div>
+<sc-for list="{{habits}}" as="h" hint-placeholder-count="9">
+<div style="display: flex; align-items: center; gap: 2px; min-height: 58px; box-sizing: border-box; padding-right: 4px; border-radius: 16px; border: 1px solid {{c.border}}; background: {{c.card}}">
+<button type="button" aria-pressed="{{h.done}}" onClick="{{h.toggle}}" style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; min-height: 56px; box-sizing: border-box; padding: 6px 10px 6px 6px; background: transparent; border: none; color: {{c.text}}; font: 400 16px Inter, system-ui, sans-serif; text-align: left; cursor: pointer">
+<span style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center">
+<span style="width: 26px; height: 26px; box-sizing: border-box; border-radius: 999px; border: 2px solid {{h.ring}}; background: {{h.fill}}; display: flex; align-items: center; justify-content: center; transition: background 200ms, border-color 200ms">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{c.onAccent}}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="opacity: {{h.checkOp}}" aria-hidden="true"><path d="M5 12.5L9.5 17L19 7"></path></svg>
+</span>
+</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-weight: 500">{{h.label}}</span>
+<sc-if value="{{h.detail}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: {{c.muted}}">{{h.detail}}</span></sc-if>
+</span>
+<span style="display: flex; align-items: center; gap: 3px; color: {{h.streakColor}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 17px">
+<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3C13 7 18 9 18 14A6 6 0 0 1 6 14C6 11 8 9.5 9 8.5C9.3 10.5 10.3 11.5 11.5 12C11.5 9 10.5 6 12 3Z"></path></svg>
+<span>{{h.streak}}</span>
+</span>
+</button>
+<sc-if value="{{h.editing}}" hint-placeholder-val="{{ false }}">
+<button type="button" aria-label="{{h.removeLabel}}" onClick="{{h.remove}}" style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 12px; border: none; background: transparent; color: {{c.muted}}; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6L18 18M18 6L6 18"></path></svg>
+</button>
+</sc-if>
+</div>
+</sc-for>
+</section>
+
+<sc-if value="{{showToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 98px; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; border-radius: 16px; background: {{c.toast}}; border: 1px solid {{c.border}}; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45)">
+<span style="flex: 1; font-size: 14px; line-height: 1.35">{{toastText}}</span>
+<button type="button" onClick="{{undo}}" style="height: 44px; padding: 0 14px; border-radius: 12px; border: none; background: transparent; color: {{c.accent}}; font: 600 15px Inter, system-ui, sans-serif; cursor: pointer">Undo</button>
+</div>
+</sc-if>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 8px 22px; background: {{c.bar}}; border-top: 1px solid {{c.border}}; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<button type="button" aria-current="page" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: {{c.accent}}; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11M12 11C12 7 9 5 5 5C5 9 8 11 12 11ZM12 14C12 11 14.5 9 18 9C18 12 15.5 14 12 14ZM6 21H18"></path></svg>
+<span>Garden</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: {{c.muted}}; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18C6 10 18 10 21 18M7 18C9 14 15 14 17 18"></path></svg>
+<span>Arcs</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: {{c.muted}}; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"></rect><path d="M3.5 10H20.5M8 3V7M16 3V7"></path></svg>
+<span>Calendar</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: {{c.muted}}; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7H13M19 7H20M4 17H6M12 17H20"></path><circle cx="16" cy="7" r="2.5"></circle><circle cx="9" cy="17" r="2.5"></circle></svg>
+<span>Settings</span>
+</button>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"season":{"editor":"enum","options":["winter","spring","summer","autumn"],"default":"winter"},"mood":{"editor":"enum","options":["great","good","okay","low","rough"],"default":"good"},"day":{"editor":"range","min":1,"max":90,"step":1,"default":40},"startDone":{"editor":"int","min":0,"max":9,"default":5},"arcName":{"editor":null,"default":"Winter Arc"},"still":{"editor":"boolean","default":false},"event":{"editor":"enum","options":["none","aurora","rainbow","night"],"default":"none"},"$preview":{"width":390,"height":1300}}'>
+class Component extends DCLogic {
+  seasons() {
+    return {
+      winter: {
+        ui: { bg: '#070B14', card: '#0D1424', border: '#1B2539', text: '#E8EEF8', muted: '#8C99B0', accent: '#22D3EE', onAccent: '#04121A', bar: '#0A101D', toast: '#141D31' },
+        ground1: '#E6EEF7', ground2: '#C3D2E3', grass: '#9FB3C8', mound: '#B4C3D4', trunk: '#5B4636', leafA: '#1E5F6B', leafB: '#2B7A86', pine: true,
+        flowers: ['#F87171', '#93C5FD', '#FFFFFF'], flowerRing: 'rgba(15, 23, 42, 0.14)', stem: '#2B7A86', bloomA: '#F87171', bloomB: '#FDE68A', precip: 'snow',
+        sky: { great: ['#6FAEE3', '#D9EEFB'], good: ['#5A8DC2', '#C3DBF0'], okay: ['#8695A8', '#CBD4DE'], low: ['#4F5E73', '#93A2B4'], rough: ['#1F2838', '#4E5A6E'] }
+      },
+      spring: {
+        ui: { bg: '#0F0B10', card: '#1A1420', border: '#2D2335', text: '#F5EDF5', muted: '#A897AD', accent: '#F472B6', onAccent: '#22071A', bar: '#130E15', toast: '#221A2A' },
+        ground1: '#7FBF6A', ground2: '#5EA352', grass: '#4C8F44', mound: '#6A5640', trunk: '#6B4E3A', leafA: '#5DAA5A', leafB: '#F9A8D4', pine: false,
+        flowers: ['#F9A8D4', '#FDE68A', '#FFFFFF', '#C4B5FD'], flowerRing: 'rgba(0, 0, 0, 0.08)', stem: '#4C8F44', bloomA: '#F472B6', bloomB: '#FDE68A', precip: 'rain',
+        sky: { great: ['#7CC3F0', '#E6F5FF'], good: ['#86BFE6', '#EAF4FB'], okay: ['#9FAAB6', '#DCE2E8'], low: ['#6E7C8C', '#B0BAC4'], rough: ['#2D3542', '#5D6878'] }
+      },
+      summer: {
+        ui: { bg: '#0F0C08', card: '#1B1610', border: '#30271C', text: '#F7EFE4', muted: '#AD9C88', accent: '#F59E0B', onAccent: '#1F1203', bar: '#130F0A', toast: '#241D15' },
+        ground1: '#8BC34A', ground2: '#6DAA3A', grass: '#558B2F', mound: '#7A5C3E', trunk: '#6D4C35', leafA: '#2E7D32', leafB: '#43A047', pine: false,
+        flowers: ['#FACC15', '#FB923C', '#FFFFFF', '#F472B6'], flowerRing: 'rgba(0, 0, 0, 0.08)', stem: '#558B2F', bloomA: '#FACC15', bloomB: '#B45309', precip: 'rain',
+        sky: { great: ['#2F96E8', '#BFE6FF'], good: ['#4FA6E3', '#D3ECFC'], okay: ['#94A4B3', '#D4DCE3'], low: ['#64748B', '#A6B2BF'], rough: ['#28323F', '#566373'] }
+      },
+      autumn: {
+        ui: { bg: '#100B08', card: '#1C140F', border: '#33251B', text: '#F6ECE3', muted: '#AE9A8A', accent: '#FB923C', onAccent: '#200D02', bar: '#140E0A', toast: '#261B14' },
+        ground1: '#C49A5A', ground2: '#A97E45', grass: '#8A6A3A', mound: '#6B4E33', trunk: '#5C4030', leafA: '#E07A2E', leafB: '#C2410C', pine: false,
+        flowers: ['#F59E0B', '#DC2626', '#FDE68A'], flowerRing: 'rgba(0, 0, 0, 0.1)', stem: '#8A6A3A', bloomA: '#F59E0B', bloomB: '#7C2D12', precip: 'rain',
+        sky: { great: ['#E9A35E', '#FCE3C2'], good: ['#C58B5C', '#EBD2B8'], okay: ['#9A8F86', '#D3CCC6'], low: ['#6A6560', '#A8A29C'], rough: ['#2E2A28', '#5C5552'] }
+      }
+    };
+  }
+
+  hexA(hex, a) {
+    const n = parseInt(hex.slice(1), 16);
+    return 'rgba(' + ((n >> 16) & 255) + ', ' + ((n >> 8) & 255) + ', ' + (n & 255) + ', ' + a + ')';
+  }
+
+  rnd(i, k) {
+    const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453;
+    return v - Math.floor(v);
+  }
+
+  st() {
+    const order = ['wake', 'med', 'read', 'eat', 'cold', 'plan', 'gym', 'journal', 'social'];
+    const n = Math.max(0, Math.min(9, parseInt(this.props.startDone, 10) || 0));
+    const s = this.state || {};
+    return {
+      done: s.done || order.slice(0, isNaN(parseInt(this.props.startDone, 10)) ? 5 : n),
+      removed: s.removed || [],
+      mood: s.mood || this.props.mood || 'good',
+      editing: !!s.editing,
+      toastId: s.toastId || null
+    };
+  }
+
+  componentDidMount() {
+    const reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || (this.props.still && String(this.props.still) !== 'false')) return;
+    const start = performance.now();
+    const tick = (now) => {
+      const a = this.anim;
+      if (a) {
+        const t = (now - start) / 1000;
+        const gust = Math.pow(Math.max(0, Math.sin(t * 0.42) * Math.sin(t * 0.17 + 1)), 1.5) * 2.4;
+        const w = a.windMul;
+        a.plants.forEach((p) => {
+          const el = this.els.plants[p.id];
+          if (!el) return;
+          const sway = Math.sin(t * 1.5 + p.phase) * (1.4 + 2.4 * gust) * w * (p.wilt ? 0.35 : 1);
+          const shake = Math.sin(t * 9 + p.phase * 3) * 0.6 * gust * w * (p.wilt ? 0 : 1);
+          el.style.transform = 'rotate(' + (p.lean + sway + shake).toFixed(2) + 'deg)';
+        });
+        for (let i = 0; i < a.birds; i++) {
+          const el = this.els.birds[i];
+          if (!el) continue;
+          const x = ((t * (16 + i * 5) + i * 95) % 420) - 30;
+          const y = a.birdY[i] + Math.sin(t * 1.7 + i) * 5;
+          const flap = 0.5 + 0.5 * Math.abs(Math.sin(t * 7 + i * 1.3));
+          el.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px) scaleY(' + flap.toFixed(2) + ')';
+        }
+        for (let i = 0; i < a.clouds; i++) {
+          const el = this.els.clouds[i];
+          if (!el) continue;
+          const x = ((t * (3 + i * 0.8) + i * 110) % 480) - 100;
+          el.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + a.cloudY[i] + 'px)';
+        }
+        a.drops.forEach((d, i) => {
+          const el = this.els.drops[i];
+          if (!el) return;
+          if (a.precip === 'snow') {
+            const y = ((t * d.speed + d.off) % 310) - 10;
+            const x = d.x + Math.sin(t * 0.8 + i) * 8 + gust * 6 * w;
+            el.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
+          } else {
+            const y = ((t * d.speed + d.off) % 320) - 20;
+            const x = d.x - y * 0.2;
+            el.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px) rotate(12deg)';
+          }
+        });
+        (a.stars || []).forEach((st, i) => {
+          const el = this.els.stars[i];
+          if (el) el.style.opacity = (st.o * (0.55 + 0.45 * Math.sin(t * st.sp + i))).toFixed(2);
+        });
+        (a.flies || []).forEach((f, i) => {
+          const el = this.els.flies[i];
+          if (!el) return;
+          const x = f.x + Math.sin(t * f.sx + i) * 26;
+          const y = f.y + Math.sin(t * f.sy + i * 1.7) * 14;
+          el.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
+          el.style.opacity = (0.3 + 0.7 * Math.abs(Math.sin(t * 1.8 + i))).toFixed(2);
+        });
+        if (a.aurora) {
+          for (let i = 0; i < 3; i++) {
+            const el = this.els.aurora[i];
+            if (!el) continue;
+            const x = Math.sin(t * (0.25 + i * 0.07) + i) * 30;
+            const sy = 1 + Math.sin(t * (0.6 + i * 0.15) + i * 2) * 0.18;
+            el.style.transform = 'translateX(' + x.toFixed(1) + 'px) skewX(-18deg) scaleY(' + sy.toFixed(3) + ')';
+            el.style.opacity = (0.5 + 0.35 * Math.sin(t * 0.5 + i)).toFixed(2);
+          }
+        }
+      }
+      this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+
+  componentWillUnmount() {
+    if (this.raf) cancelAnimationFrame(this.raf);
+  }
+
+  plantShape(g, wilt, pine, theme) {
+    const H = 10 + g * 125;
+    const T = 157 - H;
+    const k = wilt ? 0.65 : 1;
+    const none = 'M0 0';
+    const out = {
+      trunkW: (1.6 + g * 6).toFixed(1),
+      trunkColor: wilt ? '#8B7765' : theme.trunk,
+      moundRx: (10 + g * 8).toFixed(1),
+      canopyOp: wilt ? 0.55 : 1,
+      leafA: wilt ? '#7C6A58' : theme.leafA,
+      leafB: wilt ? '#6B5B4D' : theme.leafB,
+      sprout: none, r1: 0, r2: 0, r3: 0, r4: 0, c1y: T, c2x: 60, c2y: T, c3x: 60, c3y: T, c4x: 60, c4y: T,
+      t1: none, t2: none, t3: none, cap: none
+    };
+    if (g <= 0) {
+      out.trunk = none;
+      return out;
+    }
+    if (g < 0.08) {
+      out.trunk = 'M60 157L60 ' + T.toFixed(1);
+      if (!wilt) {
+        out.sprout = 'M60 ' + T.toFixed(1) + 'Q53 ' + (T - 6).toFixed(1) + ' 50 ' + (T - 1).toFixed(1) + 'Q56 ' + (T + 2).toFixed(1) + ' 60 ' + T.toFixed(1) + 'ZM60 ' + T.toFixed(1) + 'Q67 ' + (T - 6).toFixed(1) + ' 70 ' + (T - 1).toFixed(1) + 'Q64 ' + (T + 2).toFixed(1) + ' 60 ' + T.toFixed(1) + 'Z';
+      }
+      return out;
+    }
+    if (pine) {
+      out.trunk = 'M60 157L60 ' + (157 - H * 0.35).toFixed(1);
+      const w = (10 + g * 52) * k;
+      const tri = (base, apex, width) => 'M' + (60 - width / 2).toFixed(1) + ' ' + (157 - H * base).toFixed(1) + 'L60 ' + (157 - H * apex).toFixed(1) + 'L' + (60 + width / 2).toFixed(1) + ' ' + (157 - H * base).toFixed(1) + 'Z';
+      out.t1 = tri(0.3, 0.68, w);
+      out.t2 = tri(0.52, 0.88, w * 0.78);
+      out.t3 = tri(0.72, 1.06, w * 0.55);
+      if (!wilt) out.cap = tri(0.95, 1.06, w * 0.2);
+      return out;
+    }
+    out.trunk = 'M60 157C59 ' + (157 - H * 0.4).toFixed(1) + ' 61 ' + (157 - H * 0.7).toFixed(1) + ' 60 ' + T.toFixed(1);
+    out.r1 = ((5 + g * 24) * k).toFixed(1);
+    out.c1y = (T + 2).toFixed(1);
+    if (g > 0.25) {
+      out.r2 = ((4 + g * 17) * k).toFixed(1);
+      out.c2x = (60 - 6 - g * 14).toFixed(1);
+      out.c2y = (T + 6 + g * 8).toFixed(1);
+      out.r3 = ((4 + g * 16) * k).toFixed(1);
+      out.c3x = (60 + 6 + g * 14).toFixed(1);
+      out.c3y = (T + 8 + g * 7).toFixed(1);
+    }
+    if (g > 0.55) {
+      out.r4 = ((3 + g * 13) * k).toFixed(1);
+      out.c4x = 62;
+      out.c4y = (T - 4 - g * 8).toFixed(1);
+    }
+    return out;
+  }
+
+  renderVals() {
+    const S = this.seasons();
+    const sKey = S[this.props.season] ? this.props.season : 'winter';
+    const g = S[sKey];
+    const c = g.ui;
+    const st = this.st();
+    const moodKey = g.sky[st.mood] ? st.mood : 'good';
+    const day = Math.max(1, Math.min(90, parseInt(this.props.day, 10) || 40));
+    const arcName = this.props.arcName || 'Winter Arc';
+
+    if (!this.els) this.els = { plants: {}, birds: [], clouds: [], drops: [], stars: [], flies: [], aurora: [] };
+
+    const base = [
+      { id: 'wake', label: 'Wake up at 5 AM', detail: '', rate: 0.9, streak: 5 },
+      { id: 'med', label: 'Meditation', detail: '10 min', rate: 0.75, streak: 3 },
+      { id: 'gym', label: 'Gym', detail: '', rate: 0.35, streak: 2 },
+      { id: 'read', label: 'Read', detail: '10 pages', rate: 0.95, streak: 10 },
+      { id: 'eat', label: 'Eat healthy', detail: '', rate: 0.6, streak: 2 },
+      { id: 'plan', label: 'Plan next day', detail: '', rate: 0.85, streak: 9 },
+      { id: 'journal', label: 'Journaling', detail: '', rate: 0.45, streak: 1 },
+      { id: 'cold', label: 'Cold shower', detail: '', rate: 0.8, streak: 4 },
+      { id: 'social', label: 'No social media', detail: '', rate: 0.55, streak: 0 }
+    ];
+    const isDone = (id) => st.done.indexOf(id) !== -1;
+    const isRemoved = (id) => st.removed.indexOf(id) !== -1;
+    const active = base.filter((h) => !isRemoved(h.id));
+    const total = active.length;
+    const doneCount = active.filter((h) => isDone(h.id)).length;
+    const allDone = total > 0 && doneCount === total;
+
+    const slots = [
+      { x: 34, b: 112, s: 0.72, row: 'back' }, { x: 70, b: 66, s: 1, row: 'front' },
+      { x: 108, b: 118, s: 0.72, row: 'back' }, { x: 146, b: 66, s: 1, row: 'front' },
+      { x: 182, b: 114, s: 0.72, row: 'back' }, { x: 222, b: 70, s: 1, row: 'front' },
+      { x: 256, b: 120, s: 0.72, row: 'back' }, { x: 298, b: 72, s: 1, row: 'front' },
+      { x: 328, b: 114, s: 0.72, row: 'back' }
+    ];
+    const backPlants = [];
+    const frontPlants = [];
+    const animPlants = [];
+    base.forEach((h, i) => {
+      const wilt = isRemoved(h.id);
+      const daysDone = Math.round((day - 1) * h.rate) + (!wilt && isDone(h.id) ? 1 : 0);
+      const gr = Math.min(1, daysDone / 70);
+      const shape = this.plantShape(gr, wilt, g.pine, g);
+      const slot = slots[i];
+      const lean = wilt ? 9 : 0;
+      const item = Object.assign({}, shape, {
+        id: h.id,
+        left: slot.x - 60,
+        bottom: slot.b,
+        scale: slot.s,
+        lean: lean,
+        ref: (el) => { this.els.plants[h.id] = el; }
+      });
+      if (slot.row === 'back') backPlants.push(item); else frontPlants.push(item);
+      animPlants.push({ id: h.id, phase: i * 0.9, wilt: wilt, lean: lean });
+    });
+
+    const keptDays = Math.round((day - 1) * 0.8) + (allDone ? 1 : 0);
+    const flowerCount = Math.min(80, 5 + keptDays);
+    const flowers = [];
+    for (let i = 0; i < flowerCount; i++) {
+      flowers.push({
+        x: Math.round(6 + this.rnd(i, 1) * 340),
+        y: Math.round(6 + this.rnd(i, 2) * 50),
+        s: Math.round(4 + this.rnd(i, 3) * 4),
+        color: g.flowers[i % g.flowers.length],
+        ring: g.flowerRing
+      });
+    }
+
+    const prog = day / 90;
+    const birdCount = prog < 0.15 ? 0 : prog < 0.35 ? 1 : prog < 0.6 ? 2 : prog < 0.9 ? 3 : 5;
+    const birdY = [38, 60, 28, 74, 50];
+    const birds = [];
+    for (let i = 0; i < birdCount; i++) {
+      birds.push({ x: 40 + i * 70, y: birdY[i], ref: (el) => { this.els.birds[i] = el; } });
+    }
+
+    const ev = ['aurora', 'rainbow', 'night'].indexOf(this.props.event) !== -1 ? this.props.event : 'none';
+    const isNight = ev === 'night' || ev === 'aurora';
+    const cloudCount = isNight ? 0 : ev === 'rainbow' ? 2 : { great: 0, good: 2, okay: 4, low: 5, rough: 5 }[moodKey];
+    const cloudColor = { great: '#FFFFFF', good: 'rgba(255, 255, 255, 0.92)', okay: '#E5EAF0', low: '#9AA7B6', rough: '#4B5567' }[moodKey];
+    const cloudY = [18, 46, 30, 64, 10];
+    const clouds = [];
+    for (let i = 0; i < cloudCount; i++) {
+      clouds.push({ x: i * 100 - 40, y: cloudY[i], op: moodKey === 'good' ? 0.9 : 1, ref: (el) => { this.els.clouds[i] = el; } });
+    }
+
+    const snow = g.precip === 'snow';
+    const dropCount = ev === 'rainbow' ? 0 : isNight ? (snow ? 10 : 0) : snow ? { great: 8, good: 12, okay: 16, low: 30, rough: 46 }[moodKey] : { great: 0, good: 0, okay: 0, low: 30, rough: 50 }[moodKey];
+    const drops = [];
+    const animDrops = [];
+    for (let i = 0; i < dropCount; i++) {
+      const x = (i * 47) % 356;
+      const y = (i * 73) % 300;
+      drops.push({
+        x: x, y: y,
+        w: snow ? 3 : 1.2, h: snow ? 3 : 10,
+        rad: snow ? '999px' : '1px',
+        color: snow ? 'rgba(255, 255, 255, 0.95)' : 'rgba(225, 236, 250, 0.75)',
+        ref: (el) => { this.els.drops[i] = el; }
+      });
+      animDrops.push({ x: x, off: y, speed: snow ? 22 + (i % 5) * 6 : 240 + (i % 4) * 40 });
+    }
+
+    const stars = [];
+    const flies = [];
+    if (isNight) {
+      for (let i = 0; i < 34; i++) {
+        stars.push({ x: Math.round(this.rnd(i, 7) * 350), y: Math.round(this.rnd(i, 8) * 130), s: this.rnd(i, 9) > 0.8 ? 3 : 2, o: (0.5 + this.rnd(i, 10) * 0.5).toFixed(2), sp: 0.8 + this.rnd(i, 11) * 2, ref: (el) => { this.els.stars[i] = el; } });
+      }
+    }
+    if (ev === 'night') {
+      for (let i = 0; i < 14; i++) {
+        flies.push({ x: Math.round(20 + this.rnd(i, 12) * 320), y: Math.round(170 + this.rnd(i, 13) * 100), sx: 0.3 + this.rnd(i, 14) * 0.5, sy: 0.4 + this.rnd(i, 15) * 0.6, ref: (el) => { this.els.flies[i] = el; } });
+      }
+    }
+    const auroraBands = ev === 'aurora' ? [
+      { left: -20, top: 6, w: 200, h: 120, bg: 'linear-gradient(180deg, rgba(52, 211, 153, 0) 0%, rgba(52, 211, 153, 0.85) 45%, rgba(34, 211, 238, 0) 100%)', ref: (el) => { this.els.aurora[0] = el; } },
+      { left: 110, top: 0, w: 180, h: 140, bg: 'linear-gradient(180deg, rgba(167, 139, 250, 0) 0%, rgba(167, 139, 250, 0.75) 40%, rgba(52, 211, 153, 0) 100%)', ref: (el) => { this.els.aurora[1] = el; } },
+      { left: 220, top: 10, w: 170, h: 110, bg: 'linear-gradient(180deg, rgba(34, 211, 238, 0) 0%, rgba(34, 211, 238, 0.8) 50%, rgba(167, 139, 250, 0) 100%)', ref: (el) => { this.els.aurora[2] = el; } }
+    ] : [];
+
+    this.anim = {
+      plants: animPlants,
+      birds: birdCount,
+      birdY: birdY,
+      clouds: cloudCount,
+      cloudY: cloudY,
+      drops: animDrops,
+      precip: g.precip,
+      windMul: moodKey === 'rough' ? 2.2 : moodKey === 'low' ? 1.5 : 1,
+      stars: stars.map((s) => ({ o: parseFloat(s.o), sp: s.sp })),
+      flies: flies.map((f) => ({ x: f.x, y: f.y, sx: f.sx, sy: f.sy })),
+      aurora: ev === 'aurora'
+    };
+
+    const moodDefs = [
+      { key: 'great', label: 'Great', icon: 'M12 7.5A4.5 4.5 0 1 0 12 16.5A4.5 4.5 0 1 0 12 7.5ZM12 2V4M12 20V22M4.9 4.9L6.3 6.3M17.7 17.7L19.1 19.1M2 12H4M20 12H22M4.9 19.1L6.3 17.7M17.7 6.3L19.1 4.9' },
+      { key: 'good', label: 'Good', icon: 'M8 3V4.5M3.5 7.5H5M4.8 4.3L5.8 5.3M11.2 4.3L10.2 5.3M5.4 10.6A3 3 0 0 1 10.6 7.8M17 20H8A4 4 0 1 1 9.2 12.2A5 5 0 0 1 18.8 13.6A3.2 3.2 0 0 1 17 20Z' },
+      { key: 'okay', label: 'Okay', icon: 'M17.5 19H8A5 5 0 1 1 9.6 9.3A6 6 0 0 1 20.8 12.5A3.5 3.5 0 0 1 17.5 19Z' },
+      { key: 'low', label: 'Low', icon: 'M17.5 14H8A4.5 4.5 0 1 1 9.5 5.3A5.5 5.5 0 0 1 19.8 8.2A3 3 0 0 1 17.5 14ZM8 17V19M12 18V20M16 17V19' },
+      { key: 'rough', label: 'Rough', icon: 'M17.5 13H8A4.5 4.5 0 1 1 9.5 4.3A5.5 5.5 0 0 1 19.8 7.2A3 3 0 0 1 17.5 13ZM13 14L10.5 18H14L11.5 22' }
+    ];
+    const moods = moodDefs.map((m) => {
+      const sel = m.key === moodKey;
+      return {
+        label: m.label,
+        icon: m.icon,
+        sel: sel,
+        bg: sel ? this.hexA(c.accent, 0.16) : c.card,
+        border: sel ? c.accent : c.border,
+        color: sel ? c.accent : c.muted,
+        pick: () => this.setState({ mood: m.key })
+      };
+    });
+    const moodLabel = {
+      great: 'Great, sunny',
+      good: 'Good, clear skies',
+      okay: 'Okay, cloudy',
+      low: snow ? 'Low, snowing' : 'Low, rainy',
+      rough: snow ? 'Rough, blizzard' : 'Rough, stormy'
+    }[moodKey];
+
+    const habits = active.map((h) => {
+      const d = isDone(h.id);
+      return {
+        id: h.id,
+        label: h.label,
+        detail: h.detail,
+        done: d,
+        editing: st.editing,
+        streak: h.streak + (d ? 1 : 0),
+        fill: d ? c.accent : 'transparent',
+        ring: d ? c.accent : this.hexA(c.muted, 0.7),
+        checkOp: d ? 1 : 0,
+        streakColor: d ? c.accent : c.muted,
+        removeLabel: 'Remove ' + h.label,
+        toggle: () => {
+          const cur = this.st().done;
+          const next = cur.indexOf(h.id) !== -1 ? cur.filter((x) => x !== h.id) : cur.concat([h.id]);
+          this.setState({ done: next });
+        },
+        remove: () => {
+          const s = this.st();
+          this.setState({
+            removed: s.removed.concat([h.id]),
+            done: s.done.filter((x) => x !== h.id),
+            toastId: h.id
+          });
+        }
+      };
+    });
+
+    const toastHabit = base.filter((h) => h.id === st.toastId)[0];
+    const sky = isNight ? ['#060B1E', '#22305A'] : ev === 'rainbow' ? ['#7FA9CC', '#E6F0F7'] : g.sky[moodKey];
+    const dark = moodKey === 'low' || moodKey === 'rough' || isNight;
+
+    return {
+      c: c,
+      g: g,
+      arcName: arcName,
+      sky0: sky[0],
+      sky1: sky[1],
+      showSun: (moodKey === 'great' || moodKey === 'good' || ev === 'rainbow') && !isNight,
+      showMoon: isNight,
+      stars: stars,
+      flies: flies,
+      auroraBands: auroraBands,
+      showRainbow: ev === 'rainbow',
+      nightOverlay: isNight,
+      overlayColor: ev === 'night' ? 'rgba(8, 12, 32, 0.5)' : 'rgba(8, 12, 32, 0.32)',
+      clouds: clouds,
+      cloudColor: cloudColor,
+      backPlants: backPlants,
+      frontPlants: frontPlants,
+      flowers: flowers,
+      bloomScale: allDone ? 1 : 0,
+      birds: birds,
+      birdColor: dark ? '#E2E8F0' : '#1E293B',
+      drops: drops,
+      moods: moods,
+      moodLabel: moodLabel,
+      doneCount: doneCount,
+      total: total,
+      habits: habits,
+      editLabel: st.editing ? 'Done' : 'Edit',
+      toggleEdit: () => this.setState({ editing: !this.st().editing }),
+      showToast: !!toastHabit,
+      toastText: toastHabit ? toastHabit.label + ' removed. Its tree stops growing.' : '',
+      undo: () => {
+        const s = this.st();
+        this.setState({ removed: s.removed.filter((x) => x !== s.toastId), toastId: null });
+      },
+      gardenLabel: arcName + ' garden with ' + total + ' growing plants, ' + flowerCount + ' flowers' + (birdCount ? ' and ' + birdCount + ' birds' : '')
+    };
+  }
+}
+</script>
+</body>
+</html>

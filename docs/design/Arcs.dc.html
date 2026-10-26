@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grove, all arcs</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 900px; box-sizing: border-box; padding: 20px 16px 104px; background: #070B14; color: #E8EEF8; font-family: Inter, system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; gap: 16px">
+<header style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.14em; line-height: 1">GROVE</div>
+<h1 style="margin: 4px 0 0; font-size: 24px; font-weight: 600">Your arcs</h1>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{arcs}}" as="a" hint-placeholder-count="4">
+<button type="button" style="display: flex; flex-direction: column; padding: 0; border-radius: 20px; overflow: hidden; border: 1px solid {{a.border}}; background: #0D1424; color: #E8EEF8; text-align: left; cursor: pointer; font: inherit">
+<div aria-hidden="true" style="position: relative; width: 100%; height: 110px; background: linear-gradient(180deg, {{a.sky0}} 0%, {{a.sky1}} 100%); overflow: hidden">
+<svg width="171" height="110" viewBox="0 0 171 110" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%">
+<path d="M0 84C40 74 90 82 130 76C150 73 162 78 171 76L171 110L0 110Z" fill="{{a.ground}}"></path>
+</svg>
+<sc-for list="{{a.trees}}" as="t" hint-placeholder-count="5">
+<svg width="24" height="34" viewBox="0 0 24 34" style="position: absolute; left: {{t.x}}px; bottom: {{t.b}}px; transform: scale({{t.s}}); transform-origin: 50% 100%">
+<path d="M12 34V20" stroke="{{a.trunk}}" stroke-width="2.2" stroke-linecap="round"></path>
+<path d="{{a.crown}}" fill="{{t.fill}}"></path>
+</svg>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 12px 14px">
+<span style="font-size: 16px; font-weight: 600">{{a.name}}</span>
+<span style="font-size: 13px; color: #8C99B0">{{a.status}}</span>
+<span style="height: 4px; border-radius: 999px; background: #1B2539; overflow: hidden; margin-top: 2px"><span style="display: block; width: {{a.pct}}%; height: 100%; border-radius: 999px; background: {{a.accent}}"></span></span>
+</div>
+</button>
+</sc-for>
+</div>
+
+<button type="button" style="height: 52px; border-radius: 16px; border: none; background: #22D3EE; color: #04121A; font: 600 16px Inter, system-ui, sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5V19M5 12H19"></path></svg>
+<span>Start a new arc</span>
+</button>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 8px 8px 22px; background: #0A101D; border-top: 1px solid #1B2539; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11M12 11C12 7 9 5 5 5C5 9 8 11 12 11ZM12 14C12 11 14.5 9 18 9C18 12 15.5 14 12 14ZM6 21H18"></path></svg>
+<span>Garden</span>
+</button>
+<button type="button" aria-current="page" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #22D3EE; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18C6 10 18 10 21 18M7 18C9 14 15 14 17 18"></path></svg>
+<span>Arcs</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"></rect><path d="M3.5 10H20.5M8 3V7M16 3V7"></path></svg>
+<span>Calendar</span>
+</button>
+<button type="button" style="height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; color: #8C99B0; font: 600 11px Inter, system-ui, sans-serif; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7H13M19 7H20M4 17H6M12 17H20"></path><circle cx="16" cy="7" r="2.5"></circle><circle cx="9" cy="17" r="2.5"></circle></svg>
+<span>Settings</span>
+</button>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pine = 'M12 1L19 13H5ZM12 6L21 22H3Z';
+    const round = 'M12 2A9 9 0 1 1 11.99 2Z';
+    const make = (count, size, colors) => {
+      const xs = [10, 38, 66, 94, 122, 146, 24, 108];
+      const bs = [26, 30, 28, 32, 30, 34, 18, 20];
+      const out = [];
+      for (let i = 0; i < count; i++) {
+        out.push({ x: xs[i], b: bs[i], s: (size * (0.85 + (i % 3) * 0.12)).toFixed(2), fill: colors[i % colors.length] });
+      }
+      return out;
+    };
+    return {
+      arcs: [
+        { name: 'Winter Arc', status: 'Day 40 of 90', pct: 44, sky0: '#5A8DC2', sky1: '#C3DBF0', ground: '#E6EEF7', trunk: '#5B4636', crown: pine, accent: '#22D3EE', border: '#22D3EE', trees: make(6, 0.9, ['#1E5F6B', '#2B7A86']) },
+        { name: 'Study Arc', status: 'Day 12 of 60', pct: 20, sky0: '#86BFE6', sky1: '#EAF4FB', ground: '#7FBF6A', trunk: '#6B4E3A', crown: round, accent: '#F472B6', border: '#1B2539', trees: make(4, 0.55, ['#5DAA5A', '#F9A8D4']) },
+        { name: 'Fall Reset', status: 'Finished, 82% of days kept', pct: 100, sky0: '#E9A35E', sky1: '#FCE3C2', ground: '#C49A5A', trunk: '#5C4030', crown: round, accent: '#FB923C', border: '#1B2539', trees: make(8, 1.15, ['#E07A2E', '#C2410C', '#F59E0B']) },
+        { name: 'Summer Arc', status: 'Starts Jun 1', pct: 0, sky0: '#2F96E8', sky1: '#BFE6FF', ground: '#8BC34A', trunk: '#6D4C35', crown: round, accent: '#F59E0B', border: '#1B2539', trees: make(0, 1, ['#2E7D32']) }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
