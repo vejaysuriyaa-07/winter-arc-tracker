@@ -53,6 +53,11 @@ export function arcProgress(arc: Arc, today: YMD): number {
   return Math.max(0, Math.min(1, arcDayNumber(arc, today) / arc.lengthDays));
 }
 
+/** The arc the Garden tab shows: the active one, unless it was deleted. */
+export function activeArc(state: AppState): Arc | undefined {
+  return state.arcs.find((a) => a.id === state.activeArcId && !a.deleted);
+}
+
 // ---------- scheduling ----------
 
 /** Habits of the arc that exist (tombstones dropped), in list order. Includes archived ones. */

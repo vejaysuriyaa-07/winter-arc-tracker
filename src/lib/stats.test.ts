@@ -198,3 +198,12 @@ describe("more rules", () => {
     expect(st.lifetimeCounts(S, "2026-11-01", () => 9)).toMatchObject({ fullGrownTrees: 1, arcsFinished: 1 }); // A has 9
   });
 });
+
+describe("active arc", () => {
+  it("skips a deleted active arc", () => {
+    const s = fixtureState();
+    expect(st.activeArc(s)?.id).toBe(ARC);
+    s.arcs[0]!.deleted = true;
+    expect(st.activeArc(s)).toBeUndefined();
+  });
+});

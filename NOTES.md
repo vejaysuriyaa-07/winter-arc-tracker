@@ -5,7 +5,8 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 ## Status
 
 - Phase 0 (rebrand and data): done. v3 model, async storage adapter, v1 migration with backup, arc-scoped mutations and stats with a hand-worked fixture, four-tab shell with placeholders, Grove name and icon, spec fonts installed.
-- Next: phase 1, theme system (three looks x four seasons from `Skin.dc.html`) and the garden engine (`lib/garden.ts`, `GardenScene`) with a DEV-only showcase route for screenshots.
+- Phase 1 (theme system and garden engine): done. Tokens and ThemeProvider/ThemeScope, scene loop with pause and freeze, NightSky, pure `lib/garden.ts`, `GardenScene`, showcase route behind `VITE_SHOWCASE` (deploy guard in the workflow). Screenshots reviewed (12 chrome, 20 garden, events, day 1, day 90).
+- Next: phase 2, the Garden tab (SPEC 5.1): header and arc switcher, date heading, garden card, mood row, habit rows with the check animation and animated streak icons, edit mode with undo, quick add, bloom mini flower, progress line, full-bloom moment, bloom chain card, before-start state.
 
 ## Open issues
 
@@ -18,5 +19,7 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Free Apple ID only: no push, no Sign in with Apple, no TestFlight. Phase 8 adds `npm run ios:reinstall` with every command commented.
 
 ## Test counts
+
+Phase 1: 129 unit tests, 20 e2e. typecheck, test, build, e2e green.
 
 Phase 0: 98 unit tests, 5 e2e. Review fixes: state stays loadable after start moves, reset syncs, no defaults saved over unread data, uuid habit ids. typecheck, test, build, e2e green.

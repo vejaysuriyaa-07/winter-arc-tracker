@@ -40,3 +40,12 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - e2e: smoke, migration, rollover, save-failure.
 - Review (fresh-context reviewer): fixed archived habits starting after their archive day, v1 key removal before the v3 save, defaults saved over unreadable or unread data, reset not syncing and keeping frozenAt, non-uuid migrated ids. Added tests for each plus bucketFor, full runs, lifetime counts, perfect-week edges, store write order.
 - Counts: 98 unit tests, 5 e2e.
+
+## 2026-10-26: Grove phase 1, theme system and garden engine
+
+- `src/theme/tokens.ts` (port of Skin.dc.html) with tests against SPEC 4.1; `ThemeProvider` and `ThemeScope` write `--g-*` variables, Tailwind reads them through `@theme inline`.
+- `src/lib/garden.ts` (port of Garden.dc.html: palettes, plantShape, slots, flowers, birds, weather, sky, scene model, node cap) with tests; `gardenFromState` renders any arc at any day.
+- `src/scenes/useSceneLoop.ts`, `GardenScene.tsx`, `NightSky.tsx`; `#/dev/showcase` behind `VITE_SHOWCASE`.
+- Screenshot review found the date heading drawn as a gradient box after a look change (background shorthand reset background-clip); fixed with background-image.
+- Review fixes: scoped utilities (`@theme inline`), body background keeps `fixed`, frozen frame redrawn after each render, Night stars steady when frozen, bloom transition frozen with the toggle, layout effects to avoid a first-paint flash, shared `activeArc`, node cap holds at 120 plants, frame-counted waits instead of timeouts, deploy guard for the showcase.
+- Counts: 129 unit tests, 20 e2e.

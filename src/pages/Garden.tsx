@@ -1,11 +1,11 @@
 import { useAppState } from "../lib/store";
 import { useToday } from "../lib/today";
-import { arcDayNumber } from "../lib/stats";
+import { activeArc, arcDayNumber } from "../lib/stats";
 
 export default function Garden() {
   const state = useAppState();
   const today = useToday();
-  const arc = state.arcs.find((a) => a.id === state.activeArcId && !a.deleted);
+  const arc = activeArc(state);
   return (
     <>
       <header className="flex h-11 items-center justify-between">

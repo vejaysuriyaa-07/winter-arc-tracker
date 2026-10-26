@@ -29,6 +29,8 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
       - run: npm run build
+      - name: The dev showcase is not in the deploy build
+        run: "! grep -rl 'dev/showcase' dist"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

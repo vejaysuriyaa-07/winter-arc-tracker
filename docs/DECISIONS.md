@@ -39,3 +39,11 @@ One line each: what was chosen and why. 1 to 18 are from the v1 build; v2 (Grove
 32. v1 e2e specs for screens v2 removes (Today, Calendar, Insights, Goals, polish) were deleted with those screens. Their surviving behaviours return as v2 specs in later phases.
 33. Resetting an arc restarts it today (clears `frozenAt`), empties its logs (kept and queued so the reset syncs), clears its bloom and arc celebrations and recap flags, tombstones archived habits, and keeps found visitors because SPEC 7.3 says they are never lost.
 34. Moving an arc's start moves the habits that began with it, but an archived habit never starts after its archive day; removing a habit that starts in the future archives it on its own start day. Both keep every state loadable.
+35. Theme tokens are a pure port of `Skin.dc.html` (`src/theme/tokens.ts`); ThemeProvider writes them as `--g-*` CSS variables on `<html>` and Tailwind colours and fonts read those variables. ThemeScope applies a different look and season to a subtree (arc cards, New arc, theme picker).
+36. Cards, sheets and tiles that `Skin.dc.html` does not draw use the look's list style: hairline paper card (journal), soft tile (greenhouse), grouped dark card (night).
+37. The scene showcase route (`#/dev/showcase`) is compiled in only when `VITE_SHOWCASE=1`, which the Playwright build sets; the deploy build does not, so it never ships.
+38. Fewer than nine plants spread across the design's nine slots (one plant takes the centre); more than nine narrow the spacing, then shrink so bases keep half a pixel apart.
+39. When a scene would pass 150 animated nodes, precipitation gives way first, then fireflies, then stars; every habit keeps its plant.
+40. Gradient text uses `background-image`, never the `background` shorthand, because rewriting the shorthand resets `background-clip` when the look changes.
+41. The full-bloom flower in the garden keeps a gold centre (the design file used the season's bloomB) because SPEC 13 says full bloom plants a gold-centred flower.
+42. Under reduced motion or the motion toggle, the frozen frame is redrawn after every render, so a changed scene (mood, a new habit) is also static and correctly placed.

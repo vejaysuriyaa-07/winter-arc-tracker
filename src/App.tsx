@@ -1,11 +1,19 @@
 import { MotionConfig } from "motion/react";
+import { lazy, Suspense } from "react";
 import { HashRouter, NavLink, Route, Routes } from "react-router";
-import { useSaveFailed } from "./lib/store";
+import { useAppState, useSaveFailed } from "./lib/store";
+import { useToday } from "./lib/today";
+import { activeArc, dailyCompletion } from "./lib/stats";
+import { ThemeProvider, effectiveLook, useSystemDark, useTheme } from "./theme/ThemeProvider";
+import NightSky from "./scenes/NightSky";
 import Garden from "./pages/Garden";
 import Progress from "./pages/Progress";
 import Arcs from "./pages/Arcs";
 import Settings from "./pages/Settings";
 import Placeholder from "./pages/Placeholder";
+
+// Screenshot target for the scene engine; compiled in only for e2e builds (VITE_SHOWCASE=1).
+const Showcase = import.meta.env.VITE_SHOWCASE === "1" ? lazy(() => import("./pages/dev/Showcase")) : null;
 
 type Tab = { to: string; label: string; icon: string };
 
@@ -21,8 +29,8 @@ function TabBar() {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper-2/95 backdrop-blur"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-line backdrop-blur"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom), 22px)", background: "var(--g-nav-bg)" }}
     >
       <ul className="mx-auto grid max-w-md grid-cols-4 px-2 pt-2">
         {TABS.map((t) => (
@@ -56,11 +64,57 @@ function SaveBanner() {
   );
 }
 
+function Sky() {
+  const th = useTheme();
+  const state = useAppState();
+  const today = useToday();
+  if (!th.isNight) return null;
+  const arc = activeArc(state);
+  const p = arc ? (dailyCompletion(state, arc.id, today).percent ?? 0) / 100 : 0;
+  return <NightSky accent={th.accent} progress={p} />;
+}
+
+function Themed({ children }: { children: React.ReactNode }) {
+  const state = useAppState();
+  const today = useToday();
+  const dark = useSystemDark();
+  const arc = activeArc(state);
+  const look = effectiveLook(arc?.look ?? "journal", state.settings.autoNight, dark);
+  const progress = arc ? (dailyCompletion(state, arc.id, today).percent ?? 0) / 100 : 0;
+  return (
+    <ThemeProvider look={look} season={arc?.season ?? "winter"} progress={progress}>
+      {children}
+    </ThemeProvider>
+  );
+}
+
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <HashRouter>
-        <div className="mx-auto min-h-dvh max-w-md px-4 pb-28" style={{ paddingTop: "calc(env(safe-area-inset-top) + 16px)" }}>
+        <Routes>
+          {Showcase && (
+            <Route
+              path="/dev/showcase"
+              element={
+                <Suspense fallback={null}>
+                  <Showcase />
+                </Suspense>
+              }
+            />
+          )}
+          <Route path="*" element={<Shell />} />
+        </Routes>
+      </HashRouter>
+    </MotionConfig>
+  );
+}
+
+function Shell() {
+  return (
+    <Themed>
+        <Sky />
+        <div className="relative z-10 mx-auto min-h-dvh max-w-md px-4 pb-28" style={{ paddingTop: "calc(env(safe-area-inset-top) + 16px)" }}>
           <SaveBanner />
           <Routes>
             <Route path="/" element={<Garden />} />
@@ -76,7 +130,6 @@ export default function App() {
           </Routes>
         </div>
         <TabBar />
-      </HashRouter>
-    </MotionConfig>
+    </Themed>
   );
 }
