@@ -1,1 +1,8 @@
 CLAUDE.md
+node_modules/
+dist/
+dev-dist/
+test-results/
+playwright-report/
+e2e/screenshots/
+*.tsbuildinfo
