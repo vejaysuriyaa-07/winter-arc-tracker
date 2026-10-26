@@ -5,11 +5,11 @@ import { todayLocal } from "../src/lib/dates";
 
 export { STORAGE_KEY, defaultState, todayLocal };
 
-/** Put a state into localStorage before the app loads. */
+/** Put a state into localStorage before the app first loads. Reloads keep what the app saved since. */
 export async function seed(page: Page, state: AppState): Promise<void> {
   await page.addInitScript(
     ([key, json]) => {
-      window.localStorage.setItem(key as string, json as string);
+      if (window.localStorage.getItem(key as string) === null) window.localStorage.setItem(key as string, json as string);
     },
     [STORAGE_KEY, JSON.stringify(state)],
   );

@@ -1,10 +1,13 @@
+import { useEffect, useRef } from "react";
 import ArcStatusCard from "../components/ArcStatusCard";
+import CountUp from "../components/CountUp";
 import CheckIn from "../components/CheckIn";
 import HabitRow from "../components/HabitRow";
 import ProgressRing from "../components/ProgressRing";
 import QuickAdd from "../components/QuickAdd";
 import StreakFlame from "../components/StreakFlame";
 import WaveProgress from "../components/WaveProgress";
+import { burst } from "../lib/celebrate";
 import { diffDays, formatShort } from "../lib/dates";
 import {
   arcDayNumber,
@@ -38,6 +41,27 @@ export default function Today() {
   const lp = levelProgress(lifetime);
   const started = hasAnyCheckoff(state);
   const dayNumber = arcDayNumber(settings, today);
+  const full = completion.scheduled > 0 && percent >= 100;
+
+  // Confetti and the % pulse only on a live crossing into 100%, never on load.
+  const prevFull = useRef<boolean | null>(null);
+  const percentRef = useRef<HTMLParagraphElement | null>(null);
+  useEffect(() => {
+    if (prevFull.current === null) {
+      prevFull.current = full;
+      return;
+    }
+    if (full && !prevFull.current) {
+      burst();
+      const el = percentRef.current;
+      if (el) {
+        el.classList.remove("pulse-once");
+        void el.offsetWidth;
+        el.classList.add("pulse-once");
+      }
+    }
+    prevFull.current = full;
+  }, [full]);
 
   return (
     <main className="space-y-4">
@@ -78,9 +102,9 @@ export default function Today() {
 
       {phase === "active" && (
         <>
-          <WaveProgress percent={percent} gold={completion.scheduled > 0 && percent >= 100}>
-            <p className="num text-7xl font-bold leading-none drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]" data-testid="percent">
-              {completion.scheduled === 0 ? "–" : `${Math.round(percent)}%`}
+          <WaveProgress percent={percent} gold={full}>
+            <p ref={percentRef} className="num text-7xl font-bold leading-none drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
+              {completion.scheduled === 0 ? <span data-testid="percent">–</span> : <CountUp value={percent} suffix="%" testId="percent" />}
             </p>
             <p className="mt-1 text-sm text-ink/80 drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
               {completion.scheduled === 0 ? "Add a habit to start" : `${completion.completed} of ${completion.scheduled} habits done`}
@@ -91,8 +115,8 @@ export default function Today() {
             <div className="min-w-0 flex-1">
               <p className="text-[11px] uppercase tracking-wide text-dim">Overall consistency</p>
               {started && consistency.percent !== null ? (
-                <p className="num text-4xl font-bold leading-none text-green" data-testid="consistency">
-                  {Math.round(consistency.percent)}%
+                <p className="num text-4xl font-bold leading-none text-green">
+                  <CountUp value={consistency.percent} suffix="%" testId="consistency" />
                 </p>
               ) : (
                 <p className="mt-1 text-sm text-muted" data-testid="consistency-empty">

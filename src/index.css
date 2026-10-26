@@ -72,3 +72,22 @@
 @media (prefers-reduced-motion: reduce) {
   .wave-drift { animation: none; }
 }
+
+@keyframes wave-splash {
+  0% { transform: scaleY(1); }
+  25% { transform: scaleY(2); }
+  60% { transform: scaleY(0.85); }
+  100% { transform: scaleY(1); }
+}
+.wave-splash { animation: wave-splash 700ms ease-out 1; }
+
+@keyframes pulse-once {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.pulse-once { animation: pulse-once 600ms ease-out 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-splash, .pulse-once { animation: none; }
+}

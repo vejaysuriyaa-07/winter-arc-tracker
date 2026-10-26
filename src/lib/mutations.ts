@@ -186,3 +186,11 @@ export function resetArc(state: AppState, today: YMD): AppState {
     ui: { lastCelebratedLevel: 1 },
   };
 }
+
+// ---------- celebrations ----------
+
+/** Raise lastCelebratedLevel to the current level without a toast (import, first load). */
+export function syncCelebratedLevel(state: AppState, currentLevel: number): AppState {
+  if (currentLevel <= state.ui.lastCelebratedLevel) return state;
+  return { ...state, ui: { lastCelebratedLevel: currentLevel } };
+}

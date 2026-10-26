@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import type { Habit } from "../types";
 
 type Props = { habit: Habit; checked: boolean; disabled?: boolean; onToggle: () => void };
@@ -36,8 +37,12 @@ export default function HabitRow({ habit, checked, disabled = false, onToggle }:
             </span>
           </span>
         </span>
-        <span
+        <motion.span
           aria-hidden="true"
+          initial={false}
+          animate={checked ? { scale: [1, 1.35, 1] } : { scale: 1 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          whileTap={{ scale: 0.85 }}
           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 ${
             checked ? "border-green bg-green text-bg shadow-glow" : "border-dim"
           }`}
@@ -47,7 +52,7 @@ export default function HabitRow({ habit, checked, disabled = false, onToggle }:
               <path d="M5 13l4 4L19 7" />
             </svg>
           )}
-        </span>
+        </motion.span>
       </button>
     </li>
   );

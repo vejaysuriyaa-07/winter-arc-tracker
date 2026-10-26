@@ -1,4 +1,7 @@
+import { MotionConfig } from "motion/react";
 import { HashRouter, NavLink, Route, Routes } from "react-router";
+import Toast from "./components/Toast";
+import { useLevelUp } from "./lib/useLevelUp";
 import Today from "./pages/Today";
 import Calendar from "./pages/Calendar";
 import Insights from "./pages/Insights";
@@ -46,10 +49,17 @@ function TabBar() {
   );
 }
 
+function LevelToast() {
+  const { toast, dismiss } = useLevelUp();
+  return <Toast toast={toast} onDismiss={dismiss} />;
+}
+
 export default function App() {
   return (
-    <HashRouter>
-      <div className="mx-auto min-h-dvh max-w-md px-4 pt-3 pb-24">
+    <MotionConfig reducedMotion="user">
+      <HashRouter>
+        <LevelToast />
+        <div className="mx-auto min-h-dvh max-w-md px-4 pb-24" style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}>
         <Routes>
           <Route path="/" element={<Today />} />
           <Route path="/calendar" element={<Calendar />} />
@@ -57,8 +67,9 @@ export default function App() {
           <Route path="/goals" element={<Goals />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
-      </div>
-      <TabBar />
-    </HashRouter>
+        </div>
+        <TabBar />
+      </HashRouter>
+    </MotionConfig>
   );
 }

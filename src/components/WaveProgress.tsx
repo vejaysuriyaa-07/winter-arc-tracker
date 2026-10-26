@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, type ReactNode } from "react";
-import { tween } from "../lib/motion";
+import { prefersReducedMotion, tween } from "../lib/motion";
 
 type Props = {
   /** 0-100 */
@@ -28,11 +28,13 @@ const PATH = wavePath(10);
 
 function Layer({
   layerRef,
+  crestRef,
   className,
   speed,
   delay,
 }: {
   layerRef: React.RefObject<HTMLDivElement | null>;
+  crestRef: React.RefObject<HTMLDivElement | null>;
   className: string;
   speed: string;
   delay: string;
@@ -43,7 +45,7 @@ function Layer({
       className={`wave-layer absolute inset-x-0 top-0 flex h-full flex-col ${className}`}
       style={{ transform: "translateY(100%)" }}
     >
-      <div className="relative h-9 w-full overflow-hidden" style={{ height: CREST }}>
+      <div ref={crestRef} className="relative w-full overflow-visible" style={{ height: CREST, transformOrigin: "50% 100%" }}>
         <svg
           className="wave-drift absolute left-0 top-0 h-full"
           style={{ width: PERIOD * 4, ["--wave-speed" as string]: speed, animationDelay: delay }}
@@ -62,8 +64,21 @@ function Layer({
 export default function WaveProgress({ percent, gold = false, children }: Props) {
   const back = useRef<HTMLDivElement | null>(null);
   const front = useRef<HTMLDivElement | null>(null);
+  const backCrest = useRef<HTMLDivElement | null>(null);
+  const frontCrest = useRef<HTMLDivElement | null>(null);
   const shown = useRef<number | null>(null);
   const target = Math.max(0, Math.min(100, percent));
+
+  // Splash: the crest amplitude doubles and settles whenever the fill rises (never when it lowers).
+  const splash = (): void => {
+    if (prefersReducedMotion()) return;
+    for (const el of [backCrest.current, frontCrest.current]) {
+      if (!el) continue;
+      el.classList.remove("wave-splash");
+      void el.offsetWidth; // restart the animation
+      el.classList.add("wave-splash");
+    }
+  };
 
   useLayoutEffect(() => {
     const apply = (v: number): void => {
@@ -77,6 +92,7 @@ export default function WaveProgress({ percent, gold = false, children }: Props)
       apply(target);
       return;
     }
+    if (target > shown.current) splash();
     return tween(shown.current, target, 600, apply);
   }, [target]);
 
@@ -90,8 +106,8 @@ export default function WaveProgress({ percent, gold = false, children }: Props)
       data-percent={Math.round(target)}
       data-gold={gold ? "true" : "false"}
     >
-      <Layer layerRef={back} className={`${tone} opacity-60`} speed="11s" delay="-4s" />
-      <Layer layerRef={front} className={tone} speed="7s" delay="0s" />
+      <Layer layerRef={back} crestRef={backCrest} className={`${tone} opacity-60`} speed="11s" delay="-4s" />
+      <Layer layerRef={front} crestRef={frontCrest} className={tone} speed="7s" delay="0s" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center">{children}</div>
     </div>
   );

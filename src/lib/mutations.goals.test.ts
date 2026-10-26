@@ -7,6 +7,7 @@ import {
   moveHabit,
   removeGoal,
   resetArc,
+  syncCelebratedLevel,
   updateSettings,
 } from "./mutations";
 import { arcDaysSoFar, dailyCompletion, scheduledHabits } from "./stats";
@@ -148,5 +149,15 @@ describe("resetArc", () => {
     expect(next.habits.find((h) => h.id === A)!.createdAt).toBe(T); // moved with the start date
     expect(next.habits.find((h) => h.id === D)!.createdAt).toBe("2026-10-08");
     expect(next.ui.lastCelebratedLevel).toBe(1);
+  });
+});
+
+describe("syncCelebratedLevel", () => {
+  it("raises the celebrated level silently and never lowers it", () => {
+    const s = fixtureState();
+    expect(syncCelebratedLevel(s, 1)).toBe(s);
+    expect(syncCelebratedLevel(s, 3).ui.lastCelebratedLevel).toBe(3);
+    s.ui.lastCelebratedLevel = 4;
+    expect(syncCelebratedLevel(s, 2)).toBe(s);
   });
 });

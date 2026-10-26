@@ -64,6 +64,7 @@ export function useAppState(): AppState {
 
 // ---------- actions ----------
 import * as m from "./mutations";
+import { level, lifetimeCheckoffs } from "./stats";
 import type { ArcSettings, Rating } from "../types";
 import type { YMD } from "./dates";
 
@@ -83,7 +84,8 @@ export const actions = {
   moveHabit: (habitId: string, dir: -1 | 1) => update((s) => m.moveHabit(s, habitId, dir)),
   deleteHabit: (today: YMD, habitId: string) => update((s) => m.deleteHabit(s, today, habitId)),
   resetArc: (today: YMD) => update((s) => m.resetArc(s, today)),
-  importState: (next: AppState) => replaceState(next),
+  /** Imported data never toasts: its level is marked celebrated before it lands (DECISIONS 5). */
+  importState: (next: AppState) => replaceState(m.syncCelebratedLevel(next, level(lifetimeCheckoffs(next)))),
   markCelebratedLevel: (level: number) =>
     update((s) => (s.ui.lastCelebratedLevel === level ? s : { ...s, ui: { lastCelebratedLevel: level } })),
 };
