@@ -1,29 +1,48 @@
 // One app store: in-memory AppState, persisted through storage.ts, read with
 // useSyncExternalStore so every screen updates live. Mutations go through
 // `update`, which notifies subscribers and writes through to storage.
+// `initStore` must resolve before the first render (main.tsx awaits it).
 import { useSyncExternalStore } from "react";
-import type { AppState, ArcSettings, Rating } from "../types";
+import type { AppState, Look, Mood } from "../types";
 import { todayLocal, type YMD } from "./dates";
 import * as m from "./mutations";
-import { level, lifetimeCheckoffs } from "./stats";
-import { STORAGE_KEY, load, save } from "./storage";
+import { STORAGE_KEY, defaultState, load, save, webAdapter, type StorageAdapter } from "./storage";
 
 type Listener = () => void;
 
+let adapter: StorageAdapter = webAdapter();
 let state: AppState | null = null;
 let saveFailed = false;
+let writes: Promise<unknown> = Promise.resolve();
+/** Set when storage could not be read: nothing is written, so unread data is never overwritten. */
+let readOnly = false;
 const listeners = new Set<Listener>();
 
-function ensure(): AppState {
-  if (state === null) state = load(todayLocal());
+const nowIso = (): string => new Date().toISOString();
+
+export async function initStore(a: StorageAdapter = webAdapter()): Promise<AppState> {
+  adapter = a;
+  readOnly = false;
+  try {
+    state = await load(adapter, todayLocal(), nowIso());
+    saveFailed = false;
+  } catch {
+    state = defaultState(nowIso());
+    readOnly = true;
+    saveFailed = true;
+  }
+  emit();
+  // Persist right away so a migrated v1 state lands under the v3 key.
+  persist(state);
   return state;
 }
 
 export function getState(): AppState {
-  return ensure();
+  if (state === null) state = defaultState(nowIso()); // only before initStore, e.g. in isolated tests
+  return state;
 }
 
-/** True when the last write to storage was refused; the UI can warn that progress is not being kept. */
+/** True when the last write to storage was refused; the UI warns that progress is not being kept. */
 export function lastSaveFailed(): boolean {
   return saveFailed;
 }
@@ -39,30 +58,45 @@ function emit(): void {
   for (const l of listeners) l();
 }
 
-/** Replace the state wholesale (import, reset), notify, then persist. */
+function persist(next: AppState): void {
+  if (readOnly) return;
+  // Writes are chained so an older state can never land after a newer one.
+  writes = writes.then(async () => {
+    const ok = await save(adapter, next);
+    if (state !== next) return; // a newer write is queued; it decides the flag
+    if (saveFailed === !ok) return;
+    saveFailed = !ok;
+    emit();
+  });
+}
+
+/** Wait for queued writes (tests, before export). */
+export function flushWrites(): Promise<unknown> {
+  return writes;
+}
+
+/** Replace the state wholesale (import, sync pull), notify, then persist. */
 export function replaceState(next: AppState): void {
   state = next;
-  saveFailed = !save(next);
   emit();
+  persist(next);
 }
 
 /** Apply a pure updater; identical results are ignored. */
 export function update(fn: (s: AppState) => AppState): void {
-  const prev = ensure();
+  const prev = getState();
   const next = fn(prev);
   if (next === prev) return;
   replaceState(next);
 }
 
-/** Drop the cached state so the next read loads from storage (tests, cross-tab). */
-export function reloadFromStorage(): void {
-  state = load(todayLocal());
-  emit();
-}
-
 if (typeof window !== "undefined") {
   window.addEventListener("storage", (e) => {
-    if (e.key === STORAGE_KEY || e.key === null) reloadFromStorage();
+    if (e.key !== STORAGE_KEY && e.key !== null) return;
+    void load(adapter, todayLocal(), nowIso()).then((s) => {
+      state = s;
+      emit();
+    });
   });
 }
 
@@ -70,31 +104,37 @@ export function useAppState(): AppState {
   return useSyncExternalStore(subscribe, getState, getState);
 }
 
-/** Reactive view of lastSaveFailed(): flips with every save attempt. */
+/** Reactive view of lastSaveFailed(). */
 export function useSaveFailed(): boolean {
   return useSyncExternalStore(subscribe, lastSaveFailed, lastSaveFailed);
 }
 
 // ---------- actions ----------
 
+const u = (fn: (s: AppState, now: string) => AppState): void => update((s) => fn(s, nowIso()));
+
 export const actions = {
-  toggleHabit: (date: YMD, habitId: string) => update((s) => m.toggleHabit(s, date, habitId)),
-  setCheckoff: (date: YMD, habitId: string, checked: boolean) =>
-    update((s) => m.setCheckoff(s, date, habitId, checked)),
-  addHabit: (today: YMD, input: m.NewHabit) => update((s) => m.addHabit(s, today, input)),
-  setMood: (date: YMD, mood: Rating | undefined) => update((s) => m.setMood(s, date, mood)),
-  setSleep: (date: YMD, input: m.SleepInput) => update((s) => m.setSleep(s, date, input)),
-  setJournalWin: (date: YMD, text: string | undefined) => update((s) => m.setJournalWin(s, date, text)),
-  addGoal: (today: YMD, input: { name: string; target: number }) => update((s) => m.addGoal(s, today, input)),
-  incGoal: (goalId: string, delta: number) => update((s) => m.incGoal(s, goalId, delta)),
-  removeGoal: (goalId: string) => update((s) => m.removeGoal(s, goalId)),
-  updateSettings: (patch: Partial<ArcSettings>) => update((s) => m.updateSettings(s, patch)),
-  editHabit: (habitId: string, patch: m.HabitPatch) => update((s) => m.editHabit(s, habitId, patch)),
-  moveHabit: (habitId: string, dir: -1 | 1) => update((s) => m.moveHabit(s, habitId, dir)),
-  deleteHabit: (today: YMD, habitId: string) => update((s) => m.deleteHabit(s, today, habitId)),
-  resetArc: (today: YMD) => update((s) => m.resetArc(s, today)),
-  /** Imported data never toasts: its level is marked celebrated before it lands (DECISIONS 5). */
-  importState: (next: AppState) => replaceState(m.syncCelebratedLevel(next, level(lifetimeCheckoffs(next)))),
-  markCelebratedLevel: (level: number) =>
-    update((s) => (s.ui.lastCelebratedLevel === level ? s : { ...s, ui: { lastCelebratedLevel: level } })),
+  toggleHabit: (arcId: string, date: YMD, habitId: string) => u((s, n) => m.toggleHabit(s, n, arcId, date, habitId)),
+  setCheckoff: (arcId: string, date: YMD, habitId: string, checked: boolean) =>
+    u((s, n) => m.setCheckoff(s, n, arcId, date, habitId, checked)),
+  setMood: (arcId: string, date: YMD, mood: Mood | undefined) => u((s, n) => m.setMood(s, n, arcId, date, mood)),
+  addHabit: (today: YMD, arcId: string, input: m.NewHabit) => u((s, n) => m.addHabit(s, n, today, arcId, input)),
+  editHabit: (habitId: string, patch: m.HabitPatch) => u((s, n) => m.editHabit(s, n, habitId, patch)),
+  reorderHabits: (arcId: string, ids: string[]) => u((s, n) => m.reorderHabits(s, n, arcId, ids)),
+  removeHabit: (today: YMD, habitId: string) => u((s, n) => m.removeHabit(s, n, today, habitId)),
+  restoreHabit: (habitId: string) => u((s, n) => m.restoreHabit(s, n, habitId)),
+  createArc: (input: m.NewArc) => u((s, n) => m.createArc(s, n, input)),
+  updateArc: (arcId: string, patch: m.ArcPatch) => u((s, n) => m.updateArc(s, n, arcId, patch)),
+  setTheme: (arcId: string, look: Look, season: AppState["arcs"][number]["season"]) =>
+    u((s, n) => m.updateArc(s, n, arcId, { look, season })),
+  setActiveArc: (arcId: string) => update((s) => m.setActiveArc(s, arcId)),
+  freezeArc: (arcId: string) => u((s, n) => m.freezeArc(s, n, arcId)),
+  deleteArc: (arcId: string) => u((s, n) => m.deleteArc(s, n, arcId)),
+  resetArc: (today: YMD, arcId: string) => u((s, n) => m.resetArc(s, n, today, arcId)),
+  updateSettings: (patch: m.SettingsPatch) => u((s, n) => m.updateSettings(s, n, patch)),
+  addVisitor: (arcId: string, visitorId: string, foundOn: YMD) => u((s, n) => m.addVisitor(s, n, arcId, visitorId, foundOn)),
+  markCelebrated: (key: string) => update((s) => m.markCelebrated(s, key)),
+  markRecapSeen: (key: string) => update((s) => m.markRecapSeen(s, key)),
+  setUiFlag: (flag: "signInPrompted" | "notificationsPrompted", value: boolean) => update((s) => m.setUiFlag(s, flag, value)),
+  importState: (next: AppState) => replaceState(next),
 };

@@ -1,34 +1,28 @@
 @import "tailwindcss";
 
+/* Phase 0 baseline: Field journal, winter. The theme provider (phase 1) drives these per arc. */
 @theme {
-  --color-bg: #0a0f0d;
-  --color-card: #121816;
-  --color-card-2: #182019;
-  --color-line: #1f2a25;
-  --color-ink: #e7efe9;
-  --color-muted: #8ea396;
-  --color-dim: #5b6e63;
-  --color-green: #22c55e;
-  --color-green-deep: #15803d;
-  --color-green-soft: #166534;
+  --color-paper: #f8f4eb;
+  --color-paper-2: #efe8db;
+  --color-ink: #272520;
+  --color-muted: #6b6555;
+  --color-line: #dcd3c2;
+  --color-accent: #3e5f75;
+  --color-tint: #d3e3ee;
   --color-gold: #f5b83d;
-  --color-red: #f87171;
+  --color-miss: #f87171;
 
-  --font-display: "Barlow Condensed", "Archivo Narrow", "Arial Narrow", ui-sans-serif, sans-serif;
-  --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
-
-  --shadow-glow: 0 0 24px rgb(34 197 94 / 0.35);
-  --shadow-glow-gold: 0 0 28px rgb(245 184 61 / 0.45);
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --font-sans: "Instrument Sans Variable", system-ui, sans-serif;
 }
 
 @layer base {
   html {
-    background: var(--color-bg);
-    color-scheme: dark;
+    background: var(--color-paper-2);
   }
   body {
-    @apply bg-bg text-ink font-sans antialiased;
-    font-variant-numeric: tabular-nums;
+    @apply text-ink font-sans antialiased;
+    background: linear-gradient(180deg, var(--color-paper) 0%, var(--color-paper-2) 100%) fixed;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: none;
   }
@@ -42,52 +36,10 @@
 }
 
 @utility num {
-  font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
-}
-
-@utility card {
-  @apply rounded-2xl border border-line bg-card;
 }
 
 @utility tap {
   min-width: 44px;
   min-height: 44px;
-}
-
-/* Hero wave: horizontal drift is pure CSS; the fill level is set per layer
-   from requestAnimationFrame (see WaveProgress). */
-@keyframes wave-drift {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.wave-drift {
-  animation: wave-drift var(--wave-speed, 7s) linear infinite;
-  will-change: transform;
-}
-.wave-layer {
-  transition: color 600ms ease;
-}
-@media (prefers-reduced-motion: reduce) {
-  .wave-drift { animation: none; }
-}
-
-@keyframes wave-splash {
-  0% { transform: scaleY(1); }
-  25% { transform: scaleY(2); }
-  60% { transform: scaleY(0.85); }
-  100% { transform: scaleY(1); }
-}
-.wave-splash { animation: wave-splash 700ms ease-out 1; }
-
-@keyframes pulse-once {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.18); }
-  100% { transform: scale(1); }
-}
-.pulse-once { animation: pulse-once 600ms ease-out 1; }
-
-@media (prefers-reduced-motion: reduce) {
-  .wave-splash, .pulse-once { animation: none; }
 }

@@ -1,7 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#0A0F0D"/>
-  <rect x="24" y="24" width="464" height="464" rx="96" fill="none" stroke="#1F2A25" stroke-width="8"/>
-  <path d="M0 300 C 64 260, 128 340, 192 300 S 320 260, 384 300 S 480 340, 512 300 V512 H0 Z" fill="#15803D" opacity="0.7"/>
-  <path d="M0 330 C 64 290, 128 370, 192 330 S 320 290, 384 330 S 480 370, 512 330 V512 H0 Z" fill="#22C55E"/>
-  <text x="256" y="236" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-weight="700" font-size="150" fill="#E7EFE9">WA</text>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F8F4EB"/>
+      <stop offset="1" stop-color="#EFE8DB"/>
+    </linearGradient>
+    <radialGradient id="wash" cx="0.5" cy="0" r="0.8">
+      <stop offset="0" stop-color="#D3E3EE" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#D3E3EE" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#paper)"/>
+  <rect width="512" height="512" rx="112" fill="url(#wash)"/>
+  <g transform="translate(256 205)">
+    <path d="M0 -112 L44 -48 H22 L58 6 H30 L70 62 H-70 L-30 6 H-58 L-22 -48 H-44 Z" fill="#1E5F6B"/>
+    <path d="M0 -112 L16 -88 H-16 Z" fill="#FFFFFF"/>
+    <rect x="-7" y="62" width="14" height="26" rx="3" fill="#5B4636"/>
+  </g>
+  <text x="256" y="408" text-anchor="middle" font-family="Fraunces Variable, Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="128" fill="#272520">Grove</text>
 </svg>
