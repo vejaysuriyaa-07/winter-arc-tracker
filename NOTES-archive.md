@@ -49,3 +49,12 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Screenshot review found the date heading drawn as a gradient box after a look change (background shorthand reset background-clip); fixed with background-image.
 - Review fixes: scoped utilities (`@theme inline`), body background keeps `fixed`, frozen frame redrawn after each render, Night stars steady when frozen, bloom transition frozen with the toggle, layout effects to avoid a first-paint flash, shared `activeArc`, node cap holds at 120 plants, frame-counted waits instead of timeouts, deploy guard for the showcase.
 - Counts: 129 unit tests, 20 e2e.
+
+## 2026-10-26: Grove phase 2, Garden tab
+
+- `lib/today-view.ts` (rows, streak icon rules, mood labels, once-per-day bloom rule) with tests; `lib/feedback.ts` no-op hook for haptics.
+- `components/garden/*`: Header with arc switcher sheet, MoodRow, HabitList (drag reorder by handle), HabitRow (two-phase check fx), StreakIcon with one page loop (`scenes/streakIcons.ts`), Bloom (mini, full-bloom moment, chain), QuickAdd; `components/ui/Sheet`, `UndoToast`.
+- e2e `garden.spec.ts`: growth and counts with reload, mood saved, icons by streak and mood, remove with undo and unchanged past, full bloom once, before start, finished arc, quick add, drag reorder, chain strip, 12 look x season screenshots.
+- Fixed while testing: screenshot loop reused the first seed (init scripts stack), the drag handle sat under the tab bar in the test, full bloom played off screen (now scrolls into view), mini bloom petals reshaped.
+- Review fixes: frozen icons register before the static frame, bloom only after a local check, finished arcs read-only, check fx cancelled on fast uncheck, accessible names for rows and the switcher, 44px switcher, loop root always mounted.
+- Counts: 136 unit tests, 44 e2e.

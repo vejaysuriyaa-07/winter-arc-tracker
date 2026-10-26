@@ -47,3 +47,9 @@ One line each: what was chosen and why. 1 to 18 are from the v1 build; v2 (Grove
 40. Gradient text uses `background-image`, never the `background` shorthand, because rewriting the shorthand resets `background-clip` when the look changes.
 41. The full-bloom flower in the garden keeps a gold centre (the design file used the season's bloomB) because SPEC 13 says full bloom plants a gold-centred flower.
 42. Under reduced motion or the motion toggle, the frozen frame is redrawn after every render, so a changed scene (mood, a new habit) is also static and correctly placed.
+43. The bloom chain strip shows each of the last seven calendar days: gold centre full, accent kept, faded missed, outlined while today is open, nearly invisible outside the arc or with nothing scheduled. Its teaser reads "Keep the chain going. Kept days bring visitors to your garden." until visitors exist (phase 5).
+44. Before the start date the habit list shows day 1's habits disabled, the header reads "Day 1", the garden shows seed mounds with a "Starts in N days" pill, and no chain card. After the last day the garden and list freeze at the last day (the celebration comes in phase 3).
+45. Full bloom plays once per arc and day, and only when a check made on this screen completes the day: removing the last open habit, a sync pull or another tab never plays it, and unchecking then re-checking does not replay it. When it plays, the garden card scrolls into view so it is seen.
+48. A finished arc's Garden is read-only: no Edit, no quick add, no check-offs, no mood changes.
+46. Physical feedback goes through `lib/feedback.ts` (no-op on the web); the native build plugs in haptics in phase 8.
+47. With no arc, the Garden tab says "Start your first arc to plant a garden." with a button to New arc; an arc with no habits says "Add your first habit below."

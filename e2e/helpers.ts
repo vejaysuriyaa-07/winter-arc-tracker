@@ -40,3 +40,31 @@ export async function readState(page: Page): Promise<AppState> {
 }
 
 export const SHOTS = "e2e/screenshots";
+
+/** Adds check-offs by habit name: { "2026-10-20": ["Read", "Gym"] }. Moods optional. */
+export function withLogs(
+  state: AppState,
+  days: Record<string, string[]>,
+  moods: Record<string, AppState["logs"][string]["mood"]> = {},
+): AppState {
+  const arc = state.arcs[0]!;
+  const byName = new Map(state.habits.map((h) => [h.name, h.id]));
+  const logs = { ...state.logs };
+  for (const date of new Set([...Object.keys(days), ...Object.keys(moods)])) {
+    const ids = (days[date] ?? []).map((n) => {
+      const id = byName.get(n);
+      if (!id) throw new Error(`no habit ${n}`);
+      return id;
+    });
+    const log: AppState["logs"][string] = { id: `00000000-0000-4000-a000-${date.replace(/-/g, "").padStart(12, "0")}`, arcId: arc.id, date, completedHabitIds: ids, updatedAt: T };
+    const mood = moods[date];
+    if (mood) log.mood = mood;
+    logs[`${arc.id}:${date}`] = log;
+  }
+  return { ...state, logs };
+}
+
+/** Local noon in Los Angeles on a calendar day (the e2e browser runs in that zone). */
+export function noonLA(ymd: string): Date {
+  return new Date(`${ymd}T12:00:00-07:00`);
+}

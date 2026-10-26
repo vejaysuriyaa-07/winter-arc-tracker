@@ -21,7 +21,9 @@ test("v1 data migrates into a Winter Arc with nothing lost, and the raw data is 
   await seedRaw(page, V1_KEY, JSON.stringify(V1));
   await page.goto("#/");
   await expect(page.getByTestId("arc-name")).toHaveText("Winter Arc");
-  await expect(page.getByTestId("arc-day")).toHaveText("Day 22 of 90");
+  // Only Read is scheduled today (Gym was archived on Oct 9); the old habits keep their history.
+  await expect(page.getByTestId("habit-row")).toHaveCount(1);
+  await expect(page.getByTestId("habit-row")).toContainText("Read");
   const s = await readState(page);
   const arc = s.arcs[0]!;
   expect(arc).toMatchObject({ name: "Winter Arc", season: "winter", look: "journal", startDate: "2026-10-05", lengthDays: 90, threshold: 75 });
