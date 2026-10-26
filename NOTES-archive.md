@@ -66,3 +66,12 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Fixed while testing: overlays sat under the tab bar (page z-index context), now portaled; arc card scenes cropped the plants; preview label fade.
 - Review fixes: cleared start date no longer crashes, custom length validated, Cancel on a cold load, start date follows midnight, frozen arcs and migrated finished arcs never celebrate, celebration haptic on arrival, close-once guard, overlay stack with Escape, inert background and focus return, roving radio groups, dark-mode note in the picker.
 - Counts: 148 unit tests, 63 e2e.
+
+## 2026-10-26: Grove phase 4, progress, month view, plant detail
+
+- `lib/progress.ts` (tiles, plants ranked, week line, timelapse range, plant days, habit across arcs, tree rings, best month, tallest trees) with fixture tests.
+- Progress page (timelapse with play and slider, tiles, plants, week, visitors row; all time rings with month buttons, lifetime counts, grove strip, tallest trees), Month view (buckets, legend, last 7 days, backfill sheet with Edit), Plant detail (swaying tree, tiles, day grid, across arcs, edit, remove), plant taps in the garden, scroll to top on navigation.
+- e2e `progress.spec.ts` with a hand-worked state (53% score, 76% last 7, +29, 12% ring, 41 check-offs).
+- Process note: the scroll-to-top test was written together with its fix rather than shown failing first.
+- Review fixes: same-day-only restore (past days never change), finished arcs read-only, deleted arcs' plants not found, tombstone undo, Close on deep links, non-overlapping plant tap targets, decorations ignore taps, timelapse keyed by arc, ring wording, memoized all-time numbers.
+- Counts: 159 unit tests, 80 e2e.

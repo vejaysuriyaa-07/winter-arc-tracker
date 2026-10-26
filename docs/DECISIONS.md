@@ -62,3 +62,11 @@ One line each: what was chosen and why. 1 to 18 are from the v1 build; v2 (Grove
 55. Settings has only the garden theme row and the night-look switch until phase 6.
 56. Overlays keep a stack: only the topmost answers Escape (held keys do not repeat), the app behind is inert, focus moves into the overlay and returns on close.
 57. Radio groups (look, season, length) use roving focus: one Tab stop, arrow keys move the choice.
+58. "Your plants, tallest first" lists every habit of the arc, archived ones too (dimmed, wilted mini tree), by days done then name; the bar is the habit's rate. The weakest weekday is highlighted in the accent, not red (red is for misses).
+59. "The same habit across arcs" and "Tallest trees" match habits by name, ignoring case and spaces at the ends.
+60. Tree rings scale down to fit the 280px box once there are too many months; months with no arc are grey. Tapping is done with a row of 44px month buttons under the rings (the rings themselves are too thin to tap reliably).
+61. The Month view shows every month the arc touches; days before today in the arc open a day sheet that is read-only until "Edit this day" (today's sheet is editable at once). The legend shows all done, kept, some, missed, not logged and today.
+62. Removing a habit (Garden X or Plant detail) can be undone only on the same day: undoing an older removal would schedule it on past days again and change their numbers. After that day the plant stays removed (a new habit can be added instead). Plant detail shows the same-day undo as "Put it back in this arc" instead of a toast.
+63. Every route change scrolls to the top.
+64. Plant tap targets in the garden are as wide as their share of the row spacing, up to 44px, so they never overlap; with nine or more plants they can be narrower than 44px, and every plant also has a full-size row in Progress.
+65. A finished or frozen arc is read-only everywhere: no backfill in the Month view, no edit or remove in Plant detail.

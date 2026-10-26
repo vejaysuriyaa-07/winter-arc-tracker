@@ -21,6 +21,9 @@ type Props = {
   visitor?: ReactNode;
   className?: string;
   testId?: string;
+  /** Tapping a plant opens it; each plant gets a 44px button (names come from `plantLabel`). */
+  onPlant?: (id: string) => void;
+  plantLabel?: (id: string) => string;
 };
 
 type Els = {
@@ -84,7 +87,7 @@ const AURORA = [
   { left: 220, top: 10, w: 170, h: 110, bg: "linear-gradient(180deg, rgba(34, 211, 238, 0) 0%, rgba(34, 211, 238, 0.8) 50%, rgba(167, 139, 250, 0) 100%)" },
 ];
 
-export default function GardenScene({ model: m, height = SCENE_H, still = false, label, visitor, className, testId = "garden" }: Props) {
+export default function GardenScene({ model: m, height = SCENE_H, still = false, label, visitor, className, testId = "garden", onPlant, plantLabel }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const els = useRef<Els>({ plants: [], birds: [], clouds: [], drops: [], stars: [], flies: [], aurora: [] });
@@ -176,7 +179,7 @@ export default function GardenScene({ model: m, height = SCENE_H, still = false,
   return (
     <div
       ref={box}
-      role="img"
+      role={onPlant ? "group" : "img"}
       aria-label={description}
       data-testid={testId}
       data-season={m.season}
@@ -185,8 +188,8 @@ export default function GardenScene({ model: m, height = SCENE_H, still = false,
       data-birds={m.birds.length}
       data-bloom={m.bloom ? "true" : "false"}
       data-motion={allowed ? "on" : "off"}
-      className={className}
       style={{ position: "relative", width: "100%", height: height * scale, overflow: "hidden" }}
+      className={className ? `${className} garden-scene` : "garden-scene"}
     >
       <div
         style={{
@@ -307,6 +310,27 @@ export default function GardenScene({ model: m, height = SCENE_H, still = false,
             </svg>
           </div>
         ))}
+        {onPlant &&
+          m.plants.map((p) => {
+            // Each target is as wide as its own share of the row spacing (never overlapping a
+            // neighbour), up to 44px; Progress lists every plant with a full-size row too.
+            const xs = m.plants.map((q) => q.slot.x).sort((a, b) => a - b);
+            const k = xs.indexOf(p.slot.x);
+            const left = k > 0 ? (p.slot.x + xs[k - 1]!) / 2 : p.slot.x - 22 / scale;
+            const right = k < xs.length - 1 ? (p.slot.x + xs[k + 1]!) / 2 : p.slot.x + 22 / scale;
+            const w = Math.min(44 / scale, right - left, 2 * (p.slot.x - left), 2 * (right - p.slot.x));
+            const h = Math.max(44 / scale, (24 + p.g * 150) * p.slot.s);
+            return (
+              <button
+                key={`tap-${p.id}`}
+                type="button"
+                data-testid="plant-tap"
+                aria-label={plantLabel ? plantLabel(p.id) : "Open plant"}
+                onClick={() => onPlant(p.id)}
+                style={{ position: "absolute", left: p.slot.x - w / 2, bottom: p.slot.b - 4, width: w, height: h, background: "transparent", border: "none", padding: 0, cursor: "pointer" }}
+              />
+            );
+          })}
         {m.drops.map((d, i) => (
           <span key={i} ref={set("drops", i)} data-testid="drop" aria-hidden="true" style={{ position: "absolute", left: 0, top: 0, width: d.w, height: d.h, borderRadius: d.round ? 999 : 1, background: d.color, transform: `translate(${d.x}px, ${d.off}px)` }} />
         ))}

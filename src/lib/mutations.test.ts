@@ -89,13 +89,18 @@ describe("habits", () => {
     expect(m.isHardDeletable(s2, s2.habits.at(-1)!, FIX_TODAY)).toBe(false);
     expect(m.removeHabit(s2, NOW, FIX_TODAY, id).habits.at(-1)!.archivedAt).toBe(FIX_TODAY);
   });
-  it("restore undoes either kind of removal", () => {
+  it("restore undoes either kind of removal made today", () => {
     const s0 = m.addHabit(fixtureState(), NOW, FIX_TODAY, ARC, { name: "New" });
     const id = s0.habits.at(-1)!.id;
-    const hard = m.restoreHabit(m.removeHabit(s0, NOW, FIX_TODAY, id), NOW, id);
+    const hard = m.restoreHabit(m.removeHabit(s0, NOW, FIX_TODAY, id), NOW, FIX_TODAY, id);
     expect(hard.habits.find((h) => h.id === id)!.deleted).toBeUndefined();
-    const soft = m.restoreHabit(m.removeHabit(s0, NOW, FIX_TODAY, C), NOW, C);
+    const soft = m.restoreHabit(m.removeHabit(s0, NOW, FIX_TODAY, C), NOW, FIX_TODAY, C);
     expect(soft.habits.find((h) => h.id === C)!.archivedAt).toBeUndefined();
+  });
+  it("a removal from an earlier day cannot be undone: past days never change", () => {
+    const s = fixtureState(); // Bravo archived 10-09
+    expect(m.restoreHabit(s, NOW, FIX_TODAY, B)).toBe(s);
+    expect(m.canRestore(s.habits.find((h) => h.id === B)!, FIX_TODAY)).toBe(false);
   });
 });
 

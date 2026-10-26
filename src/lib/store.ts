@@ -123,7 +123,7 @@ export const actions = {
   editHabit: (habitId: string, patch: m.HabitPatch) => u((s, n) => m.editHabit(s, n, habitId, patch)),
   reorderHabits: (arcId: string, ids: string[]) => u((s, n) => m.reorderHabits(s, n, arcId, ids)),
   removeHabit: (today: YMD, habitId: string) => u((s, n) => m.removeHabit(s, n, today, habitId)),
-  restoreHabit: (habitId: string) => u((s, n) => m.restoreHabit(s, n, habitId)),
+  restoreHabit: (today: YMD, habitId: string) => u((s, n) => m.restoreHabit(s, n, today, habitId)),
   createArc: (input: m.NewArc) => u((s, n) => m.createArc(s, n, input)),
   updateArc: (arcId: string, patch: m.ArcPatch) => u((s, n) => m.updateArc(s, n, arcId, patch)),
   setTheme: (arcId: string, look: Look, season: AppState["arcs"][number]["season"]) =>

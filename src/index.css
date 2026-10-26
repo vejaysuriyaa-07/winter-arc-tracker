@@ -91,3 +91,10 @@
     transition-duration: 1ms !important;
   }
 }
+
+/* Scene decorations never take taps; only the plant buttons do. */
+.garden-scene span,
+.garden-scene svg,
+.garden-scene div:not(:has(button)) {
+  pointer-events: none;
+}

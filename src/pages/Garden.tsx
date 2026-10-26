@@ -1,6 +1,6 @@
 // The Garden tab (SPEC 5.1), laid out as docs/design/Skin.dc.html.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { actions, useAppState } from "../lib/store";
 import { useToday } from "../lib/today";
 import { activeArc, chainStrip } from "../lib/stats";
@@ -72,6 +72,7 @@ export default function Garden() {
   const th = useTheme();
   const arc = activeArc(state);
   const motion = useMotionAllowed();
+  const navigate = useNavigate();
   const root = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState(false);
@@ -129,7 +130,11 @@ export default function Garden() {
       <DateHeading day={today} />
 
       <Frame frameRef={frame}>
-        <GardenScene model={model} />
+        <GardenScene
+          model={model}
+          onPlant={(id) => navigate(`/plant/${id}`)}
+          plantLabel={(id) => `Open ${state.habits.find((h) => h.id === id)?.name ?? "plant"}`}
+        />
         {view.phase === "before" && (
           <div className="pointer-events-none absolute inset-x-0 top-4 flex justify-center">
             <span data-testid="starts-in" className="rounded-full px-4 py-1.5 text-[15px] font-medium" style={{ background: "rgba(255, 255, 255, 0.82)", color: "#272520" }}>
@@ -198,7 +203,7 @@ export default function Garden() {
                 onRemove={() => {
                   actions.removeHabit(today, r.habit.id);
                   feedback("remove", state.settings.haptics);
-                  setToast({ id: Date.now(), text: `${r.habit.name} removed. Its tree stops growing.`, onUndo: () => actions.restoreHabit(r.habit.id) });
+                  setToast({ id: Date.now(), text: `${r.habit.name} removed. Its tree stops growing.`, onUndo: () => actions.restoreHabit(today, r.habit.id) });
                 }}
                 {...(dragStart ? { onDragStart: dragStart } : {})}
               />

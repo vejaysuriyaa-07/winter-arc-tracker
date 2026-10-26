@@ -93,7 +93,7 @@ test("streak icons show seed, sprout or flame and react to the mood", async ({ p
 test("removing a habit wilts its plant, Undo restores it, and past days never change", async ({ page }) => {
   await openAt(page, withLogs(arcState(), { "2026-10-25": ["Read", "Gym", "Meditation"] }));
   const before = (await readState(page)).logs;
-  await page.getByRole("button", { name: "Edit" }).click();
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
   await page.getByRole("button", { name: "Remove Gym" }).click();
   await expect(page.getByTestId("habit-row")).toHaveCount(2);
   await expect(page.getByTestId("toast")).toContainText("Gym removed. Its tree stops growing.");
@@ -132,7 +132,7 @@ test("the last habit plays the full-bloom moment once, never on reload", async (
 test("removing the last unchecked habit does not play full bloom", async ({ page }) => {
   await openAt(page, arcState());
   for (const n of ["Read", "Gym"]) await row(page, n).click();
-  await page.getByRole("button", { name: "Edit" }).click();
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
   await page.getByRole("button", { name: "Remove Meditation" }).click();
   await expect(page.getByTestId("count")).toHaveText("2 of 2");
   await frames(page);
@@ -152,7 +152,7 @@ test("under reduced motion the streak icons still show the weather", async ({ pa
 test("a finished arc freezes: no Edit, no check-offs, no remove", async ({ page }) => {
   await openAt(page, arcState({ startDate: "2026-09-01", lengthDays: 30 }));
   await expect(page.getByTestId("arc-finished")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Edit" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Edit", exact: true })).toHaveCount(0);
   await expect(page.getByLabel("New habit name")).toHaveCount(0);
   await expect(row(page, "Read")).toHaveAttribute("aria-disabled", "true");
 });
@@ -179,7 +179,7 @@ test("quick add plants a new habit today", async ({ page }) => {
 
 test("edit mode reorders by dragging the handle", async ({ page }) => {
   await openAt(page, arcState());
-  await page.getByRole("button", { name: "Edit" }).click();
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
   // Bring the list above the fixed tab bar, as a person would by scrolling.
   await page.getByTestId("habit-list").evaluate((el) => el.scrollIntoView({ block: "center" }));
   const handle = page.getByRole("button", { name: "Move Meditation", exact: true });

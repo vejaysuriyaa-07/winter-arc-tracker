@@ -1,6 +1,6 @@
 import { MotionConfig } from "motion/react";
-import { lazy, Suspense } from "react";
-import { HashRouter, NavLink, Route, Routes } from "react-router";
+import { lazy, Suspense, useLayoutEffect } from "react";
+import { HashRouter, NavLink, Route, Routes, useLocation } from "react-router";
 import { useAppState, useSaveFailed } from "./lib/store";
 import { useToday } from "./lib/today";
 import { activeArc, dailyCompletion } from "./lib/stats";
@@ -12,6 +12,8 @@ import Arcs from "./pages/Arcs";
 import Settings from "./pages/Settings";
 import Placeholder from "./pages/Placeholder";
 import NewArc from "./pages/NewArc";
+import Month from "./pages/Month";
+import PlantDetail from "./pages/PlantDetail";
 import ArcComplete from "./components/arcs/ArcComplete";
 import { arcToCelebrate } from "./lib/arcs";
 
@@ -77,6 +79,15 @@ function Sky() {
   return <NightSky accent={th.accent} progress={p} />;
 }
 
+/** Every new screen starts at the top (the hash router keeps the old scroll position otherwise). */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 /** Shows the arc-complete celebration once per finished arc, on whatever tab is open. */
 function CompleteGate() {
   const state = useAppState();
@@ -103,6 +114,7 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <HashRouter>
+        <ScrollToTop />
         <Routes>
           {Showcase && (
             <Route
@@ -140,8 +152,8 @@ function Shell() {
             <Route path="/progress" element={<Progress />} />
             <Route path="/arcs" element={<Arcs />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/month" element={<Placeholder title="Month" />} />
-            <Route path="/plant/:id" element={<Placeholder title="Plant" />} />
+            <Route path="/month" element={<Month />} />
+            <Route path="/plant/:id" element={<PlantDetail />} />
             <Route path="/visitors" element={<Placeholder title="Visitors" />} />
             <Route path="/recap/:week" element={<Placeholder title="Recap" />} />
             <Route path="/signin" element={<Placeholder title="Sign in" />} />

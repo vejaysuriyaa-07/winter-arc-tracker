@@ -123,10 +123,19 @@ export function removeHabit(state: AppState, now: string, today: YMD, habitId: s
   return putHabit(state, now, { ...habit, archivedAt: habit.createdAt > today ? habit.createdAt : today });
 }
 
-/** Undo for removeHabit. */
-export function restoreHabit(state: AppState, now: string, habitId: string): AppState {
+/**
+ * A removal can be undone only on the day it was made: undoing an older one would
+ * schedule the habit on past days again and change their numbers (SPEC 13).
+ */
+export function canRestore(habit: Habit, today: YMD): boolean {
+  if (habit.deleted) return habit.createdAt >= today; // a tombstone only ever comes from a habit with no history
+  return habit.archivedAt !== undefined && habit.archivedAt >= today;
+}
+
+/** Undo for removeHabit, the same day only. */
+export function restoreHabit(state: AppState, now: string, today: YMD, habitId: string): AppState {
   const habit = state.habits.find((h) => h.id === habitId);
-  if (!habit || (!habit.deleted && habit.archivedAt === undefined)) return state;
+  if (!habit || (!habit.deleted && habit.archivedAt === undefined) || !canRestore(habit, today)) return state;
   const next: Habit = { ...habit };
   delete next.deleted;
   delete next.archivedAt;

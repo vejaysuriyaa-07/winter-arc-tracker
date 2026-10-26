@@ -23,13 +23,17 @@ function status(arc: Arc, today: string): string {
   return `Day ${arcDayNumber(arc, today)} of ${arc.lengthDays}`;
 }
 
-export default function Header({ state, arc, today, onSwitch }: { state: AppState; arc: Arc | undefined; today: string; onSwitch: (id: string) => void }) {
+export default function Header({ state, arc, today, onSwitch, title }: { state: AppState; arc: Arc | undefined; today: string; onSwitch: (id: string) => void; title?: string }) {
   const th = useTheme();
   const [open, setOpen] = useState(false);
   const arcs = state.arcs.filter((a) => !a.deleted && (arcPhase(a, today) !== "complete" || a.frozenAt === undefined || a.id === arc?.id));
   return (
     <header className="flex h-11 items-center justify-between">
-      <Wordmark />
+      {title ? (
+        <h1 className="text-[30px] leading-none" style={{ fontFamily: th.t.fonts.display, fontWeight: th.t.fonts.headingWeight }}>{title}</h1>
+      ) : (
+        <Wordmark />
+      )}
       {arc && (
         <button
           type="button"

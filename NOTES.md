@@ -8,7 +8,8 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Phase 1 (theme system and garden engine): done. Tokens and ThemeProvider/ThemeScope, scene loop with pause and freeze, NightSky, pure `lib/garden.ts`, `GardenScene`, showcase route behind `VITE_SHOWCASE` (deploy guard in the workflow). Screenshots reviewed (12 chrome, 20 garden, events, day 1, day 90).
 - Phase 2 (Garden tab): done. Header and arc switcher sheet, date heading, garden card, mood row, habit rows with the two-phase check animation and animated streak icons, edit mode (drag reorder, X with undo toast), quick add, bloom mini flower, progress line, full-bloom moment (live transition only, scrolls into view), bloom chain card, before-start and finished states, empty states. Screenshots reviewed: 3 looks x 4 seasons (top and bottom), full bloom, before start.
 - Phase 3 (Arcs, New arc, theme picker, switching, night in dark mode, arc complete): done. Screenshots reviewed in 3 looks x 2 seasons (arcs list, picker, New arc) plus arc complete.
-- Next: phase 4, Progress (this arc: timelapse, tiles, plants, week, visitors row; all time: rings, counts, grove, tallest), Month view with backfill, Plant detail.
+- Phase 4 (Progress, Month view, Plant detail): done. Screenshots reviewed in 3 looks x 2 seasons.
+- Next: phase 5, rewards: visitors (rules, art for four seasons, arrival in the garden), rare skies on real triggers, Sunday recap with share.
 
 ## Open issues
 
@@ -23,7 +24,8 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 ## Test counts
 
 Phase 2: 136 unit tests, 44 e2e.
-Phase 3: 148 unit tests, 63 e2e. typecheck, test, build, e2e green. typecheck, test, build, e2e green.
+Phase 3: 148 unit tests, 63 e2e. typecheck, test, build, e2e green.
+Phase 4: 159 unit tests, 80 e2e. typecheck, test, build, e2e green. typecheck, test, build, e2e green.
 
 Phase 1: 129 unit tests, 20 e2e. typecheck, test, build, e2e green.
 
