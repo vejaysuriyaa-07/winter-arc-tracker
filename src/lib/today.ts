@@ -16,14 +16,17 @@ function check(): void {
 }
 
 function start(): void {
-  if (started || typeof window === "undefined") return;
+  if (started) return;
   started = true;
-  window.addEventListener("focus", check);
-  document.addEventListener("visibilitychange", check);
-  window.setInterval(check, 60_000);
+  check(); // the module may have loaded on an earlier day than the first subscriber
+  if (typeof window !== "undefined") {
+    window.addEventListener("focus", check);
+    document.addEventListener("visibilitychange", check);
+  }
+  setInterval(check, 60_000);
 }
 
-function subscribe(l: () => void): () => void {
+export function subscribeToday(l: () => void): () => void {
   start();
   listeners.add(l);
   return () => {
@@ -31,10 +34,10 @@ function subscribe(l: () => void): () => void {
   };
 }
 
-function get(): YMD {
+export function currentDay(): YMD {
   return current;
 }
 
 export function useToday(): YMD {
-  return useSyncExternalStore(subscribe, get, get);
+  return useSyncExternalStore(subscribeToday, currentDay, currentDay);
 }

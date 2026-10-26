@@ -16,7 +16,7 @@ Resume point for the Winter Arc Tracker build. Spec: `docs/SPEC.md`. Decisions: 
 
 ## Open issues
 
-- Phase 1 reviewer pass was stopped before it reported; a self-check stood in for it (store snapshot stability, no UTC date paths, validation covers every field). Skipped, not failed.
+- Phase 1 review ran after the build finished (2026-10-26). Fixed: `save` no longer throws on a full or blocked storage (returns false, `lastSaveFailed()` exposed, subscribers still notified); validator rejects duplicate habit/goal ids, archivedAt before createdAt, fractional order and celebrated level, drops check-offs of unknown habits; backup key written only when absent; `isValidYMD` requires years 1000-9999; `addMonths` floor-mod; `today.ts` re-checks the day when the first subscriber arrives. New tests: `store.test.ts`, `today.test.ts`, extra dates and storage cases.
 
 ## Test counts
 
@@ -28,3 +28,4 @@ Phase 5: 83 unit tests, 15 e2e (at the phase 5 file set).
 Phase 6: 94 unit tests, 19 e2e (at the phase 6 file set).
 Phase 7: 95 unit tests, 25 e2e (at the phase 7 file set).
 Phase 8: 95 unit tests, 27 e2e. typecheck, test, build, e2e all green.
+Post-build Phase 1 review: 113 unit tests, 27 e2e, all green.

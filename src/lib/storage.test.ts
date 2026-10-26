@@ -148,6 +148,74 @@ describe("validateState", () => {
   });
 });
 
+describe("validation holes", () => {
+  const valid = (): AppState => defaultState(TODAY);
+  it("rejects duplicate habit and goal ids", () => {
+    const s = valid();
+    s.habits[1] = { ...s.habits[1]!, id: s.habits[0]!.id };
+    const r = validateState(s);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toMatch(/duplicate/i);
+    const t = valid();
+    t.goals.push({ id: "g", name: "A", target: 1, current: 0, createdAt: TODAY });
+    t.goals.push({ id: "g", name: "B", target: 1, current: 0, createdAt: TODAY });
+    expect(validateState(t).ok).toBe(false);
+  });
+  it("rejects archivedAt before createdAt", () => {
+    const s = valid();
+    s.habits[0] = { ...s.habits[0]!, archivedAt: "2026-10-01" };
+    expect(validateState(s).ok).toBe(false);
+    const t = valid();
+    t.habits[0] = { ...t.habits[0]!, archivedAt: TODAY }; // same day is allowed (never scheduled)
+    expect(validateState(t).ok).toBe(true);
+  });
+  it("rejects fractional order and celebrated level", () => {
+    const s = valid();
+    s.habits[0] = { ...s.habits[0]!, order: 0.5 };
+    expect(validateState(s).ok).toBe(false);
+    const t = valid();
+    t.ui = { lastCelebratedLevel: 1.5 };
+    expect(validateState(t).ok).toBe(false);
+  });
+  it("strips unknown fields and drops check-offs of unknown habits", () => {
+    const s = valid();
+    const raw = JSON.parse(serialize(s)) as Record<string, unknown>;
+    raw.extra = 1;
+    (raw.habits as Record<string, unknown>[])[0]!.colour = "red";
+    (raw.logs as Record<string, unknown>)[TODAY] = { date: TODAY, completedHabitIds: [s.habits[0]!.id, "ghost"], note: "x" };
+    const r = validateState(raw);
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect("extra" in r.state).toBe(false);
+      expect("colour" in r.state.habits[0]!).toBe(false);
+      expect(r.state.logs[TODAY]).toEqual({ date: TODAY, completedHabitIds: [s.habits[0]!.id] });
+    }
+  });
+  it("names the problem for a wrong-shape file", () => {
+    const r = parseImport(JSON.stringify({ hello: "world" }));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toMatch(/version/i);
+  });
+});
+
+describe("save resilience", () => {
+  it("returns false instead of throwing when storage is full", () => {
+    const s = defaultState(TODAY);
+    localStorage.setItem = () => {
+      throw new Error("QuotaExceededError");
+    };
+    expect(() => save(s)).not.toThrow();
+    expect(save(s)).toBe(false);
+  });
+  it("keeps the first backup rather than overwriting it", () => {
+    localStorage.setItem(STORAGE_KEY, "{first");
+    load(TODAY);
+    localStorage.setItem(STORAGE_KEY, "{second");
+    load(TODAY);
+    expect(localStorage.getItem(BACKUP_KEY)).toBe("{first");
+  });
+});
+
 describe("serialize / parseImport", () => {
   it("round-trips a state", () => {
     const s = defaultState(TODAY);

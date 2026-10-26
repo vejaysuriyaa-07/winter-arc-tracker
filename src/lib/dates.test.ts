@@ -6,13 +6,22 @@ import {
   dayOfMonth,
   daysInMonth,
   diffDays,
+  eachDay,
+  firstOfMonth,
   formatLocal,
+  formatMonthDay,
+  formatMonthYear,
+  formatShort,
   isValidYMD,
+  lastOfMonth,
+  maxDay,
+  minDay,
   monthOf,
   parseLocal,
   startOfWeekMon,
   todayLocal,
   weekdayMonFirst,
+  weekdayShort,
 } from "./dates";
 
 // test/setup.ts pins TZ to America/Los_Angeles.
@@ -118,5 +127,42 @@ describe("isValidYMD", () => {
     expect(isValidYMD("2026-13-01")).toBe(false);
     expect(isValidYMD("26-10-25")).toBe(false);
     expect(isValidYMD("2026-10-25T00:00")).toBe(false);
+  });
+});
+
+describe("isValidYMD edge cases", () => {
+  it("rejects impossible months, days, whitespace and years below 1000", () => {
+    expect(isValidYMD("2026-00-10")).toBe(false);
+    expect(isValidYMD("2027-02-29")).toBe(false);
+    expect(isValidYMD("2026-04-31")).toBe(false);
+    expect(isValidYMD(" 2026-10-25")).toBe(false);
+    expect(isValidYMD("2026-10-25 ")).toBe(false);
+    expect(isValidYMD("0004-02-29")).toBe(false); // two-digit-year Date mapping trap
+    expect(isValidYMD("2028-02-29")).toBe(true);
+  });
+});
+
+describe("ranges and helpers", () => {
+  it("eachDay is inclusive, empty when reversed, and spans DST", () => {
+    expect(eachDay("2026-10-30", "2026-11-02")).toEqual(["2026-10-30", "2026-10-31", "2026-11-01", "2026-11-02"]);
+    expect(eachDay("2026-10-25", "2026-10-25")).toEqual(["2026-10-25"]);
+    expect(eachDay("2026-10-26", "2026-10-25")).toEqual([]);
+  });
+  it("addMonths wraps several years in both directions", () => {
+    expect(addMonths({ year: 2026, month: 10 }, 27)).toEqual({ year: 2029, month: 1 });
+    expect(addMonths({ year: 2026, month: 1 }, -25)).toEqual({ year: 2023, month: 12 });
+    expect(addMonths({ year: 2026, month: 3 }, -3)).toEqual({ year: 2025, month: 12 });
+  });
+  it("min/max, first/last of month", () => {
+    expect(minDay("2026-10-25", "2026-10-24")).toBe("2026-10-24");
+    expect(maxDay("2026-10-25", "2026-10-24")).toBe("2026-10-25");
+    expect(firstOfMonth({ year: 2026, month: 2 })).toBe("2026-02-01");
+    expect(lastOfMonth({ year: 2028, month: 2 })).toBe("2028-02-29");
+  });
+  it("formats for display", () => {
+    expect(formatShort("2026-10-25")).toBe("Sun, Oct 25");
+    expect(formatMonthDay("2026-01-05")).toBe("Jan 5");
+    expect(formatMonthYear({ year: 2026, month: 12 })).toBe("December 2026");
+    expect(weekdayShort("2026-10-26")).toBe("Mon");
   });
 });

@@ -77,17 +77,19 @@ function validateHabit(v: unknown, i: number): Habit | string {
   if (!isStr(v.name)) return `habits[${i}].name is missing`;
   if (v.detail !== undefined && !isStr(v.detail)) return `habits[${i}].detail is not text`;
   if (!isCategory(v.category)) return `habits[${i}].category is not a known category`;
-  if (!isFiniteNum(v.order)) return `habits[${i}].order is not a number`;
+  if (!isFiniteNum(v.order) || !Number.isInteger(v.order)) return `habits[${i}].order is not a whole number`;
   if (!isValidYMD(v.createdAt)) return `habits[${i}].createdAt is not a YYYY-MM-DD day`;
   if (v.archivedAt !== undefined && !isValidYMD(v.archivedAt))
     return `habits[${i}].archivedAt is not a YYYY-MM-DD day`;
+  if (v.archivedAt !== undefined && v.archivedAt < v.createdAt)
+    return `habits[${i}].archivedAt is before its createdAt`;
   const h: Habit = { id: v.id, name: v.name, category: v.category, order: v.order, createdAt: v.createdAt };
   if (v.detail !== undefined) h.detail = v.detail;
   if (v.archivedAt !== undefined) h.archivedAt = v.archivedAt;
   return h;
 }
 
-function validateLog(key: string, v: unknown): DayLog | string {
+function validateLog(key: string, v: unknown, knownIds: ReadonlySet<string>): DayLog | string {
   if (!isValidYMD(key)) return `logs key "${key}" is not a YYYY-MM-DD day`;
   if (!isRecord(v)) return `logs["${key}"] is not an object`;
   if (v.date !== key) return `logs["${key}"].date does not match its key`;
@@ -98,7 +100,8 @@ function validateLog(key: string, v: unknown): DayLog | string {
     return `logs["${key}"].sleepHours is not a non-negative number`;
   if (v.sleepQuality !== undefined && !isRating(v.sleepQuality)) return `logs["${key}"].sleepQuality is not 1-5`;
   if (v.journalWin !== undefined && !isStr(v.journalWin)) return `logs["${key}"].journalWin is not text`;
-  const log: DayLog = { date: key, completedHabitIds: [...v.completedHabitIds] };
+  // Check-offs of habits that no longer exist are meaningless: drop them, keep the rest.
+  const log: DayLog = { date: key, completedHabitIds: v.completedHabitIds.filter((id) => knownIds.has(id)) };
   if (v.mood !== undefined) log.mood = v.mood;
   if (v.sleepHours !== undefined) log.sleepHours = v.sleepHours;
   if (v.sleepQuality !== undefined) log.sleepQuality = v.sleepQuality;
@@ -139,30 +142,41 @@ function validateV1(v: Record<string, unknown>): Validation {
 
   if (!Array.isArray(v.habits)) return fail("habits is not a list");
   const habits: Habit[] = [];
+  const habitIds = new Set<string>();
   for (const [i, h] of v.habits.entries()) {
     const r = validateHabit(h, i);
     if (isStr(r)) return fail(r);
+    if (habitIds.has(r.id)) return fail(`habits[${i}].id "${r.id}" is a duplicate`);
+    habitIds.add(r.id);
     habits.push(r);
   }
 
   if (!isRecord(v.logs)) return fail("logs is not an object");
   const logs: Record<string, DayLog> = {};
   for (const [key, l] of Object.entries(v.logs)) {
-    const r = validateLog(key, l);
+    const r = validateLog(key, l, habitIds);
     if (isStr(r)) return fail(r);
     logs[key] = r;
   }
 
   if (!Array.isArray(v.goals)) return fail("goals is not a list");
   const goals: Goal[] = [];
+  const goalIds = new Set<string>();
   for (const [i, g] of v.goals.entries()) {
     const r = validateGoal(g, i);
     if (isStr(r)) return fail(r);
+    if (goalIds.has(r.id)) return fail(`goals[${i}].id "${r.id}" is a duplicate`);
+    goalIds.add(r.id);
     goals.push(r);
   }
 
-  if (!isRecord(v.ui) || !isFiniteNum(v.ui.lastCelebratedLevel) || v.ui.lastCelebratedLevel < 1)
-    return fail("ui.lastCelebratedLevel must be a number of at least 1");
+  if (
+    !isRecord(v.ui) ||
+    !isFiniteNum(v.ui.lastCelebratedLevel) ||
+    !Number.isInteger(v.ui.lastCelebratedLevel) ||
+    v.ui.lastCelebratedLevel < 1
+  )
+    return fail("ui.lastCelebratedLevel must be a whole number of at least 1");
 
   return {
     ok: true,
@@ -174,6 +188,8 @@ function validateV1(v: Record<string, unknown>): Validation {
 export function validateState(input: unknown): Validation {
   if (!isRecord(input)) return fail("Not a Winter Arc export (expected an object)");
   if (input.version === 1) return validateV1(input);
+  if (input.version === undefined) return fail("Not a Winter Arc export (no version field)");
+  // Future versions migrate here, oldest first, before falling through to validateV1.
   return fail(`Unsupported data version: ${String(input.version)}`);
 }
 
@@ -192,12 +208,28 @@ export function load(today: YMD): AppState {
   if (raw === null || raw === undefined) return defaultState(today);
   const r = parseImport(raw);
   if (r.ok) return r.state;
-  storage()?.setItem(BACKUP_KEY, raw);
+  // Park the unreadable data once; an older backup is worth more than a newer broken one.
+  const s = storage();
+  if (s && s.getItem(BACKUP_KEY) === null) {
+    try {
+      s.setItem(BACKUP_KEY, raw);
+    } catch {
+      // nothing more to do: storage is unwritable
+    }
+  }
   return defaultState(today);
 }
 
-export function save(state: AppState): void {
-  storage()?.setItem(STORAGE_KEY, JSON.stringify(state));
+/** Persists the state. Returns false when storage refuses (quota, private mode); never throws. */
+export function save(state: AppState): boolean {
+  const s = storage();
+  if (!s) return false;
+  try {
+    s.setItem(STORAGE_KEY, JSON.stringify(state));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 // ---------- export / import ----------

@@ -5,7 +5,8 @@
 export type YMD = string;
 export type YearMonth = { year: number; month: number }; // month is 1-12
 
-const YMD_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
+// Years 1000-9999 only: new Date(y, m, d) maps 0-99 to 1900-1999.
+const YMD_RE = /^([1-9]\d{3})-(\d{2})-(\d{2})$/;
 
 function pad2(n: number): string {
   return n < 10 ? `0${n}` : String(n);
@@ -87,7 +88,7 @@ export function monthOf(ymd: YMD): YearMonth {
 
 export function addMonths(ym: YearMonth, n: number): YearMonth {
   const idx = ym.year * 12 + (ym.month - 1) + n;
-  return { year: Math.floor(idx / 12), month: (idx % 12) + 1 };
+  return { year: Math.floor(idx / 12), month: (((idx % 12) + 12) % 12) + 1 };
 }
 
 export function firstOfMonth(ym: YearMonth): YMD {

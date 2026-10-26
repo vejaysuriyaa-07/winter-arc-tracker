@@ -1,14 +1,17 @@
 // One app store: in-memory AppState, persisted through storage.ts, read with
 // useSyncExternalStore so every screen updates live. Mutations go through
-// `update`, which writes through to storage and notifies subscribers.
+// `update`, which notifies subscribers and writes through to storage.
 import { useSyncExternalStore } from "react";
-import type { AppState } from "../types";
-import { todayLocal } from "./dates";
+import type { AppState, ArcSettings, Rating } from "../types";
+import { todayLocal, type YMD } from "./dates";
+import * as m from "./mutations";
+import { level, lifetimeCheckoffs } from "./stats";
 import { STORAGE_KEY, load, save } from "./storage";
 
 type Listener = () => void;
 
 let state: AppState | null = null;
+let saveFailed = false;
 const listeners = new Set<Listener>();
 
 function ensure(): AppState {
@@ -18,6 +21,11 @@ function ensure(): AppState {
 
 export function getState(): AppState {
   return ensure();
+}
+
+/** True when the last write to storage was refused; the UI can warn that progress is not being kept. */
+export function lastSaveFailed(): boolean {
+  return saveFailed;
 }
 
 export function subscribe(listener: Listener): () => void {
@@ -31,10 +39,10 @@ function emit(): void {
   for (const l of listeners) l();
 }
 
-/** Replace the state wholesale (import, reset) and persist it. */
+/** Replace the state wholesale (import, reset), notify, then persist. */
 export function replaceState(next: AppState): void {
   state = next;
-  save(next);
+  saveFailed = !save(next);
   emit();
 }
 
@@ -63,10 +71,6 @@ export function useAppState(): AppState {
 }
 
 // ---------- actions ----------
-import * as m from "./mutations";
-import { level, lifetimeCheckoffs } from "./stats";
-import type { ArcSettings, Rating } from "../types";
-import type { YMD } from "./dates";
 
 export const actions = {
   toggleHabit: (date: YMD, habitId: string) => update((s) => m.toggleHabit(s, date, habitId)),
