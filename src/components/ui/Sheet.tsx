@@ -1,13 +1,16 @@
 // Bottom sheet in the current look. Escape and the backdrop close it.
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { useSheet } from "../../lib/useSheet";
 import { useTheme } from "../../theme/ThemeProvider";
+import Portal from "./Portal";
 
 export default function Sheet({ title, onClose, children, testId }: { title: string; onClose: () => void; children: ReactNode; testId?: string }) {
-  useSheet(onClose);
+  const box = useRef<HTMLDivElement>(null);
+  useSheet(onClose, box);
   const th = useTheme();
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center" role="dialog" aria-modal="true" aria-label={title}>
+    <Portal>
+    <div ref={box} className="fixed inset-0 z-50 flex items-end justify-center" role="dialog" aria-modal="true" aria-label={title}>
       <button type="button" aria-label="Close" onClick={onClose} className="absolute inset-0" style={{ background: "rgba(15, 14, 10, 0.45)" }} />
       <section
         data-testid={testId}
@@ -27,5 +30,6 @@ export default function Sheet({ title, onClose, children, testId }: { title: str
         {children}
       </section>
     </div>
+    </Portal>
   );
 }

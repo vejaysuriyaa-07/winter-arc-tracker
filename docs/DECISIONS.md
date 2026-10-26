@@ -53,3 +53,12 @@ One line each: what was chosen and why. 1 to 18 are from the v1 build; v2 (Grove
 48. A finished arc's Garden is read-only: no Edit, no quick add, no check-offs, no mood changes.
 46. Physical feedback goes through `lib/feedback.ts` (no-op on the web); the native build plugs in haptics in phase 8.
 47. With no arc, the Garden tab says "Start your first arc to plant a garden." with a button to New arc; an arc with no habits says "Add your first habit below."
+49. A new arc defaults to the season of the calendar month (Dec-Feb winter, Mar-May spring, Jun-Aug summer, Sep-Nov autumn), the current arc's look, 90 days, and today; it can start today or later; custom length is 1 to 365 days. An empty name uses "<Season> Arc".
+50. "Bring habits" copies the chosen habits' names and details into the new arc as new habits starting on its first day (fresh seeds); the old arc keeps its own.
+51. The arc-complete celebration shows once per finished arc, the first time the app is open after its last day ends (live at midnight when open). Closing it freezes the arc (`frozenAt`). Imported data and data migrated from v1 mark arcs already finished as celebrated, and a frozen arc (frozen on any device) never celebrates, so history never celebrates on load. Two arcs ending the same day celebrate one after the other.
+52. The arc switcher lists every arc except finished arcs that are already frozen (they stay on the Arcs tab); tapping an arc card on the Arcs tab makes it active and opens the Garden.
+53. The theme picker and New arc preview show the person's own garden and habits (or day-1 seeds with the habits being added), never sample data. The design's duplicate "Done" in the picker is dropped; "Use this theme" applies.
+54. Sheets, toasts and full-screen overlays render through a portal at the end of `<body>`, so the tab bar never covers them.
+55. Settings has only the garden theme row and the night-look switch until phase 6.
+56. Overlays keep a stack: only the topmost answers Escape (held keys do not repeat), the app behind is inert, focus moves into the overlay and returns on close.
+57. Radio groups (look, season, length) use roving focus: one Tab stop, arrow keys move the choice.

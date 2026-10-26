@@ -11,6 +11,9 @@ import Progress from "./pages/Progress";
 import Arcs from "./pages/Arcs";
 import Settings from "./pages/Settings";
 import Placeholder from "./pages/Placeholder";
+import NewArc from "./pages/NewArc";
+import ArcComplete from "./components/arcs/ArcComplete";
+import { arcToCelebrate } from "./lib/arcs";
 
 // Screenshot target for the scene engine; compiled in only for e2e builds (VITE_SHOWCASE=1).
 const Showcase = import.meta.env.VITE_SHOWCASE === "1" ? lazy(() => import("./pages/dev/Showcase")) : null;
@@ -74,6 +77,14 @@ function Sky() {
   return <NightSky accent={th.accent} progress={p} />;
 }
 
+/** Shows the arc-complete celebration once per finished arc, on whatever tab is open. */
+function CompleteGate() {
+  const state = useAppState();
+  const today = useToday();
+  const arc = arcToCelebrate(state, today);
+  return arc ? <ArcComplete key={arc.id} arc={arc} today={today} /> : null;
+}
+
 function Themed({ children }: { children: React.ReactNode }) {
   const state = useAppState();
   const today = useToday();
@@ -103,6 +114,14 @@ export default function App() {
               }
             />
           )}
+          <Route
+            path="/arcs/new"
+            element={
+              <Themed>
+                <NewArc />
+              </Themed>
+            }
+          />
           <Route path="*" element={<Shell />} />
         </Routes>
       </HashRouter>
@@ -125,11 +144,11 @@ function Shell() {
             <Route path="/plant/:id" element={<Placeholder title="Plant" />} />
             <Route path="/visitors" element={<Placeholder title="Visitors" />} />
             <Route path="/recap/:week" element={<Placeholder title="Recap" />} />
-            <Route path="/arcs/new" element={<Placeholder title="New arc" />} />
             <Route path="/signin" element={<Placeholder title="Sign in" />} />
           </Routes>
         </div>
         <TabBar />
+        <CompleteGate />
     </Themed>
   );
 }

@@ -20,6 +20,7 @@ type Props = {
   /** Rendered between the bloom flower and the night overlay (found visitor). */
   visitor?: ReactNode;
   className?: string;
+  testId?: string;
 };
 
 type Els = {
@@ -83,7 +84,7 @@ const AURORA = [
   { left: 220, top: 10, w: 170, h: 110, bg: "linear-gradient(180deg, rgba(34, 211, 238, 0) 0%, rgba(34, 211, 238, 0.8) 50%, rgba(167, 139, 250, 0) 100%)" },
 ];
 
-export default function GardenScene({ model: m, height = SCENE_H, still = false, label, visitor, className }: Props) {
+export default function GardenScene({ model: m, height = SCENE_H, still = false, label, visitor, className, testId = "garden" }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const els = useRef<Els>({ plants: [], birds: [], clouds: [], drops: [], stars: [], flies: [], aurora: [] });
@@ -177,7 +178,7 @@ export default function GardenScene({ model: m, height = SCENE_H, still = false,
       ref={box}
       role="img"
       aria-label={description}
-      data-testid="garden"
+      data-testid={testId}
       data-season={m.season}
       data-mood={m.mood}
       data-flowers={m.flowers.length}

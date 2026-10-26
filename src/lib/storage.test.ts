@@ -107,6 +107,14 @@ describe("load and save", () => {
     await load(mem, TODAY, NOW);
     expect(await mem.get(BACKUP_V1_KEY)).toBe(v1Blob());
   });
+  it("a v1 arc that already ended does not celebrate on the first launch after the upgrade", async () => {
+    await mem.set("winter-arc:v1", v1Blob()); // 90 days from 2026-10-05: ends 2027-01-02
+    const running = await load(mem, TODAY, NOW);
+    expect(running.ui.celebrated).toEqual({});
+    const m2 = memoryAdapter({ "winter-arc:v1": v1Blob() });
+    const ended = await load(m2, "2027-02-01", NOW);
+    expect(ended.ui.celebrated).toEqual({ [`arc:${ended.arcs[0]!.id}`]: true });
+  });
   it("parks unreadable data and returns defaults", async () => {
     await mem.set(STORAGE_KEY, "{not json");
     const s = await load(mem, TODAY, NOW);

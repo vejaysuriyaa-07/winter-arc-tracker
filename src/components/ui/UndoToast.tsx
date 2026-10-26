@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 import { useTheme } from "../../theme/ThemeProvider";
+import Portal from "./Portal";
 
 export type ToastData = { id: number; text: string; onUndo?: () => void };
 
@@ -13,6 +14,7 @@ export default function UndoToast({ toast, onDone }: { toast: ToastData | null; 
     return () => clearTimeout(t);
   }, [toast, onDone]);
   return (
+    <Portal>
     <div className="pointer-events-none fixed inset-x-0 z-50 flex justify-center px-4" style={{ bottom: "calc(max(env(safe-area-inset-bottom), 22px) + 74px)" }}>
       <AnimatePresence>
         {toast && (
@@ -45,5 +47,6 @@ export default function UndoToast({ toast, onDone }: { toast: ToastData | null; 
         )}
       </AnimatePresence>
     </div>
+    </Portal>
   );
 }

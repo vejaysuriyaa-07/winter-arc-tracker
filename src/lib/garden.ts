@@ -381,3 +381,13 @@ export function gardenFromState(state: AppState, arc: Arc, day: YMD, events: Sky
     visitorId,
   });
 }
+
+/** The theme picker's preview: the person's own garden in another season, or day-1 seeds for a new arc. */
+export function previewModel(state: AppState, arc: Arc | undefined, day: YMD, season: Season, habitCount: number): SceneModel {
+  if (arc) return gardenFromState(state, { ...arc, season }, day, NO_EVENTS);
+  return sceneModel({
+    season, mood: "good", events: NO_EVENTS, lengthDays: 90, dayNumber: 1,
+    plants: Array.from({ length: habitCount }, (_, i) => ({ id: `new-${i}`, daysDone: 0, wilt: false })),
+    keptDays: [], bloom: false,
+  });
+}

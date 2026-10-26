@@ -4,6 +4,7 @@ import { LOOKS, MOODS, SEASONS, SYNC_TABLES, logKey } from "../types";
 import type { AppState, Arc, DayLog, Habit, Look, Mood, Season, Settings, SyncOp, SyncTable, UiState, VisitorFound } from "../types";
 import { isValidYMD, type YMD } from "./dates";
 import { migrateV1, type V1State } from "./migrate";
+import { markFinishedCelebrated } from "./arcs";
 
 export const STORAGE_KEY = "grove:v3";
 /** The old Winter Arc Tracker key; read once, migrated, then parked. */
@@ -310,14 +311,14 @@ async function park(adapter: StorageAdapter, key: string, raw: string): Promise<
  * A read error rejects: the caller must not save defaults over data it could not read.
  */
 export async function load(adapter: StorageAdapter, today: YMD, now: string): Promise<AppState> {
-  void today;
   const raw = await adapter.get(STORAGE_KEY);
   if (raw === null) {
     const v1raw = await adapter.get(V1_KEY);
     if (v1raw === null) return defaultState(now);
     const r = parseImport(v1raw, now);
     await park(adapter, r.ok ? BACKUP_V1_KEY : `${BACKUP_UNREADABLE_KEY}:${now}`, v1raw);
-    return r.ok ? r.state : defaultState(now);
+    // Like an import: an arc that already ended before the upgrade does not celebrate on load.
+    return r.ok ? markFinishedCelebrated(r.state, today) : defaultState(now);
   }
   const r = parseImport(raw, now);
   if (r.ok) return r.state;

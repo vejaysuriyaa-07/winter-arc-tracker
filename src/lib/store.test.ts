@@ -96,3 +96,11 @@ describe("store safety", () => {
     expect(JSON.parse((await base.get(STORAGE_KEY))!).activeArcId).toBeNull();
   });
 });
+
+describe("import", () => {
+  it("imported finished arcs never celebrate", async () => {
+    await withData();
+    store.actions.importState(fixtureState()); // the fixture arc ended 2026-10-18, before today
+    expect(store.getState().ui.celebrated["arc:arc-winter"]).toBe(true);
+  });
+});

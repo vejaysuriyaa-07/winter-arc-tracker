@@ -6,6 +6,7 @@ import { useSyncExternalStore } from "react";
 import type { AppState, Look, Mood } from "../types";
 import { todayLocal, type YMD } from "./dates";
 import * as m from "./mutations";
+import { markFinishedCelebrated } from "./arcs";
 import { STORAGE_KEY, defaultState, load, save, webAdapter, type StorageAdapter } from "./storage";
 
 type Listener = () => void;
@@ -136,5 +137,6 @@ export const actions = {
   markCelebrated: (key: string) => update((s) => m.markCelebrated(s, key)),
   markRecapSeen: (key: string) => update((s) => m.markRecapSeen(s, key)),
   setUiFlag: (flag: "signInPrompted" | "notificationsPrompted", value: boolean) => update((s) => m.setUiFlag(s, flag, value)),
-  importState: (next: AppState) => replaceState(next),
+  /** Imported history never celebrates on load: arcs already finished are marked celebrated. */
+  importState: (next: AppState) => replaceState(markFinishedCelebrated(next, todayLocal())),
 };

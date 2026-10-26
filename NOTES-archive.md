@@ -58,3 +58,11 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Fixed while testing: screenshot loop reused the first seed (init scripts stack), the drag handle sat under the tab bar in the test, full bloom played off screen (now scrolls into view), mini bloom petals reshaped.
 - Review fixes: frozen icons register before the static frame, bloom only after a local check, finished arcs read-only, check fx cancelled on fast uncheck, accessible names for rows and the switcher, 44px switcher, loop root always mounted.
 - Counts: 136 unit tests, 44 e2e.
+
+## 2026-10-26: Grove phase 3, arcs and themes
+
+- `lib/arcs.ts` (status labels, arc-complete rule, summary, season by month, mark finished arcs celebrated) with tests; `previewModel` in `lib/garden.ts`.
+- Arcs tab (cards in each arc's own theme), New arc (live restyle, look and season cards, length, start date, bring habits, add habits), ThemePicker sheet with live preview, minimal Settings (theme row, night-look switch), ArcComplete overlay via a gate in the shell.
+- Fixed while testing: overlays sat under the tab bar (page z-index context), now portaled; arc card scenes cropped the plants; preview label fade.
+- Review fixes: cleared start date no longer crashes, custom length validated, Cancel on a cold load, start date follows midnight, frozen arcs and migrated finished arcs never celebrate, celebration haptic on arrival, close-once guard, overlay stack with Escape, inert background and focus return, roving radio groups, dark-mode note in the picker.
+- Counts: 148 unit tests, 63 e2e.
