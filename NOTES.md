@@ -6,7 +6,8 @@ Resume point for the Winter Arc Tracker build. Spec: `docs/SPEC.md`. Decisions: 
 
 - Phase 1 (scaffold): done. Vite 8, React 19, TS 7 strict, Tailwind v4, React Router 8 HashRouter, Vitest 3, Playwright 1.64 (Chromium 1248 cached). `dates.ts` and `storage.ts` with tests (29 passing; corrupt stored data is parked under a backup key before defaults replace it). `store.ts` (useSyncExternalStore over storage) and `today.ts` (midnight rollover) in place; pages are placeholders.
 - Phase 2 (stats): done. `src/lib/stats.ts` pure, `stats.fixture.ts` is a 14-day arc with the expected values worked in comments (unlogged day, habit added mid-arc, habit archived mid-arc, 100% day, broken streak, today in progress, zero-scheduled variant). 34 stats tests. Reviewer confirmed all fixture arithmetic; its one gap (not-kept final arc day after the arc) was added as a test.
-- Next: Phase 3, Today screen (WaveProgress, HabitRow, StreakFlame, ProgressRing, QuickAdd, CheckIn) plus store actions and the e2e screenshot spec.
+- Phase 3 (Today): done. WaveProgress (CSS drift, rAF fill tween to refs, gold at 100%), HabitRow, StreakFlame, ProgressRing, QuickAdd, CheckIn, ArcStatusCard (before/complete). Pure `mutations.ts` + store actions. Playwright config (Chromium phone emulation, TZ pinned) with `e2e/screens.spec.ts` (screenshots) and `e2e/today.spec.ts` (live update, reload persistence, quick add, check-in). Review fixes: sleep-hours input keeps local text; days-left in header; no-op writes keep state identity.
+- Next: Phase 4, Calendar (already drafted in the working tree: `pages/Calendar.tsx`, `components/DaySheet.tsx`, `bucketFor`/`arcMonths` in stats, `e2e/calendar.spec.ts`).
 
 ## Open issues
 
@@ -16,3 +17,4 @@ Resume point for the Winter Arc Tracker build. Spec: `docs/SPEC.md`. Decisions: 
 
 Phase 1: 29 unit tests, 0 e2e.
 Phase 2: 63 unit tests, 0 e2e.
+Phase 3: 77 unit tests, 11 e2e.

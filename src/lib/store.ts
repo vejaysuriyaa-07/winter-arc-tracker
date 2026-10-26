@@ -61,3 +61,18 @@ if (typeof window !== "undefined") {
 export function useAppState(): AppState {
   return useSyncExternalStore(subscribe, getState, getState);
 }
+
+// ---------- actions ----------
+import * as m from "./mutations";
+import type { Rating } from "../types";
+import type { YMD } from "./dates";
+
+export const actions = {
+  toggleHabit: (date: YMD, habitId: string) => update((s) => m.toggleHabit(s, date, habitId)),
+  setCheckoff: (date: YMD, habitId: string, checked: boolean) =>
+    update((s) => m.setCheckoff(s, date, habitId, checked)),
+  addHabit: (today: YMD, input: m.NewHabit) => update((s) => m.addHabit(s, today, input)),
+  setMood: (date: YMD, mood: Rating | undefined) => update((s) => m.setMood(s, date, mood)),
+  setSleep: (date: YMD, input: m.SleepInput) => update((s) => m.setSleep(s, date, input)),
+  setJournalWin: (date: YMD, text: string | undefined) => update((s) => m.setJournalWin(s, date, text)),
+};
