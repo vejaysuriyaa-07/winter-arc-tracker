@@ -1,5 +1,5 @@
 // Settings (SPEC 5.10), laid out in the arc's look: this arc, feel, sync, your data, reset.
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AppState } from "../types";
 import { actions, flushWrites, useAppState } from "../lib/store";
 import { useNow, useToday } from "../lib/today";
@@ -16,6 +16,7 @@ import { ConfirmSheet, HabitsSheet, ScoringSheet } from "../components/settings/
 import { useTheme } from "../theme/ThemeProvider";
 import { useNavigate } from "react-router";
 import { signOut, statusText, syncNow, useSync } from "../lib/sync";
+import { allowNotifications, isNative, notificationsAllowed, shareText } from "../lib/native";
 
 const WEEKDAY = new Intl.DateTimeFormat("en-US", { weekday: "long" });
 const MONTH_DAY = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" });
@@ -41,6 +42,16 @@ export default function Settings() {
   const arc = activeArc(state);
   const [open, setOpen] = useState<Open>(null);
   const sync = useSync();
+  const native = isNative();
+  const [blocked, setBlocked] = useState(false);
+  useEffect(() => {
+    if (native) void notificationsAllowed().then((ok) => setBlocked(!ok));
+  }, [native]);
+  // In the iPhone app, turning a reminder on asks iOS for permission (the system prompt shows once).
+  const reminder = (patch: { nudge?: boolean; recap?: boolean }): void => {
+    actions.updateSettings(patch);
+    if (native && (patch.nudge || patch.recap)) void allowNotifications().then((ok) => setBlocked(!ok));
+  };
   const navigate = useNavigate();
   useNow(); // the "Synced N min ago" line stays fresh
   const limits = arc ? arcEditLimits(arc, today) : null;
@@ -96,10 +107,14 @@ export default function Settings() {
         <Divider />
         <Toggle label="Wind and animations" detail="Off keeps every scene still" checked={s.motion} onChange={(v) => actions.updateSettings({ motion: v })} testId="settings-motion" />
         <Divider />
-        <Toggle label="8pm nudge" detail="When today is open and your chain is 2+" checked={s.nudge} onChange={(v) => actions.updateSettings({ nudge: v })} testId="settings-nudge" />
+        <Toggle label="8pm nudge" detail="When today is open and your chain is 2+" checked={s.nudge} onChange={(v) => reminder({ nudge: v })} testId="settings-nudge" />
         <Divider />
-        <Toggle label="Sunday recap" detail="A note when your week is ready" checked={s.recap} onChange={(v) => actions.updateSettings({ recap: v })} testId="settings-recap" />
-        {(s.nudge || s.recap) && <p className="pb-3 text-[13px]" style={{ color: th.t.muted }}>Notifications arrive in the iPhone app.</p>}
+        <Toggle label="Sunday recap" detail="A note when your week is ready" checked={s.recap} onChange={(v) => reminder({ recap: v })} testId="settings-recap" />
+        {(s.nudge || s.recap) && (native ? blocked : true) && (
+          <p className="pb-3 text-[13px]" data-testid="notify-note" style={{ color: th.t.muted }}>
+            {native ? "Notifications are off for Grove. Turn them on in the iPhone's Settings app, under Grove." : "Notifications arrive in the iPhone app."}
+          </p>
+        )}
       </Section>
 
       <Section title="Sync">
@@ -124,6 +139,11 @@ export default function Settings() {
           testId="export"
           onClick={async () => {
             await flushWrites();
+            if (native) {
+              // The iPhone app cannot download files; the share sheet can save the backup to Files or send it.
+              setNote((await shareText(backupFileName(today), serialize(state))) ? "Backup shared." : null);
+              return;
+            }
             download(serialize(state), backupFileName(today));
             setNote("Backup saved.");
           }}

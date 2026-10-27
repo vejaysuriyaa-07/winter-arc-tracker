@@ -50,6 +50,28 @@ export function webAdapter(): StorageAdapter {
   };
 }
 
+/** The slice of @capacitor/preferences this module uses. */
+export type PreferencesLike = {
+  get(o: { key: string }): Promise<{ value: string | null }>;
+  set(o: { key: string; value: string }): Promise<void>;
+  remove(o: { key: string }): Promise<void>;
+};
+
+/** The iPhone app's storage (SPEC 11): native key-value storage that iOS does not clear like web storage. */
+export function preferencesAdapter(prefs: PreferencesLike): StorageAdapter {
+  return {
+    get: async (k) => (await prefs.get({ key: k })).value,
+    set: (k, v) => prefs.set({ key: k, value: v }),
+    remove: (k) => prefs.remove({ key: k }),
+  };
+}
+
+/** The iPhone app's adapter, with the plugin loaded only there (never in the web bundle's start-up path). */
+export async function nativeStorage(): Promise<StorageAdapter> {
+  const { Preferences } = await import("@capacitor/preferences");
+  return preferencesAdapter(Preferences);
+}
+
 /** Prefix for the sign-in session, kept apart from app data. */
 export const AUTH_PREFIX = "grove:session:";
 

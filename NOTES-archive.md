@@ -102,3 +102,10 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Test expectation changes: engine tests moved to uuid fixture ids once the fake server enforced uuids; the incremental pull test asserts the one-minute overlap rule instead of zero rows; the in-flight test checks the round's final push; the export round trip compares content without timestamps (imports are restamped by design).
 - Review fixes (each with a failing run first, except the e2e account-switch test, written after its fix): different account on one device, runs outliving sign out, bad rows blocking sync, stale writes not coming back, offset paging, arcs finished through a pull, import leftovers, prompt flash, read-only store status.
 - Counts: 234 unit, 131 e2e. Hygiene check passed.
+
+## 2026-10-26 Phase 8: iPhone app
+
+- Built: Capacitor 8.5 core and iOS, plugins preferences, haptics, local-notifications, share, status-bar, splash-screen; `capacitor.config.json` (the CLI cannot load a .ts config with TypeScript 7 on Node 23.1); `ios/` created by `cap add ios` (SPM, no Xcode needed); portrait only; `VITE_TARGET=native` build (base ./, no PWA); index.html icon links follow the base; `lib/nudges.ts` (plan, prompt rule, haptic map, plan application), `lib/native.ts`, `nativeStorage` in storage.ts, reminders card, Settings permission handling, showcase view for the card, icon and splash via `scripts/make-icons.mjs`, `scripts/ios-reinstall.sh`.
+- Review fixes, with failing runs first: nudge on days with nothing due; tomorrow's nudge when today is kept; cutoff before 20:00 and retry after a failed schedule; card skipped when a reminder is on; permission state on Settings; cards wait for the session; replan timer; reachable wired iPhone first and optional team id in the script; Preferences import moved into storage.ts.
+- PARTIAL: recap image and backup file sharing on iPhone wait for `@capacitor/filesystem` approval.
+- Counts: 247 unit, 138 e2e. Hygiene check passed.

@@ -12,13 +12,16 @@ import "./index.css";
 import App from "./App";
 import { initStore } from "./lib/store";
 import { startSync } from "./lib/sync";
+import { isNative, startNative } from "./lib/native";
+import { nativeStorage } from "./lib/storage";
 
 // Storage may be async (Preferences on iOS), so the state is loaded before the first render.
-void initStore().then(() => {
+void (isNative() ? nativeStorage() : Promise.resolve(undefined)).then(initStore).then(() => {
   startSync();
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <App />
     </StrictMode>,
   );
+  startNative();
 });

@@ -26,6 +26,9 @@ import { BloomChain, BloomMini, FullBloom } from "../components/garden/Bloom";
 import UndoToast, { type ToastData } from "../components/ui/UndoToast";
 import { RecapCard } from "./Recap";
 import SignInPrompt from "../components/sync/SignInPrompt";
+import RemindersPrompt from "../components/sync/RemindersPrompt";
+import { shouldPromptReminders } from "../lib/nudges";
+import { isNative } from "../lib/native";
 import { shouldPromptSignIn } from "../lib/prompts";
 import { useSync } from "../lib/sync";
 import { latestRecap } from "../lib/recap";
@@ -247,7 +250,12 @@ export default function Garden() {
       {view.phase !== "before" && (
         <BloomChain days={chainStrip(state, arc, today)} chain={view.chain} teaser={next ? teaser(next) : "Every visitor has found your garden this arc."} />
       )}
-      {sync.ready && shouldPromptSignIn(state, today, { configured: sync.configured, signedIn: sync.email !== null }) && <SignInPrompt />}
+      {(() => {
+        // One card at a time: sign in first, then reminders; neither until the saved session is read.
+        if (!sync.ready) return null;
+        if (shouldPromptSignIn(state, today, { configured: sync.configured, signedIn: sync.email !== null })) return <SignInPrompt />;
+        return shouldPromptReminders(state, today, isNative()) ? <RemindersPrompt /> : null;
+      })()}
       <UndoToast toast={toast} onDone={closeToast} />
     </>
   );

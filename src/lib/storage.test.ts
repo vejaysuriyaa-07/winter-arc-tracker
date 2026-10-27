@@ -3,6 +3,7 @@ import { fixtureState } from "./fixtures/arc14";
 import {
   AUTH_PREFIX,
   backupBeforeSwitch,
+  preferencesAdapter,
   readSyncUser,
   writeSyncUser,
   authStorage,
@@ -180,5 +181,22 @@ describe("sync account memory", () => {
     expect(await readSyncUser(a)).toBe("u1");
     await backupBeforeSwitch(a, "{\"x\":1}", "2026-10-14T13:00:00.000Z");
     expect(await a.get("grove:backup:account:2026-10-14T13:00:00.000Z")).toBe("{\"x\":1}");
+  });
+});
+
+describe("iPhone storage", () => {
+  it("reads and writes through the Preferences plugin, null when missing", async () => {
+    const box = new Map<string, string>();
+    const prefs = {
+      get: async ({ key }: { key: string }) => ({ value: box.get(key) ?? null }),
+      set: async ({ key, value }: { key: string; value: string }) => void box.set(key, value),
+      remove: async ({ key }: { key: string }) => void box.delete(key),
+    };
+    const a = preferencesAdapter(prefs);
+    expect(await a.get(STORAGE_KEY)).toBeNull();
+    await a.set(STORAGE_KEY, "{}");
+    expect(await a.get(STORAGE_KEY)).toBe("{}");
+    await a.remove(STORAGE_KEY);
+    expect(box.has(STORAGE_KEY)).toBe(false);
   });
 });

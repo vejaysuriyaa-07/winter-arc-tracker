@@ -2,6 +2,7 @@
 // when VITE_SHOWCASE=1 (the e2e build); never part of the shipped app. The sample
 // plants mirror the props of docs/design/Garden.dc.html so screenshots compare 1:1.
 import { useSearchParams } from "react-router";
+import RemindersPrompt from "../../components/sync/RemindersPrompt";
 import { LOOKS, MOODS, SEASONS, type Look, type Mood, type Season } from "../../types";
 import { NO_EVENTS, sceneModel, type SkyEvents } from "../../lib/garden";
 import GardenScene from "../../scenes/GardenScene";
@@ -116,6 +117,14 @@ export default function Showcase() {
   const look: Look = pick(q.get("look"), LOOKS, "journal");
   const season: Season = pick(q.get("season"), SEASONS, "winter");
   const mood: Mood = pick(q.get("mood"), MOODS, "good");
+  if (q.get("view") === "reminders") {
+    // The iPhone-only reminders card, for screenshots in each look.
+    return (
+      <ThemeScope look={look} season={season} paint className="relative min-h-dvh p-4" data-testid="showcase">
+        <RemindersPrompt />
+      </ThemeScope>
+    );
+  }
   const day = Math.max(1, Math.min(90, Number(q.get("day") ?? 40) || 40));
   const done = Math.max(0, Math.min(9, Number(q.get("done") ?? 5)));
   return (

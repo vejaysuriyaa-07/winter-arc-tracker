@@ -1,0 +1,16 @@
+{
+  "appId": "com.vejaysuriyaa.grove",
+  "appName": "Grove",
+  "webDir": "dist",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#F8F4EB"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#F8F4EB",
+      "showSpinner": false
+    }
+  }
+}

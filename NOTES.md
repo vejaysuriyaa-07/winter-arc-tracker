@@ -13,12 +13,14 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Phase 6 (Settings and data): done. This arc fields (name, theme, length, start, threshold) with limits that never end a running arc, habits editor sheet, scoring explainer (SPEC 9 in plain words), feel toggles, sounds, JSON export, import of v1 and v3 with a confirm, reset this arc. Screenshots reviewed in 3 looks x 2 seasons.
 - Phase 7 (sync): code done. SQL with RLS and a newest-wins trigger (`supabase/migrations/0001_grove.sql`), RLS check (`supabase/tests/rls_check.sql`, 17 checks, verified on PGlite with a stand-in auth schema), sync engine against a strict fake remote, email-code sign in with the rate-limit line, Settings sync rows, one-time sign-in card, deploy keys from secrets. Screenshots reviewed in 3 looks x 2 seasons.
 - Waiting on the owner: the steps in `docs/SYNC-SETUP.md` (project, SQL, RLS check output, email templates, keys, secrets). Then a two-device check after the next deploy.
-- Next: phase 8, Capacitor iOS (needs Xcode installed by the owner first).
+- Phase 8 (iPhone app): code done, not yet run on a device. Capacitor 8 with SPM (`ios/`, JSON config), Preferences storage, haptics, 8pm and Sunday notifications with a one-time reminders card, status bar follows the look, icon and splash, `npm run ios`, `npm run ios:reinstall` (`scripts/ios-reinstall.sh`).
+- Waiting on the owner: Xcode install and the iPhone steps; approval for `@capacitor/filesystem` (recap image and backup file sharing on iPhone, PARTIAL until then).
+- Next: phase 9 (full flow e2e, every-screen screenshots, acceptance checklist), which can start now; device checks are added when the owner reports back.
 
 ## Open issues
 
 - RLS check has only run on PGlite with a stand-in auth schema; the real run on Supabase is the owner's step 5.
-- Phase 8: export uses an anchor download, which does nothing in the iOS web view; switch to the native share sheet there.
+- Phase 8 PARTIAL: iPhone share of the recap image and backup file needs `@capacitor/filesystem` (asked). The reinstall script is syntax-checked only; xcodebuild and devicectl need Xcode.
 
 - Save banner clearing on the next good save is covered by `store.test.ts`; the e2e version returns in phase 2 when the Garden has check-offs.
 
@@ -33,6 +35,7 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 Phase 2: 136 unit tests, 44 e2e.
 Phase 3: 148 unit tests, 63 e2e. typecheck, test, build, e2e green.
 Phase 4: 159 unit tests, 80 e2e. typecheck, test, build, e2e green.
+Phase 8: 247 unit tests, 138 e2e. typecheck, test, build, build:native, e2e green (two full e2e runs).
 Phase 7: 234 unit tests, 131 e2e. typecheck, test, build, e2e green (two full e2e runs).
 Phase 6: 196 unit tests, 114 e2e. typecheck, test, build, e2e green (two full e2e runs).
 Phase 5: 188 unit tests, 95 e2e. typecheck, test, build, e2e green (two full e2e runs). typecheck, test, build, e2e green.

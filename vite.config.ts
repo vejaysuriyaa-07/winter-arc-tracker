@@ -3,12 +3,16 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
+// VITE_TARGET=native builds the iPhone app's bundle: Capacitor serves it from its
+// own origin, so asset paths are relative and there is no service worker.
+const native = process.env.VITE_TARGET === "native";
+
 export default defineConfig({
-  base: "/winter-arc-tracker/",
+  base: native ? "./" : "/winter-arc-tracker/",
   plugins: [
     react(),
     tailwindcss(),
-    VitePWA({
+    !native && VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["icons/icon.svg", "icons/apple-touch-icon.png"],
       manifest: {

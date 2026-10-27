@@ -1,7 +1,8 @@
-// Renders public/icons/icon.svg to the PNG sizes the manifest needs, using the
-// Chromium that Playwright already ships. Run: node scripts/make-icons.mjs
+// Renders public/icons/icon.svg to the PNG sizes the manifest needs, plus the
+// iPhone app icon and splash when ios/ exists, using the Chromium that
+// Playwright already ships. Run: node scripts/make-icons.mjs
 import { chromium } from "@playwright/test";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
@@ -22,6 +23,17 @@ const jobs = [
   { file: "apple-touch-icon.png", size: 180, pad: 0 },
 ];
 
+// The iPhone app: a 1024px icon (no transparency) and a 2732px splash with the
+// wordmark small in the middle of warm paper, in the three slots Xcode expects.
+const xcassets = path.join(root, "ios/App/App/Assets.xcassets");
+const hasIos = await access(xcassets).then(() => true, () => false);
+if (hasIos) {
+  jobs.push({ file: path.join(xcassets, "AppIcon.appiconset/AppIcon-512@2x.png"), size: 1024, pad: 0 });
+  for (const name of ["splash-2732x2732.png", "splash-2732x2732-1.png", "splash-2732x2732-2.png"]) {
+    jobs.push({ file: path.join(xcassets, "Splash.imageset", name), size: 2732, pad: 0.4 });
+  }
+}
+
 const browser = await chromium.launch();
 const page = await browser.newPage({ deviceScaleFactor: 1 });
 for (const { file, size, pad } of jobs) {
@@ -32,7 +44,7 @@ for (const { file, size, pad } of jobs) {
       `<div style="width:${inner}px;height:${inner}px">${svg.replace("<svg ", '<svg width="100%" height="100%" ')}</div></body></html>`,
   );
   await page.evaluate(() => document.fonts.ready);
-  await page.screenshot({ path: out(file), clip: { x: 0, y: 0, width: size, height: size }, omitBackground: false });
-  console.log("wrote", file);
+  await page.screenshot({ path: path.isAbsolute(file) ? file : out(file), clip: { x: 0, y: 0, width: size, height: size }, omitBackground: false });
+  console.log("wrote", path.basename(file));
 }
 await browser.close();
