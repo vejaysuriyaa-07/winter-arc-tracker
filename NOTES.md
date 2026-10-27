@@ -16,11 +16,11 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Phase 8 (iPhone app): code done, not yet run on a device. Capacitor 8 with SPM (`ios/`, JSON config), Preferences storage, haptics, 8pm and Sunday notifications with a one-time reminders card, status bar follows the look, icon and splash, `npm run ios`, `npm run ios:reinstall` (`scripts/ios-reinstall.sh`).
 - Waiting on the owner: Xcode install and the iPhone steps. `@capacitor/filesystem` approved and wired: recap PNG and backup JSON go to the share sheet as files.
 - Phase 9 (final): done in code. First-week flow e2e, every screen in 3 looks x 4 seasons (reviewed as contact sheets; fixed clipped Visitors tabs, stock focus ring, tiny young rings), `docs/ACCEPTANCE.md` (11 pass, sync partial, iPhone, 60fps on device and deploy pending the owner), frame-timing proxy `scripts/perf-proxy.mjs`.
-- Next: owner items only. Paste the RLS check output; install Xcode and run the iPhone steps (include sharing a recap and a backup); push to deploy. Then update `docs/ACCEPTANCE.md` rows 12 to 15 with what the owner reports.
+- Next: owner items only. Finish Supabase steps 3 to 13 (two-device test still to come); install Xcode and run the iPhone steps (include sharing a recap and a backup); push to deploy. Then update `docs/ACCEPTANCE.md` rows 12 to 15 with what the owner reports.
 
 ## Open issues
 
-- RLS check has only run on PGlite with a stand-in auth schema; the real run on Supabase is the owner's step 5.
+- RLS check passed 17/17 on the owner's Supabase project (2026-10-27). Owner is doing the email template and keys (steps 3 and 4) and creates `.env.local` themselves; never touch it.
 - The reinstall script is syntax-checked only; xcodebuild and devicectl need Xcode. iPhone file sharing is unit-tested, not yet seen on a device.
 
 - Save banner clearing on the next good save is covered by `store.test.ts`; the e2e version returns in phase 2 when the Garden has check-offs.
