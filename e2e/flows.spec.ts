@@ -27,6 +27,16 @@ const html = (page: Page) => page.locator("html");
 test("a first week in Grove, every main flow in order", async ({ page }) => {
   test.setTimeout(120_000);
 
+  // Ids from a fixed sequence: the rare visitor's roll is seeded by the arc id, so a random id would make the counts vary.
+  // The counter lives in sessionStorage so it keeps counting across the reloads below.
+  await page.addInitScript(() => {
+    crypto.randomUUID = () => {
+      const n = Number(sessionStorage.getItem("test-uuid") ?? "0") + 1;
+      sessionStorage.setItem("test-uuid", String(n));
+      return `00000000-0000-4000-8000-${String(n).padStart(12, "0")}` as `${string}-${string}-${string}-${string}-${string}`;
+    };
+  });
+
   // Day 1, Wednesday 21 October: nothing yet, so the app says what to do first.
   await page.clock.setFixedTime(at("2026-10-21", 9));
   await page.goto("#/");

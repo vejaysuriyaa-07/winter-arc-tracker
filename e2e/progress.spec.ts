@@ -1,6 +1,6 @@
 // Phase 4: Progress (this arc, all time), Month view with backfill, Plant detail.
 import { expect, test, type Page } from "@playwright/test";
-import { SHOTS, noonLA, readState, seed, stateWithArc, withLogs } from "./helpers";
+import { SHOTS, noonLA, readState, seed, stateWithArc, withLogs, withArcId } from "./helpers";
 import type { AppState, Look, Season } from "../src/types";
 
 const TODAY = "2026-10-26"; // day 26 of a 90-day arc from Oct 1
@@ -25,7 +25,8 @@ function progressState(look: Look = "journal", season: Season = "winter"): AppSt
     days[ds] = done;
   }
   days["2026-10-04"] = [];
-  return withLogs(stateWithArc({ startDate: "2026-10-01", look, season }), days, { "2026-10-04": "okay" });
+  // A fixed arc id: the rare visitor's roll is seeded by it, and this id never rolls one on these days.
+  return withArcId(withLogs(stateWithArc({ startDate: "2026-10-01", look, season }), days, { "2026-10-04": "okay" }), "0a0a0a0a-0000-4000-8000-00000000f001");
 }
 
 async function openAt(page: Page, state: AppState, path: string): Promise<void> {
