@@ -12,15 +12,15 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Phase 5 (rewards): done. Visitor rules and art for all 36, silent and live arrivals with garden entrances, rare skies (night, fireflies, bright stars, northern lights, rainbow, shooting star), Sunday recap with share. Screenshots reviewed: art sheet, visitors in 3 looks x 2 seasons, recap slides, skies.
 - Phase 6 (Settings and data): done. This arc fields (name, theme, length, start, threshold) with limits that never end a running arc, habits editor sheet, scoring explainer (SPEC 9 in plain words), feel toggles, sounds, JSON export, import of v1 and v3 with a confirm, reset this arc. Screenshots reviewed in 3 looks x 2 seasons.
 - Phase 7 (sync): code done. SQL with RLS and a newest-wins trigger (`supabase/migrations/0001_grove.sql`), RLS check (`supabase/tests/rls_check.sql`, 17 checks, verified on PGlite with a stand-in auth schema), sync engine against a strict fake remote, email-code sign in with the rate-limit line, Settings sync rows, one-time sign-in card, deploy keys from secrets. Screenshots reviewed in 3 looks x 2 seasons.
-- Waiting on the owner: the steps in `docs/SYNC-SETUP.md` (project, SQL, RLS check output, email templates, keys, secrets). Then a two-device check after the next deploy.
+- Sync is live and verified: owner signed in on iPhone and laptop on the deployed site, check-offs sync both ways (2026-10-27). ACCEPTANCE row 12 is Pass. SYNC-SETUP now covers custom SMTP (needed before templates can be edited), the `VITE_` names, and reopening the installed app after a deploy.
 - Phase 8 (iPhone app): code done, not yet run on a device. Capacitor 8 with SPM (`ios/`, JSON config), Preferences storage, haptics, 8pm and Sunday notifications with a one-time reminders card, status bar follows the look, icon and splash, `npm run ios`, `npm run ios:reinstall` (`scripts/ios-reinstall.sh`).
 - Waiting on the owner: Xcode install and the iPhone steps. `@capacitor/filesystem` approved and wired: recap PNG and backup JSON go to the share sheet as files.
 - Phase 9 (final): done in code. First-week flow e2e, every screen in 3 looks x 4 seasons (reviewed as contact sheets; fixed clipped Visitors tabs, stock focus ring, tiny young rings), `docs/ACCEPTANCE.md` (11 pass, sync partial, iPhone, 60fps on device and deploy pending the owner), frame-timing proxy `scripts/perf-proxy.mjs`.
-- Next: owner items only. Finish Supabase steps 3 to 13 (two-device test still to come); install Xcode and run the iPhone steps (include sharing a recap and a backup); push to deploy. Then update `docs/ACCEPTANCE.md` rows 12 to 15 with what the owner reports.
+- Next: owner items only. Install Xcode and run the iPhone steps (include sharing a recap and a backup); push to deploy. Then update `docs/ACCEPTANCE.md` rows 13 to 15 with what the owner reports.
 
 ## Open issues
 
-- RLS check passed 17/17 on the owner's Supabase project (2026-10-27). Owner is doing the email template and keys (steps 3 and 4) and creates `.env.local` themselves; never touch it.
+- `.env.local` and the SMTP login belong to the owner; never touch them or write the owner's email or password into the repo.
 - The reinstall script is syntax-checked only; xcodebuild and devicectl need Xcode. iPhone file sharing is unit-tested, not yet seen on a device.
 
 - Save banner clearing on the next good save is covered by `store.test.ts`; the e2e version returns in phase 2 when the Garden has check-offs.

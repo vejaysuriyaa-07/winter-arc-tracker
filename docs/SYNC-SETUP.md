@@ -28,6 +28,13 @@ pbcopy < supabase/tests/rls_check.sql
 
 ## 3. Make the email carry a 6-digit code
 
+Supabase only lets you edit the email templates once the project sends mail through your own SMTP server, so set that up first. A Gmail account works:
+
+- In your Google account, turn on 2-Step Verification, then create an **App password** (Security > App passwords). Use that, never your normal Gmail password.
+- In Supabase, **Authentication > Emails > SMTP Settings**: turn on custom SMTP. Host `smtp.gmail.com`, port **465** (587 can time out), username your Gmail address, password the app password, sender email the same Gmail address, sender name `Grove`.
+
+These values live only in Supabase. Never put the address or the app password in this repository.
+
 6. **Authentication > Sign In / Providers > Email**: make sure Email is enabled. Set **Email OTP Length** to 6 if it shows another number.
 7. **Authentication > Emails > Templates**: edit both **Magic Link** and **Confirm signup**. Supabase uses the second one the first time an address signs in. Use this subject and body:
 
@@ -41,7 +48,7 @@ pbcopy < supabase/tests/rls_check.sql
 
 8. **Authentication > URL Configuration**: set **Site URL** to `https://<your-github-user>.github.io/winter-arc-tracker/`.
 
-**About the email limit:** Supabase's built-in email sender only allows a few emails per hour for the whole project. There is also a short wait between codes for the same address. Test with one or two codes. If Grove says "Too many codes sent. Try again in a bit.", wait about an hour. If you ever need more, you can connect your own email provider under **Authentication > Emails > SMTP Settings**.
+**About the email limit:** Supabase caps how many codes it sends per hour (Authentication > Rate Limits), and there is a short wait between codes for the same address. Gmail has its own daily sending limit too. If Grove says "Too many codes sent. Try again in a bit.", wait a while before asking for another code.
 
 ## 4. Add the keys
 
@@ -54,7 +61,7 @@ touch .env.local
 open -e .env.local
 ```
 
-10. Put these two lines in it, with your values, and save:
+10. Put these two lines in it, with your values, and save. The names must start with `VITE_`: Supabase's **Connect** window shows `NEXT_PUBLIC_...` names for Next.js, and Grove ignores those.
 
     ```
     VITE_SUPABASE_URL=https://your-project-ref.supabase.co
@@ -76,4 +83,4 @@ npm run dev
 ```
 
 12. Open the address it prints, go to **Settings > Sign in to sync**, enter your email, and type the code from the email. Settings should then say "Synced just now".
-13. After the next deploy, sign in with the same email on your phone's browser too. Check a habit on one device, then switch to Grove on the other: it shows up within a few seconds. Try airplane mode, check a habit, turn the network back on: Settings goes from "Offline, will sync later" to "Synced just now".
+13. After the next deploy, close Grove on your phone completely and open it again: the installed app downloads the new version in the background and only switches to it on the next launch. Then sign in with the same email on your phone's browser too. Check a habit on one device, then switch to Grove on the other: it shows up within a few seconds. Try airplane mode, check a habit, turn the network back on: Settings goes from "Offline, will sync later" to "Synced just now".
