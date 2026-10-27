@@ -46,12 +46,12 @@ export default function Visitors() {
         <h1 className="text-[34px] leading-none" style={{ fontFamily: th.t.fonts.display, fontWeight: th.t.fonts.headingWeight }}>Visitors</h1>
         <p data-testid="found-count" className="text-[15px]" style={{ color: th.t.muted }}>{found.size} of 9 found this {season}</p>
       </div>
-      <div role="radiogroup" aria-label="Season" onKeyDown={keys.onKeyDown} className="flex gap-2 overflow-x-auto">
+      <div role="radiogroup" aria-label="Season" onKeyDown={keys.onKeyDown} className="grid grid-cols-4 gap-1.5">
         {SEASONS.map((s) => {
           const on = s === season;
           const n = foundIn(s).size;
           return (
-            <button key={s} type="button" role="radio" aria-checked={on} tabIndex={keys.tabIndex(s)} onClick={() => setSeason(s)} className="h-10 flex-none rounded-full px-4 text-[14px] font-semibold" style={{ background: on ? th.accentGradient : th.isNight ? "#1A1E17" : th.t.surface, color: on ? th.t.onAccent : th.t.text, boxShadow: on ? "none" : `0 0 0 1px ${th.t.line}` }}>
+            <button key={s} type="button" role="radio" aria-checked={on} tabIndex={keys.tabIndex(s)} onClick={() => setSeason(s)} className="h-11 min-w-0 whitespace-nowrap rounded-full px-1 text-[13px] font-semibold" style={{ background: on ? th.accentGradient : th.isNight ? "#1A1E17" : th.t.surface, color: on ? th.t.onAccent : th.t.text, boxShadow: on ? "none" : `0 0 0 1px ${th.t.line}` }}>
               {NAMES[s]}{n > 0 ? ` ${n}/9` : ""}
             </button>
           );

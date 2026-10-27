@@ -109,3 +109,6 @@ One line each: what was chosen and why. 1 to 18 are from the v1 build; v2 (Grove
 102. No copy from browser storage into the iPhone app's storage: the app is a separate install that never had web data.
 103. PARTIAL: until files can be shared on the iPhone (needs @capacitor/filesystem, awaiting approval), the backup is shared as text (Save to Files keeps it) and the recap share sends its title as text.
 104. The reminders card is skipped when a reminder is already on; Settings checks iOS permission when it opens.
+105. Tree rings zoom in on a young tree (up to 2.5x) so one or two months fill the card; ring proportions are unchanged.
+106. The Visitors season tabs are a four-column grid so all four fit at 390px.
+107. Focus rings use the look's accent instead of the browser's stock ring; text fields keep their own focus style.

@@ -9,7 +9,7 @@ import { fullGrowthDays, gardenFromState, NO_EVENTS } from "../lib/garden";
 import { arcStatus } from "../lib/arcs";
 import { formatMonthDay, minDay } from "../lib/dates";
 import { arcFound, nextVisitor, teaser } from "../lib/visitors";
-import { arcTiles, bestMonthLine, firstMonthLabel, MONTH_NAMES, plantsRanked, tallestTrees, timelapseDay, timelapseRange, treeRings, weekLine } from "../lib/progress";
+import { arcTiles, bestMonthLine, firstMonthLabel, MONTH_NAMES, plantsRanked, ringsViewBox, tallestTrees, timelapseDay, timelapseRange, treeRings, weekLine } from "../lib/progress";
 import GardenScene from "../scenes/GardenScene";
 import Header from "../components/garden/Header";
 import { Bar, MiniPlant, RowLink, SectionTitle, Segmented, Tile } from "../components/progress/Bits";
@@ -164,7 +164,7 @@ function Rings({ state, today }: { state: AppState; today: string }) {
   const outer = rings.at(-1)?.outer ?? 9;
   return (
     <div className="card flex flex-col items-center gap-3 p-4">
-      <svg data-testid="rings" width="280" height="280" viewBox="0 0 280 280" role="img" aria-label={`${rings.length} tree rings, one per month`}>
+      <svg data-testid="rings" width="280" height="280" viewBox={ringsViewBox(outer)} role="img" aria-label={`${rings.length} tree rings, one per month`}>
         <circle cx="140" cy="140" r={outer + 4} fill="none" stroke="#5B4636" strokeWidth="4" />
         {[...rings].reverse().map((r) => {
           const i = rings.indexOf(r);

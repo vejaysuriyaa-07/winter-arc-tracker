@@ -15,7 +15,8 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Waiting on the owner: the steps in `docs/SYNC-SETUP.md` (project, SQL, RLS check output, email templates, keys, secrets). Then a two-device check after the next deploy.
 - Phase 8 (iPhone app): code done, not yet run on a device. Capacitor 8 with SPM (`ios/`, JSON config), Preferences storage, haptics, 8pm and Sunday notifications with a one-time reminders card, status bar follows the look, icon and splash, `npm run ios`, `npm run ios:reinstall` (`scripts/ios-reinstall.sh`).
 - Waiting on the owner: Xcode install and the iPhone steps; approval for `@capacitor/filesystem` (recap image and backup file sharing on iPhone, PARTIAL until then).
-- Next: phase 9 (full flow e2e, every-screen screenshots, acceptance checklist), which can start now; device checks are added when the owner reports back.
+- Phase 9 (final): done in code. First-week flow e2e, every screen in 3 looks x 4 seasons (reviewed as contact sheets; fixed clipped Visitors tabs, stock focus ring, tiny young rings), `docs/ACCEPTANCE.md` (11 pass, sync partial, iPhone, 60fps on device and deploy pending the owner), frame-timing proxy `scripts/perf-proxy.mjs`.
+- Next: owner items only. Paste the RLS check output; install Xcode and run the iPhone steps; decide on `@capacitor/filesystem`; push to deploy. Then update `docs/ACCEPTANCE.md` rows 12 to 15 with what the owner reports.
 
 ## Open issues
 
@@ -35,6 +36,7 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 Phase 2: 136 unit tests, 44 e2e.
 Phase 3: 148 unit tests, 63 e2e. typecheck, test, build, e2e green.
 Phase 4: 159 unit tests, 80 e2e. typecheck, test, build, e2e green.
+Phase 9: 248 unit tests, 175 e2e. typecheck, test, build, build:native, e2e green (two full e2e runs). Frame proxy: 16.7 ms median, 16.8 ms p95.
 Phase 8: 247 unit tests, 138 e2e. typecheck, test, build, build:native, e2e green (two full e2e runs).
 Phase 7: 234 unit tests, 131 e2e. typecheck, test, build, e2e green (two full e2e runs).
 Phase 6: 196 unit tests, 114 e2e. typecheck, test, build, e2e green (two full e2e runs).

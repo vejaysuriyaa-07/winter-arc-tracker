@@ -104,3 +104,12 @@
 .garden-scene div:not(:has(button)) {
   pointer-events: none;
 }
+
+/* Keyboard and programmatic focus in the look's own accent, never the browser's stock ring.
+   In the base layer, so a field that styles its own focus (outline-none) keeps it. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--g-accent);
+    outline-offset: 2px;
+  }
+}

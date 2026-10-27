@@ -136,3 +136,14 @@ export function firstMonthLabel(state: AppState): string | null {
   const ym = monthOf(arcs[0].startDate);
   return `${MONTH_NAMES[ym.month - 1]!.slice(0, 3)} ${ym.year}`;
 }
+
+/**
+ * The rings drawing's viewBox (a 280 box centred on 140). A young tree is shown
+ * closer, up to 2.5x, so one or two months do not sit tiny in an empty card;
+ * every ring keeps its proportions.
+ */
+export function ringsViewBox(outer: number): string {
+  const size = Math.min(280, Math.max(112, 2 * (outer + 4) * 1.6));
+  const o = 140 - size / 2;
+  return `${+o.toFixed(2)} ${+o.toFixed(2)} ${+size.toFixed(2)} ${+size.toFixed(2)}`;
+}

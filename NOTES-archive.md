@@ -109,3 +109,11 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Review fixes, with failing runs first: nudge on days with nothing due; tomorrow's nudge when today is kept; cutoff before 20:00 and retry after a failed schedule; card skipped when a reminder is on; permission state on Settings; cards wait for the session; replan timer; reachable wired iPhone first and optional team id in the script; Preferences import moved into storage.ts.
 - PARTIAL: recap image and backup file sharing on iPhone wait for `@capacitor/filesystem` approval.
 - Counts: 247 unit, 138 e2e. Hygiene check passed.
+
+## 2026-10-26 Phase 9: Final
+
+- Built: `e2e/flows.spec.ts` (a first week end to end: first arc, three days, four scaled autumn visitors arriving once, Sunday recap, second arc in night summer, switch back, export, reset, import), `e2e/screens.spec.ts` (14 screens x 3 looks x 4 seasons into `screenshots/p9/`), `docs/ACCEPTANCE.md`, `scripts/perf-proxy.mjs`.
+- Screenshot review (contact sheets, looks by seasons) found: Visitors season tabs clipped "Autumn" at 390px (now a 4-column grid, each tab checked to fit); the arc-complete button showed the browser's blue focus ring (now the look's accent, in the base layer so fields keep outline-none, colour checked against the arc's accent); a one-month tree ring was a dot in an empty card (`ringsViewBox` zooms up to 2.5x, unit-tested).
+- Review fixes: focus rule layering, perf evidence committed, flow absence checks wait for the garden to render, real full-bloom check, reset checked through Progress, explicit -07:00 times, screenshot paths, per-tab fit check, reduced motion instead of a sleep for the arc-complete still.
+- Test expectation note: the flow expects four autumn visitors on day 3 because a 30-day arc scales the counts down (decision 6).
+- Counts: 248 unit, 175 e2e. Hygiene check passed.

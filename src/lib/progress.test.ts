@@ -76,3 +76,12 @@ describe("all time", () => {
     expect(t.map((x) => [x.name, x.daysDone])).toEqual([["Alpha", 9], ["Charlie", 8], ["Delta", 4]]);
   });
 });
+
+describe("rings view", () => {
+  it("zooms in on a young tree, never past 2.5x, and shows an old one whole", () => {
+    expect(p.ringsViewBox(15.5)).toBe("84 84 112 112"); // one month: capped zoom
+    expect(p.ringsViewBox(126)).toBe("0 0 280 280");
+    const mid = p.ringsViewBox(40).split(" ").map(Number);
+    expect(mid[2]).toBeCloseTo(2 * 44 * 1.6);
+  });
+});
