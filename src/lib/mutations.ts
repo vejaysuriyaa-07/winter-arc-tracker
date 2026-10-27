@@ -4,7 +4,7 @@
 import type { AppState, Arc, DayLog, Habit, Look, Mood, Season, Settings, SyncTable, UiState, VisitorFound } from "../types";
 import { logKey } from "../types";
 import { addDays, isValidYMD, type YMD } from "./dates";
-import { newId } from "./ids";
+import { newId, stableId } from "./ids";
 import { metVisitors } from "./visitors";
 
 /** The settings row has one fixed id locally; the sync layer keys it by user. */
@@ -29,7 +29,7 @@ function putLog(state: AppState, now: string, log: DayLog): AppState {
 }
 
 function emptyLog(arcId: string, date: YMD, now: string): DayLog {
-  return { id: newId(), arcId, date, completedHabitIds: [], updatedAt: now };
+  return { id: stableId(`log:${arcId}:${date}`), arcId, date, completedHabitIds: [], updatedAt: now };
 }
 
 export function toggleHabit(state: AppState, now: string, arcId: string, date: YMD, habitId: string): AppState {
@@ -292,7 +292,7 @@ export function updateSettings(state: AppState, now: string, patch: SettingsPatc
 
 export function addVisitor(state: AppState, now: string, arcId: string, visitorId: string, foundOn: YMD): AppState {
   if (state.visitors.some((v) => v.arcId === arcId && v.visitorId === visitorId)) return state;
-  const v = { id: newId(), arcId, visitorId, foundOn, updatedAt: now };
+  const v = { id: stableId(`visitor:${arcId}:${visitorId}`), arcId, visitorId, foundOn, updatedAt: now };
   return queue({ ...state, visitors: [...state.visitors, v] }, "visitors_found", v.id, now);
 }
 

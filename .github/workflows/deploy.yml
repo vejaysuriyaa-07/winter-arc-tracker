@@ -29,8 +29,14 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
       - run: npm run build
+        env:
+          # Sync keys for the published site. Only the build step gets them; the tests use a fake server.
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
       - name: The dev showcase is not in the deploy build
         run: "! grep -rl 'dev/showcase' dist"
+      - name: The fake sync host from the tests is not in the deploy build
+        run: "! grep -rl 'supabase.test' dist"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

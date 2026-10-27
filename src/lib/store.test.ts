@@ -99,6 +99,19 @@ describe("store safety", () => {
 });
 
 describe("import", () => {
+  it("an import is stamped now and queued in full, keeping this device's sync position", async () => {
+    const local = fixtureState();
+    local.sync = { lastPulledAt: "2026-10-14T00:00:00.000Z", queue: [] };
+    await withData(local);
+    const file = fixtureState();
+    file.sync = { lastPulledAt: "2020-01-01T00:00:00.000Z", queue: [] };
+    store.actions.importState(file);
+    const s = store.getState();
+    expect(s.sync.lastPulledAt).toBe("2026-10-14T00:00:00.000Z");
+    expect(s.sync.queue.filter((op) => op.table === "arcs").length).toBe(1);
+    expect(s.arcs[0]!.updatedAt).not.toBe(file.arcs[0]!.updatedAt);
+  });
+
   it("imported finished arcs never celebrate", async () => {
     await withData();
     store.actions.importState(fixtureState()); // the fixture arc ended 2026-10-18, before today

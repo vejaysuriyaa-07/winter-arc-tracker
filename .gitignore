@@ -5,3 +5,8 @@ test-results/
 playwright-report/
 e2e/screenshots/
 *.tsbuildinfo
+
+# local secrets
+.env
+.env.local
+.env.*.local

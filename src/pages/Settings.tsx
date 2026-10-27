@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import type { AppState } from "../types";
 import { actions, flushWrites, useAppState } from "../lib/store";
-import { useToday } from "../lib/today";
+import { useNow, useToday } from "../lib/today";
 import { activeArc, arcHabits } from "../lib/stats";
 import { arcEditLimits, themeLabel } from "../lib/arcs";
 import { previewModel } from "../lib/garden";
@@ -14,6 +14,8 @@ import Toggle from "../components/ui/Toggle";
 import { DateRow, Divider, NumberRow, RowButton, RowText, Section, TextRow } from "../components/settings/Fields";
 import { ConfirmSheet, HabitsSheet, ScoringSheet } from "../components/settings/Sheets";
 import { useTheme } from "../theme/ThemeProvider";
+import { useNavigate } from "react-router";
+import { signOut, statusText, syncNow, useSync } from "../lib/sync";
 
 const WEEKDAY = new Intl.DateTimeFormat("en-US", { weekday: "long" });
 const MONTH_DAY = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" });
@@ -38,6 +40,9 @@ export default function Settings() {
   const today = useToday();
   const arc = activeArc(state);
   const [open, setOpen] = useState<Open>(null);
+  const sync = useSync();
+  const navigate = useNavigate();
+  useNow(); // the "Synced N min ago" line stays fresh
   const limits = arc ? arcEditLimits(arc, today) : null;
   const [pending, setPending] = useState<AppState | null>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -95,6 +100,22 @@ export default function Settings() {
         <Divider />
         <Toggle label="Sunday recap" detail="A note when your week is ready" checked={s.recap} onChange={(v) => actions.updateSettings({ recap: v })} testId="settings-recap" />
         {(s.nudge || s.recap) && <p className="pb-3 text-[13px]" style={{ color: th.t.muted }}>Notifications arrive in the iPhone app.</p>}
+      </Section>
+
+      <Section title="Sync">
+        {!sync.configured ? (
+          <RowText label="Sync" value="Not set up in this build" testId="sync-off" />
+        ) : sync.email === null ? (
+          <RowButton label="Sign in to sync" value="Off" onClick={() => void navigate("/signin")} testId="signin-row" />
+        ) : (
+          <>
+            <RowText label="Account" value={sync.email} testId="sync-account" />
+            <Divider />
+            <RowButton label="Sync" value={statusText(sync, Date.now())} onClick={syncNow} testId="sync-status" />
+            <Divider />
+            <RowButton label="Sign out" value="Data stays here" onClick={() => void signOut()} testId="sign-out" />
+          </>
+        )}
       </Section>
 
       <Section title="Your data">

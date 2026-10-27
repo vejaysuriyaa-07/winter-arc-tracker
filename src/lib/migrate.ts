@@ -3,7 +3,7 @@
 // levels are dropped; the raw v1 data is parked by storage.ts under a backup key.
 import type { AppState, DayLog, Habit, Mood } from "../types";
 import { logKey } from "../types";
-import { newId } from "./ids";
+import { newId, stableId } from "./ids";
 
 /** Loose view of the v1 shape; validateState has already checked it when data comes from storage. */
 export type V1State = {
@@ -27,7 +27,7 @@ export function migrateV1(v1: V1State, now: string): AppState {
   });
   const logs: Record<string, DayLog> = {};
   for (const l of Object.values(v1.logs)) {
-    const out: DayLog = { id: newId(), arcId, date: l.date, completedHabitIds: l.completedHabitIds.flatMap((id) => (ids.has(id) ? [ids.get(id)!] : [])), updatedAt: now };
+    const out: DayLog = { id: stableId(`log:${arcId}:${l.date}`), arcId, date: l.date, completedHabitIds: l.completedHabitIds.flatMap((id) => (ids.has(id) ? [ids.get(id)!] : [])), updatedAt: now };
     const mood = l.mood === undefined ? undefined : MOODS[l.mood];
     if (mood) out.mood = mood;
     logs[logKey(arcId, l.date)] = out;

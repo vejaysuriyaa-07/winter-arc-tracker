@@ -50,6 +50,34 @@ export function webAdapter(): StorageAdapter {
   };
 }
 
+/** Prefix for the sign-in session, kept apart from app data. */
+export const AUTH_PREFIX = "grove:session:";
+
+/** The sign-in session's storage, in the shape the auth client expects, on the same adapter as app data. */
+export function authStorage(a: StorageAdapter): { getItem(k: string): Promise<string | null>; setItem(k: string, v: string): Promise<void>; removeItem(k: string): Promise<void> } {
+  return {
+    getItem: (k) => a.get(AUTH_PREFIX + k),
+    setItem: (k, v) => a.set(AUTH_PREFIX + k, v),
+    removeItem: (k) => a.remove(AUTH_PREFIX + k),
+  };
+}
+
+/** The account this device last synced with (local only, never synced). */
+export const SYNC_USER_KEY = "grove:sync-user";
+
+export async function readSyncUser(a: StorageAdapter): Promise<string | null> {
+  return a.get(SYNC_USER_KEY);
+}
+
+export async function writeSyncUser(a: StorageAdapter, userId: string): Promise<void> {
+  await a.set(SYNC_USER_KEY, userId);
+}
+
+/** Before another account signs in on this device, the old data is kept under its own key. */
+export async function backupBeforeSwitch(a: StorageAdapter, json: string, now: string): Promise<void> {
+  await a.set(`grove:backup:account:${now}`, json);
+}
+
 export function defaultSettings(now: string): Settings {
   return { autoNight: true, haptics: true, sounds: true, motion: true, nudge: false, recap: false, updatedAt: now };
 }

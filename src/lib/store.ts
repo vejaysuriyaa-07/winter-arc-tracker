@@ -7,6 +7,7 @@ import type { AppState, Look, Mood, VisitorFound } from "../types";
 import { todayLocal, type YMD } from "./dates";
 import * as m from "./mutations";
 import { markFinishedCelebrated } from "./arcs";
+import { prepareImport } from "./sync-engine";
 import { STORAGE_KEY, defaultState, load, save, webAdapter, type StorageAdapter } from "./storage";
 
 type Listener = () => void;
@@ -37,6 +38,16 @@ export async function initStore(a: StorageAdapter = webAdapter()): Promise<AppSt
   // Persist right away so a migrated v1 state lands under the v3 key.
   persist(state);
   return state;
+}
+
+/** The adapter app data lives on; the sign-in session is kept on the same one. */
+export function storageAdapter(): StorageAdapter {
+  return adapter;
+}
+
+/** True when storage could not be read: nothing may be written or synced over it. */
+export function isReadOnly(): boolean {
+  return readOnly;
 }
 
 export function getState(): AppState {
@@ -141,9 +152,9 @@ export const actions = {
   markCelebrated: (key: string) => update((s) => m.markCelebrated(s, key)),
   markRecapSeen: (key: string) => update((s) => m.markRecapSeen(s, key)),
   setUiFlag: (flag: "signInPrompted" | "notificationsPrompted", value: boolean) => update((s) => m.setUiFlag(s, flag, value)),
-  /** Imported history never celebrates on load: arcs already finished are marked celebrated. */
+  /** Imported history never celebrates on load: arcs already finished are marked celebrated. It replaces the account's data too (see prepareImport). */
   importState: (next: AppState) =>
-    replaceState(m.syncVisitors(markFinishedCelebrated(next, todayLocal()), nowIso(), todayLocal(), true).state),
+    replaceState(m.syncVisitors(markFinishedCelebrated(prepareImport(getState(), next, nowIso()), todayLocal()), nowIso(), todayLocal(), true).state),
   /** Live check after a change: returns visitors who just arrived (they still owe their entrance). */
   syncVisitorsLive: (today: YMD): VisitorFound[] => {
     let arrived: VisitorFound[] = [];

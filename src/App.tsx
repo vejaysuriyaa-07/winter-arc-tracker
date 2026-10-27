@@ -10,7 +10,7 @@ import Garden from "./pages/Garden";
 import Progress from "./pages/Progress";
 import Arcs from "./pages/Arcs";
 import Settings from "./pages/Settings";
-import Placeholder from "./pages/Placeholder";
+import SignIn from "./pages/SignIn";
 import NewArc from "./pages/NewArc";
 import Month from "./pages/Month";
 import PlantDetail from "./pages/PlantDetail";
@@ -166,7 +166,7 @@ function Shell() {
             <Route path="/month" element={<Month />} />
             <Route path="/plant/:id" element={<PlantDetail />} />
             <Route path="/visitors" element={<Visitors />} />
-            <Route path="/signin" element={<Placeholder title="Sign in" />} />
+            <Route path="/signin" element={<SignIn />} />
           </Routes>
         </div>
         <TabBar />

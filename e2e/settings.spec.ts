@@ -185,7 +185,9 @@ test("export, reset, then import brings everything back", async ({ page }) => {
   await page.getByTestId("confirm-yes").click();
   await expect(page.getByTestId("data-note")).toHaveText("Backup imported.");
   const after = await readState(page);
-  expect(after.logs).toEqual(before.logs);
+  // Imported rows are stamped with the import time so they win in sync; the content is the same.
+  const content = (s: AppState): unknown => Object.fromEntries(Object.entries(s.logs).map(([k, { updatedAt: _u, ...l }]) => [k, l]));
+  expect(content(after)).toEqual(content(before));
   expect(after.arcs[0]!.startDate).toBe("2026-10-01");
 });
 

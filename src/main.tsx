@@ -11,9 +11,11 @@ import "@fontsource-variable/geist/index.css";
 import "./index.css";
 import App from "./App";
 import { initStore } from "./lib/store";
+import { startSync } from "./lib/sync";
 
 // Storage may be async (Preferences on iOS), so the state is loaded before the first render.
 void initStore().then(() => {
+  startSync();
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <App />

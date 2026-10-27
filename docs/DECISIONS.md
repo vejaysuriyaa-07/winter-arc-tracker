@@ -90,3 +90,15 @@ One line each: what was chosen and why. 1 to 18 are from the v1 build; v2 (Grove
 83. Visitors earned by an arc edit (for example a lower threshold) join quietly, like a theme change: no toast, sound or haptic. The rules for earning them are unchanged.
 84. The start date saves on Enter or when the field loses focus, never per keystroke, so in-between dates never move habits.
 85. A file that is not a backup gets one plain note, without the validator's technical reason.
+86. Synced tables are keyed by (user_id, id), so the same backup imported into two accounts never collides. The settings row's id is the user's id.
+87. A database trigger keeps the newest row: a write with an older updated_at is ignored but the kept row is re-stamped, so the stale writer pulls the winner back; the server stamps synced_at. Devices pull by synced_at (server time), reaching back one extra minute so a late commit is never missed; merging twice is harmless.
+88. Day logs and found visitors get ids made from their key (arc and date, arc and visitor), so two devices create the same row; merging also matches logs by arc and date.
+89. A sync round is push, pull, push: the pull can earn visitors quietly, and those go up in the same round. Pulled data never celebrates: visitors join quietly and finished arcs that arrive are marked celebrated.
+90. Signing in with the first account on a device (or the same one again) queues every local row and pulls everything once, merging the device into the account. A different account never gets the last account's gardens: the old data is saved to a backup key and the device starts empty and fills from the account. Signing out is local only and keeps the data.
+91. Importing a backup stamps its rows with the import time, tombstones arcs and habits it does not contain and empties its missing day logs, so the import also replaces the account's data on the next sync. Found visitors cannot be deleted; extra ones stay.
+92. The sign-in session is stored through the storage module, next to app data, under its own prefix.
+93. The sign-in card counts a full day today as the first full day. Its buttons are "Sign in" and "Maybe later"; either one answers it for good.
+94. The browser tests build with a fake sync host and answer its requests themselves; the deploy workflow refuses a build that contains that host.
+95. A row the server would refuse (an id that is not a uuid, a value outside the table checks) stays on the device and is not sent, so one bad row never blocks sync.
+96. Pulls page by (synced_at, id), never by offset. A sign in or sign out ends any sync in flight before it changes anything; a stale run applies nothing.
+97. The sign-in card waits until the saved session has been read, and signing in from Settings also answers it.

@@ -19,9 +19,12 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "VITE_SHOWCASE=1 npm run build && npm run preview -- --port 4173 --strictPort",
+    // The test build points sync at a fake host that the tests answer themselves (e2e/fakeSupabase.ts),
+    // so no test ever reaches a real Supabase project. These override any .env.local keys.
+    command: "VITE_SHOWCASE=1 VITE_SUPABASE_URL=http://supabase.test VITE_SUPABASE_ANON_KEY=e2e-anon-key npm run build && npm run preview -- --port 4173 --strictPort",
     url: BASE,
-    reuseExistingServer: !process.env.CI,
+    // Always a fresh build: a preview left running could have been built with real sync keys.
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });

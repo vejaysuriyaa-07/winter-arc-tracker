@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { fixtureState } from "./fixtures/arc14";
 import {
+  AUTH_PREFIX,
+  backupBeforeSwitch,
+  readSyncUser,
+  writeSyncUser,
+  authStorage,
   BACKUP_UNREADABLE_KEY,
   BACKUP_V1_KEY,
   STORAGE_KEY,
@@ -152,5 +157,28 @@ describe("export and import", () => {
   it("rejects junk", () => {
     expect(parseImport("junk", NOW).ok).toBe(false);
     expect(parseImport("{}", NOW).ok).toBe(false);
+  });
+});
+
+describe("auth session storage", () => {
+  it("keeps the sign-in session under its own prefix, apart from app data", async () => {
+    const a = memoryAdapter();
+    const s = authStorage(a);
+    await s.setItem("grove:auth", "{\"token\":1}");
+    expect(await s.getItem("grove:auth")).toBe("{\"token\":1}");
+    expect(await a.get(AUTH_PREFIX + "grove:auth")).toBe("{\"token\":1}");
+    await s.removeItem("grove:auth");
+    expect(await s.getItem("grove:auth")).toBeNull();
+  });
+});
+
+describe("sync account memory", () => {
+  it("remembers the last account and backs up data before a switch", async () => {
+    const a = memoryAdapter();
+    expect(await readSyncUser(a)).toBeNull();
+    await writeSyncUser(a, "u1");
+    expect(await readSyncUser(a)).toBe("u1");
+    await backupBeforeSwitch(a, "{\"x\":1}", "2026-10-14T13:00:00.000Z");
+    expect(await a.get("grove:backup:account:2026-10-14T13:00:00.000Z")).toBe("{\"x\":1}");
   });
 });

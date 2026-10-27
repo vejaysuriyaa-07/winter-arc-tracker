@@ -25,6 +25,9 @@ import QuickAdd from "../components/garden/QuickAdd";
 import { BloomChain, BloomMini, FullBloom } from "../components/garden/Bloom";
 import UndoToast, { type ToastData } from "../components/ui/UndoToast";
 import { RecapCard } from "./Recap";
+import SignInPrompt from "../components/sync/SignInPrompt";
+import { shouldPromptSignIn } from "../lib/prompts";
+import { useSync } from "../lib/sync";
 import { latestRecap } from "../lib/recap";
 
 const WEEKDAY = new Intl.DateTimeFormat("en-US", { weekday: "long" });
@@ -88,6 +91,7 @@ export default function Garden() {
   useSceneLoop(root, (t) => animateIcons(t, motion), motion);
 
   const now = useNow();
+  const sync = useSync();
   const view = arc ? todayView(state, arc, today) : null;
   // Who visits today, and whether a new arrival still owes its entrance.
   // Arrivals waiting for their entrance come first, oldest first (a backfill can date one in the past).
@@ -243,6 +247,7 @@ export default function Garden() {
       {view.phase !== "before" && (
         <BloomChain days={chainStrip(state, arc, today)} chain={view.chain} teaser={next ? teaser(next) : "Every visitor has found your garden this arc."} />
       )}
+      {sync.ready && shouldPromptSignIn(state, today, { configured: sync.configured, signedIn: sync.email !== null }) && <SignInPrompt />}
       <UndoToast toast={toast} onDone={closeToast} />
     </>
   );

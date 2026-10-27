@@ -11,11 +11,13 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Phase 4 (Progress, Month view, Plant detail): done. Screenshots reviewed in 3 looks x 2 seasons.
 - Phase 5 (rewards): done. Visitor rules and art for all 36, silent and live arrivals with garden entrances, rare skies (night, fireflies, bright stars, northern lights, rainbow, shooting star), Sunday recap with share. Screenshots reviewed: art sheet, visitors in 3 looks x 2 seasons, recap slides, skies.
 - Phase 6 (Settings and data): done. This arc fields (name, theme, length, start, threshold) with limits that never end a running arc, habits editor sheet, scoring explainer (SPEC 9 in plain words), feel toggles, sounds, JSON export, import of v1 and v3 with a confirm, reset this arc. Screenshots reviewed in 3 looks x 2 seasons.
-- Next: phase 7, sync (Supabase SQL with RLS, lib/sync.ts against a fake remote, email code sign in with the rate-limit message, sync status rows, sign-in prompt card), then stop with the owner's steps.
+- Phase 7 (sync): code done. SQL with RLS and a newest-wins trigger (`supabase/migrations/0001_grove.sql`), RLS check (`supabase/tests/rls_check.sql`, 17 checks, verified on PGlite with a stand-in auth schema), sync engine against a strict fake remote, email-code sign in with the rate-limit line, Settings sync rows, one-time sign-in card, deploy keys from secrets. Screenshots reviewed in 3 looks x 2 seasons.
+- Waiting on the owner: the steps in `docs/SYNC-SETUP.md` (project, SQL, RLS check output, email templates, keys, secrets). Then a two-device check after the next deploy.
+- Next: phase 8, Capacitor iOS (needs Xcode installed by the owner first).
 
 ## Open issues
 
-- Phase 7: import currently keeps the file's sync queue and lastPulledAt. On import, sync must reset its queue, queue every imported row and stamp fresh updatedAt so last-write-wins does not discard the import.
+- RLS check has only run on PGlite with a stand-in auth schema; the real run on Supabase is the owner's step 5.
 - Phase 8: export uses an anchor download, which does nothing in the iOS web view; switch to the native share sheet there.
 
 - Save banner clearing on the next good save is covered by `store.test.ts`; the e2e version returns in phase 2 when the Garden has check-offs.
@@ -31,6 +33,7 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 Phase 2: 136 unit tests, 44 e2e.
 Phase 3: 148 unit tests, 63 e2e. typecheck, test, build, e2e green.
 Phase 4: 159 unit tests, 80 e2e. typecheck, test, build, e2e green.
+Phase 7: 234 unit tests, 131 e2e. typecheck, test, build, e2e green (two full e2e runs).
 Phase 6: 196 unit tests, 114 e2e. typecheck, test, build, e2e green (two full e2e runs).
 Phase 5: 188 unit tests, 95 e2e. typecheck, test, build, e2e green (two full e2e runs). typecheck, test, build, e2e green.
 

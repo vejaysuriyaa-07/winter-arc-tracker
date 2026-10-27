@@ -93,3 +93,12 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Test expectations changed: the first Settings test now presses Enter after setting the start date (the field commits on Enter by design); the invalid-file note expects the new plain copy.
 - Deferred: import vs sync queue (phase 7), native export (phase 8). Logged in NOTES open issues.
 - Counts: 196 unit, 114 e2e. Hygiene check passed.
+
+## 2026-10-26 Phase 7: Sync
+
+- Built: `supabase/migrations/0001_grove.sql` (five tables keyed by (user_id, id), RLS per command, anon revoked, trigger keeps the newest row and stamps synced_at), `supabase/tests/rls_check.sql`, `lib/sync-engine.ts` (rows, push, keyset pull, merge, import, sign-in rule, guard), `lib/sync.ts` (the only Supabase module: client, OTP sign in, remote, driver, status), `lib/prompts.ts`, `lib/ids.ts` stableId, auth session storage and last-account memory in `lib/storage.ts`, Sign in page, Settings sync rows, sign-in card, `docs/SYNC-SETUP.md`.
+- SQL verified in the scratchpad on PGlite with a stand-in auth schema: migration runs twice cleanly, 17 RLS checks pass, the check fails as expected with RLS off on one table, a stale upsert keeps the newer row and re-stamps it.
+- e2e: the test build points at `http://supabase.test`, answered by `e2e/fakeSupabase.ts`; the deploy workflow refuses a build containing that host; Playwright never reuses a running server.
+- Test expectation changes: engine tests moved to uuid fixture ids once the fake server enforced uuids; the incremental pull test asserts the one-minute overlap rule instead of zero rows; the in-flight test checks the round's final push; the export round trip compares content without timestamps (imports are restamped by design).
+- Review fixes (each with a failing run first, except the e2e account-switch test, written after its fix): different account on one device, runs outliving sign out, bad rows blocking sync, stale writes not coming back, offset paging, arcs finished through a pull, import leftovers, prompt flash, read-only store status.
+- Counts: 234 unit, 131 e2e. Hygiene check passed.
