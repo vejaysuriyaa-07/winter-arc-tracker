@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { ARC, FIX_TODAY, fixtureState } from "./fixtures/arc14";
-import { arcStatus, arcSummary, arcToCelebrate, LOOK_NAMES, themeLabel } from "./arcs";
+import { ARC, FIX_TODAY, fixtureArc, fixtureState } from "./fixtures/arc14";
+import { arcEditLimits, arcStatus, arcSummary, arcToCelebrate, LOOK_NAMES, themeLabel } from "./arcs";
 
 describe("arc status", () => {
   const S = fixtureState();
@@ -69,5 +69,19 @@ describe("frozen arcs", () => {
     const S = fixtureState();
     S.arcs[0]!.frozenAt = "2026-10-19T08:00:00.000Z";
     expect(arcToCelebrate(S, "2026-10-20")).toBeNull();
+  });
+});
+
+describe("arcEditLimits", () => {
+  const arc = { ...fixtureArc() }; // starts 2026-10-05, 14 days, ends 2026-10-18
+  it("a running arc cannot be shortened or moved so it ends before today", () => {
+    expect(arcEditLimits(arc, "2026-10-14")).toEqual({ editable: true, minLength: 10, earliestStart: "2026-10-01" });
+  });
+  it("an arc that has not started can take any length", () => {
+    expect(arcEditLimits(arc, "2026-10-01")).toMatchObject({ editable: true, minLength: 1 });
+  });
+  it("finished or frozen arcs keep their dates and threshold", () => {
+    expect(arcEditLimits(arc, "2026-10-19").editable).toBe(false);
+    expect(arcEditLimits({ ...arc, frozenAt: "2026-10-12T10:00:00.000Z" }, "2026-10-14").editable).toBe(false);
   });
 });

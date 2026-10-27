@@ -6,6 +6,7 @@ import { actions, useAppState } from "../../lib/store";
 import { useToday } from "../../lib/today";
 import { arrivalLine, visitorById } from "../../lib/visitors";
 import { feedback } from "../../lib/feedback";
+import { playSound } from "../../lib/sounds";
 import UndoToast, { type ToastData } from "../ui/UndoToast";
 
 export default function VisitorWatcher() {
@@ -19,6 +20,7 @@ export default function VisitorWatcher() {
     const text = lines.length === 1 ? lines[0]! : `${lines.slice(0, -1).join(". ")}. ${lines.at(-1)}`;
     setToast({ id: Date.now(), text });
     feedback("visitor", state.settings.haptics);
+    playSound("visitor", state.settings.sounds);
   }, [state.logs, state.habits, state.arcs, today]); // re-check only when something that can earn a visitor changes
   const close = useCallback(() => setToast(null), []);
   return <UndoToast toast={toast} onDone={close} />;

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fixtureState } from "./fixtures/arc14";
+import { A, ARC, FIX_NOW, FIX_TODAY, fixtureState } from "./fixtures/arc14";
 import { STORAGE_KEY, memoryAdapter, type StorageAdapter } from "./storage";
 
 let store: typeof import("./store");
@@ -103,5 +103,25 @@ describe("import", () => {
     await withData();
     store.actions.importState(fixtureState()); // the fixture arc ended 2026-10-18, before today
     expect(store.getState().ui.celebrated["arc:arc-winter"]).toBe(true);
+  });
+});
+
+describe("arc edits", () => {
+  it("visitors earned by a settings edit join quietly, never as a live arrival", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(FIX_NOW));
+    try {
+      // Only Alpha done each day: 25 to 33%, so no day is kept at 80%.
+      const st = fixtureState();
+      for (const l of Object.values(st.logs)) if (l.completedHabitIds.length) l.completedHabitIds = [A];
+      await withData(st);
+      const before = store.getState().visitors.length;
+      store.actions.updateArc(ARC, { threshold: 1 }); // now 9 days count as kept
+      const afterEdit = store.getState().visitors.length;
+      expect(store.actions.syncVisitorsLive(FIX_TODAY)).toEqual([]); // nothing left to announce
+      expect(afterEdit).toBeGreaterThan(before);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

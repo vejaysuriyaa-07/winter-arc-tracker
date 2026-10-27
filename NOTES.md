@@ -10,9 +10,13 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Phase 3 (Arcs, New arc, theme picker, switching, night in dark mode, arc complete): done. Screenshots reviewed in 3 looks x 2 seasons (arcs list, picker, New arc) plus arc complete.
 - Phase 4 (Progress, Month view, Plant detail): done. Screenshots reviewed in 3 looks x 2 seasons.
 - Phase 5 (rewards): done. Visitor rules and art for all 36, silent and live arrivals with garden entrances, rare skies (night, fireflies, bright stars, northern lights, rainbow, shooting star), Sunday recap with share. Screenshots reviewed: art sheet, visitors in 3 looks x 2 seasons, recap slides, skies.
-- Next: phase 6, Settings and data (full Settings screen, scoring explainer, export and import v3, reset this arc, sign-in prompt card hidden until Supabase exists).
+- Phase 6 (Settings and data): done. This arc fields (name, theme, length, start, threshold) with limits that never end a running arc, habits editor sheet, scoring explainer (SPEC 9 in plain words), feel toggles, sounds, JSON export, import of v1 and v3 with a confirm, reset this arc. Screenshots reviewed in 3 looks x 2 seasons.
+- Next: phase 7, sync (Supabase SQL with RLS, lib/sync.ts against a fake remote, email code sign in with the rate-limit message, sync status rows, sign-in prompt card), then stop with the owner's steps.
 
 ## Open issues
+
+- Phase 7: import currently keeps the file's sync queue and lastPulledAt. On import, sync must reset its queue, queue every imported row and stamp fresh updatedAt so last-write-wins does not discard the import.
+- Phase 8: export uses an anchor download, which does nothing in the iOS web view; switch to the native share sheet there.
 
 - Save banner clearing on the next good save is covered by `store.test.ts`; the e2e version returns in phase 2 when the Garden has check-offs.
 
@@ -27,6 +31,7 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 Phase 2: 136 unit tests, 44 e2e.
 Phase 3: 148 unit tests, 63 e2e. typecheck, test, build, e2e green.
 Phase 4: 159 unit tests, 80 e2e. typecheck, test, build, e2e green.
+Phase 6: 196 unit tests, 114 e2e. typecheck, test, build, e2e green (two full e2e runs).
 Phase 5: 188 unit tests, 95 e2e. typecheck, test, build, e2e green (two full e2e runs). typecheck, test, build, e2e green.
 
 Phase 1: 129 unit tests, 20 e2e. typecheck, test, build, e2e green.

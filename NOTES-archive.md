@@ -84,3 +84,12 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Fixed while testing: plural and sky visitor wording; a recap test that ignored earlier unseen weeks; a flaky spark check replaced by a stable counter.
 - Review fixes: season change counting, iOS share inside the tap with an opaque image, recap week numbers, next-visitor scope, queued entrances, finished arcs skipped in live checks, quiet cross-tab sync, recap slide announcements.
 - Counts: 188 unit tests, 95 e2e.
+
+## 2026-10-26 Phase 6: Settings and data
+
+- Built: Settings page in the arc's look (This arc, Feel, Your data, Reset), `components/settings/{Fields,Sheets}.tsx`, `lib/backup.ts` (file name, summary of a backup), `lib/sounds.ts` (WebAudio tones on check, full bloom, visitor arrival, only when Sounds is on), `arcEditLimits` in `lib/arcs.ts`.
+- Screenshot fix: number fields had a curved underline; they now use the look's input style. Nudge copy shortened.
+- Review fixes, each with a test that failed first: start date committed on every change (now on Enter or blur; Chromium keeps focus inside a date field on blur(), so Enter commits directly); edits could end a running arc and fire the arc-complete overlay (limits); finished arcs were editable (now text); lowering the threshold announced visitors live (now quiet sync in the updateArc action); scoring copy (removal day, per-habit rate, rings as a rate, 7-day minimum); reset copy omitted removed habits; blank habit name; unhandled audio resume rejection; technical import error text.
+- Test expectations changed: the first Settings test now presses Enter after setting the start date (the field commits on Enter by design); the invalid-file note expects the new plain copy.
+- Deferred: import vs sync queue (phase 7), native export (phase 8). Logged in NOTES open issues.
+- Counts: 196 unit, 114 e2e. Hygiene check passed.

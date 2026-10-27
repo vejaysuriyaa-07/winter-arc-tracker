@@ -127,7 +127,8 @@ export const actions = {
   removeHabit: (today: YMD, habitId: string) => u((s, n) => m.removeHabit(s, n, today, habitId)),
   restoreHabit: (today: YMD, habitId: string) => u((s, n) => m.restoreHabit(s, n, today, habitId)),
   createArc: (input: m.NewArc) => u((s, n) => m.createArc(s, n, input)),
-  updateArc: (arcId: string, patch: m.ArcPatch) => u((s, n) => m.updateArc(s, n, arcId, patch)),
+  /** Editing an arc (threshold, dates) can earn visitors after the fact; they join quietly. */
+  updateArc: (arcId: string, patch: m.ArcPatch) => u((s, n) => m.syncVisitors(m.updateArc(s, n, arcId, patch), n, todayLocal(), true).state),
   /** A new season brings its own visitors; those already earned join quietly (no burst of toasts). */
   setTheme: (arcId: string, look: Look, season: AppState["arcs"][number]["season"]) =>
     u((s, n) => m.syncVisitors(m.updateArc(s, n, arcId, { look, season }), n, todayLocal(), true).state),

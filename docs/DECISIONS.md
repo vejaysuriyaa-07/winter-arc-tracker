@@ -80,3 +80,13 @@ One line each: what was chosen and why. 1 to 18 are from the v1 build; v2 (Grove
 73. Garden entrances queue: the oldest arrival that has not made its entrance shows first (a backfill can date one in the past), then the next. Live visitor checks skip finished arcs; another tab's changes sync quietly.
 74. The recap share image is made when a slide settles, so Share runs straight inside the tap (iOS refuses sharing after a long wait); it has an opaque background; only a user cancel counts as cancelled, any other refusal downloads the image.
 75. Recap weeks are numbered from the Monday of the arc's first week.
+76. Sounds are short WebAudio tones made in code (no audio files): a soft tick on a check, a rising chord on full bloom, a two-note chime when a visitor arrives. They play only on those live moments and only when Sounds is on.
+77. The 8pm nudge and Sunday recap toggles are stored now; the notifications themselves arrive with the iPhone app in phase 8, and Settings says so.
+78. Settings fields save on blur or Enter; a number outside its range (length 1 to 365, threshold 1 to 100) snaps back instead of saving.
+79. Import always asks first, showing what the file holds (arcs, habits, days logged), and replaces everything on yes. A file that is not a Grove or Winter Arc backup is refused with a note and nothing changes.
+80. Reset this arc keeps the arc's name, theme, current habits and visitors found, clears its check-offs, moods and removed habits, and starts it again today; the confirm sheet explains it and suggests a backup first.
+81. The sign-in prompt card moves to phase 7, where sign in exists.
+82. Settings edits (threshold, length, start) never end a running arc: length cannot drop below today's day number and the start cannot move so the arc ends before today. A finished or frozen arc shows its dates and threshold as text.
+83. Visitors earned by an arc edit (for example a lower threshold) join quietly, like a theme change: no toast, sound or haptic. The rules for earning them are unchanged.
+84. The start date saves on Enter or when the field loses focus, never per keystroke, so in-between dates never move habits.
+85. A file that is not a backup gets one plain note, without the validator's technical reason.

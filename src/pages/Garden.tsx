@@ -11,6 +11,7 @@ import GardenVisitor from "../components/visitors/GardenVisitor";
 import { bloomKey, iconFor, shouldPlayFullBloom, todayView } from "../lib/today-view";
 import { parseLocal } from "../lib/dates";
 import { feedback } from "../lib/feedback";
+import { playSound } from "../lib/sounds";
 import GardenScene from "../scenes/GardenScene";
 import { flareNightSky } from "../scenes/NightSky";
 import { animateIcons } from "../scenes/streakIcons";
@@ -117,6 +118,7 @@ export default function Garden() {
     if (checkedHere && p && p.key === fullKey && shouldPlayFullBloom(p.full, isFullNow, fullKey, state.ui.celebrated)) {
       actions.markCelebrated(fullKey);
       feedback("fullBloom", state.settings.haptics);
+      playSound("fullBloom", state.settings.sounds);
       if (motion) {
         // The last check happens down in the list: bring the garden card up so the bloom is seen.
         frame.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -124,7 +126,7 @@ export default function Garden() {
       }
     }
     prev.current = { key: fullKey, full: isFullNow };
-  }, [fullKey, isFullNow, state.ui.celebrated, state.settings.haptics, motion]);
+  }, [fullKey, isFullNow, state.ui.celebrated, state.settings.haptics, state.settings.sounds, motion]);
   // A check only counts for the render it caused; runs after the bloom effect on every render.
   useEffect(() => {
     justChecked.current = null;
@@ -217,6 +219,7 @@ export default function Garden() {
                     justChecked.current = bloomKey(arc.id, today);
                     flareNightSky();
                     feedback("check", state.settings.haptics);
+                    playSound("check", state.settings.sounds);
                   }
                   actions.toggleHabit(arc.id, today, r.habit.id);
                 }}

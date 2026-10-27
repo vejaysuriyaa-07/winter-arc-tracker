@@ -1,6 +1,6 @@
 // Arc-level labels and the arc-complete rule. Pure: `today` is passed in.
 import type { AppState, Arc, Look, Season } from "../types";
-import { formatMonthDay, type YMD } from "./dates";
+import { addDays, formatMonthDay, type YMD } from "./dates";
 import { arcDayNumber, arcEnd, arcPhase, arcProgress, arcScore, bestChain, fullDays, keptDays } from "./stats";
 
 export const LOOK_NAMES: Record<Look, string> = { journal: "Field journal", greenhouse: "Greenhouse", night: "Night" };
@@ -66,4 +66,21 @@ export function seasonForDay(day: YMD): Season {
   if (m <= 5) return "spring";
   if (m <= 8) return "summer";
   return "autumn";
+}
+
+export interface ArcEditLimits {
+  /** Dates and threshold can change only while the arc is not finished or frozen. */
+  editable: boolean;
+  /** Shortest length that still includes today, so an edit never ends the arc. */
+  minLength: number;
+  /** Earliest start that still includes today at the current length. */
+  earliestStart: YMD;
+}
+
+export function arcEditLimits(arc: Arc, today: YMD): ArcEditLimits {
+  return {
+    editable: arc.frozenAt === undefined && arcPhase(arc, today) !== "complete",
+    minLength: Math.max(1, arcDayNumber(arc, today)),
+    earliestStart: addDays(today, -(arc.lengthDays - 1)),
+  };
 }
