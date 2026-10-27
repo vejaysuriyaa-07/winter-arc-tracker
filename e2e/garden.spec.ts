@@ -48,7 +48,7 @@ test("checking a habit grows its plant, fills a petal, updates counts, and survi
   await expect(page.getByTestId("progress-line")).toHaveAttribute("data-percent", "33");
   await expect(page.getByTestId("bloom-mini")).toHaveAttribute("data-done", "1");
   await expect.poll(() => plantG(page, "Read")).toBeGreaterThan(before);
-  await expect(page.getByTestId("spark").first()).toBeAttached(); // the check animation ran
+  await expect(row(page, "Read")).toHaveAttribute("data-anim-played", "1"); // the check animation ran
 
   await page.reload();
   await expect(row(page, "Read")).toHaveAttribute("aria-checked", "true");

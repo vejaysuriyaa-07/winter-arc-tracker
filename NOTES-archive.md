@@ -75,3 +75,12 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Process note: the scroll-to-top test was written together with its fix rather than shown failing first.
 - Review fixes: same-day-only restore (past days never change), finished arcs read-only, deleted arcs' plants not found, tombstone undo, Close on deep links, non-overlapping plant tap targets, decorations ignore taps, timelapse keyed by arc, ring wording, memoized all-time numbers.
 - Counts: 159 unit tests, 80 e2e.
+
+## 2026-10-26: Grove phase 5, rewards
+
+- `lib/visitors.ts` (36 visitors, rule ladder with scaling, seeded rare roll, first-day search, progress, next visitor, wording, garden visitor, per-season counting, pending entrances), `lib/sky.ts`, `lib/recap.ts`, `lib/share.ts`, `art/visitors.ts` (winter ported, 27 drawn), `syncVisitors` in mutations (silent on load, import, theme change and other tabs; live otherwise).
+- UI: VisitorWatcher toasts, GardenVisitor entrance, Visitors page, Recap story with share, recap cards on Garden and Progress, chain teaser from the next visitor.
+- Added dependency `html-to-image` (pre-approved for the share image).
+- Fixed while testing: plural and sky visitor wording; a recap test that ignored earlier unseen weeks; a flaky spark check replaced by a stable counter.
+- Review fixes: season change counting, iOS share inside the tap with an opaque image, recap week numbers, next-visitor scope, queued entrances, finished arcs skipped in live checks, quiet cross-tab sync, recap slide announcements.
+- Counts: 188 unit tests, 95 e2e.

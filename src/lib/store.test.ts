@@ -39,7 +39,8 @@ describe("store", () => {
     store.actions.setMood("arc-winter", "2026-10-14", "great");
     const s = store.getState();
     expect(s.logs["arc-winter:2026-10-14"]!.mood).toBe("great");
-    expect(s.sync.queue).toHaveLength(1);
+    // Loading also adds visitors the fixture already earned (queued too); the mood is one day-log op.
+    expect(s.sync.queue.filter((o) => o.table === "day_logs")).toEqual([{ table: "day_logs", id: "log-2026-10-14", at: expect.any(String) }]);
   });
   it("a refused save flips the flag, the next good save clears it", async () => {
     let fail = false;

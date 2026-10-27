@@ -3,7 +3,7 @@
 // `update`, which notifies subscribers and writes through to storage.
 // `initStore` must resolve before the first render (main.tsx awaits it).
 import { useSyncExternalStore } from "react";
-import type { AppState, Look, Mood } from "../types";
+import type { AppState, Look, Mood, VisitorFound } from "../types";
 import { todayLocal, type YMD } from "./dates";
 import * as m from "./mutations";
 import { markFinishedCelebrated } from "./arcs";
@@ -25,7 +25,8 @@ export async function initStore(a: StorageAdapter = webAdapter()): Promise<AppSt
   adapter = a;
   readOnly = false;
   try {
-    state = await load(adapter, todayLocal(), nowIso());
+    // Visitors earned before this launch (or in data from another device) join quietly.
+    state = m.syncVisitors(await load(adapter, todayLocal(), nowIso()), nowIso(), todayLocal(), true).state;
     saveFailed = false;
   } catch {
     state = defaultState(nowIso());
@@ -95,7 +96,8 @@ if (typeof window !== "undefined") {
   window.addEventListener("storage", (e) => {
     if (e.key !== STORAGE_KEY && e.key !== null) return;
     void load(adapter, todayLocal(), nowIso()).then((s) => {
-      state = s;
+      // Another tab changed the data: anything it earned joins quietly here (that tab announced it).
+      state = m.syncVisitors(s, nowIso(), todayLocal(), true).state;
       emit();
     });
   });
@@ -126,8 +128,9 @@ export const actions = {
   restoreHabit: (today: YMD, habitId: string) => u((s, n) => m.restoreHabit(s, n, today, habitId)),
   createArc: (input: m.NewArc) => u((s, n) => m.createArc(s, n, input)),
   updateArc: (arcId: string, patch: m.ArcPatch) => u((s, n) => m.updateArc(s, n, arcId, patch)),
+  /** A new season brings its own visitors; those already earned join quietly (no burst of toasts). */
   setTheme: (arcId: string, look: Look, season: AppState["arcs"][number]["season"]) =>
-    u((s, n) => m.updateArc(s, n, arcId, { look, season })),
+    u((s, n) => m.syncVisitors(m.updateArc(s, n, arcId, { look, season }), n, todayLocal(), true).state),
   setActiveArc: (arcId: string) => update((s) => m.setActiveArc(s, arcId)),
   freezeArc: (arcId: string) => u((s, n) => m.freezeArc(s, n, arcId)),
   deleteArc: (arcId: string) => u((s, n) => m.deleteArc(s, n, arcId)),
@@ -138,5 +141,16 @@ export const actions = {
   markRecapSeen: (key: string) => update((s) => m.markRecapSeen(s, key)),
   setUiFlag: (flag: "signInPrompted" | "notificationsPrompted", value: boolean) => update((s) => m.setUiFlag(s, flag, value)),
   /** Imported history never celebrates on load: arcs already finished are marked celebrated. */
-  importState: (next: AppState) => replaceState(markFinishedCelebrated(next, todayLocal())),
+  importState: (next: AppState) =>
+    replaceState(m.syncVisitors(markFinishedCelebrated(next, todayLocal()), nowIso(), todayLocal(), true).state),
+  /** Live check after a change: returns visitors who just arrived (they still owe their entrance). */
+  syncVisitorsLive: (today: YMD): VisitorFound[] => {
+    let arrived: VisitorFound[] = [];
+    update((s) => {
+      const r = m.syncVisitors(s, nowIso(), today, false);
+      arrived = r.arrived;
+      return r.state;
+    });
+    return arrived;
+  },
 };

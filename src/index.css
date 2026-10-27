@@ -78,6 +78,12 @@
   box-shadow: var(--g-card-shadow);
 }
 
+@keyframes visitor-in {
+  0% { transform: translate(90px, 10px) scale(0.4); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
 @keyframes shooting-star {
   0% { transform: translate(0, 0) rotate(-24deg); opacity: 0; }
   10% { opacity: 1; }

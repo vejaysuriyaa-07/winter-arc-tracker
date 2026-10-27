@@ -68,3 +68,20 @@ export function withLogs(
 export function noonLA(ymd: string): Date {
   return new Date(`${ymd}T12:00:00-07:00`);
 }
+
+/** Gives the first arc a fixed id (rare-visitor rolls are seeded by arc id, so tests can pin them). */
+export function withArcId(state: AppState, id: string): AppState {
+  const old = state.arcs[0]!.id;
+  const swap = (x: string): string => (x === old ? id : x);
+  const logs: AppState["logs"] = {};
+  for (const l of Object.values(state.logs)) logs[`${swap(l.arcId)}:${l.date}`] = { ...l, arcId: swap(l.arcId) };
+  return {
+    ...state,
+    arcs: state.arcs.map((a) => ({ ...a, id: swap(a.id) })),
+    activeArcId: state.activeArcId === old ? id : state.activeArcId,
+    habits: state.habits.map((h) => ({ ...h, arcId: swap(h.arcId) })),
+    logs,
+    visitors: state.visitors.map((v) => ({ ...v, arcId: swap(v.arcId) })),
+    sync: { queue: state.sync.queue.map((q) => ({ ...q, id: swap(q.id) })) },
+  };
+}

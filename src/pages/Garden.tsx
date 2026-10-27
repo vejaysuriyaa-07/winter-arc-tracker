@@ -2,9 +2,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { actions, useAppState } from "../lib/store";
-import { useToday } from "../lib/today";
+import { useNow, useToday } from "../lib/today";
 import { activeArc, chainStrip } from "../lib/stats";
 import { gardenFromState, NO_EVENTS } from "../lib/garden";
+import { skyEvents } from "../lib/sky";
+import { arcFound, gardenVisitor, nextVisitor, pendingEntrance, teaser, visitorById } from "../lib/visitors";
+import GardenVisitor from "../components/visitors/GardenVisitor";
 import { bloomKey, iconFor, shouldPlayFullBloom, todayView } from "../lib/today-view";
 import { parseLocal } from "../lib/dates";
 import { feedback } from "../lib/feedback";
@@ -20,6 +23,8 @@ import HabitRow from "../components/garden/HabitRow";
 import QuickAdd from "../components/garden/QuickAdd";
 import { BloomChain, BloomMini, FullBloom } from "../components/garden/Bloom";
 import UndoToast, { type ToastData } from "../components/ui/UndoToast";
+import { RecapCard } from "./Recap";
+import { latestRecap } from "../lib/recap";
 
 const WEEKDAY = new Intl.DateTimeFormat("en-US", { weekday: "long" });
 const MONTH_DAY = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" });
@@ -81,8 +86,22 @@ export default function Garden() {
 
   useSceneLoop(root, (t) => animateIcons(t, motion), motion);
 
+  const now = useNow();
   const view = arc ? todayView(state, arc, today) : null;
-  const model = useMemo(() => (arc && view ? gardenFromState(state, arc, view.day, NO_EVENTS) : null), [state, arc, view?.day]);
+  // Who visits today, and whether a new arrival still owes its entrance.
+  // Arrivals waiting for their entrance come first, oldest first (a backfill can date one in the past).
+  const pending = arc && view && view.phase === "active" ? pendingEntrance(state, arc) : null;
+  const visitorId = pending ? pending.visitorId : arc && view && view.phase !== "before" ? gardenVisitor(state, arc, view.day) : null;
+  const visitorRecord = pending ?? (arc && visitorId ? state.visitors.find((x) => x.arcId === arc.id && x.visitorId === visitorId) : undefined);
+  const entrance = !!pending;
+  const shooting = !!pending && visitorById(pending.visitorId)?.rule === 9;
+  const events = arc && view && view.phase === "active" ? skyEvents(state, arc, today, now, shooting) : NO_EVENTS;
+  const model = useMemo(
+    () => (arc && view ? gardenFromState(state, arc, view.day, events, visitorId) : null),
+    [state, arc, view?.day, events.night, events.fireflies, events.brightStars, events.aurora, events.rainbow, events.shootingStar, visitorId], // the events object is rebuilt each render; its fields are the real inputs
+  );
+  const found = arc ? new Set(arcFound(state, arc).map((x) => x.visitorId)) : new Set<string>();
+  const next = arc ? nextVisitor(state, arc, today, found) : null;
 
   // Full bloom: only a live change into a full day plays it, once per day (never on load).
   const fullKey = arc && view ? bloomKey(arc.id, view.day) : "";
@@ -134,6 +153,7 @@ export default function Garden() {
           model={model}
           onPlant={(id) => navigate(`/plant/${id}`)}
           plantLabel={(id) => `Open ${state.habits.find((h) => h.id === id)?.name ?? "plant"}`}
+          visitor={visitorRecord ? <GardenVisitor key={visitorRecord.id} record={visitorRecord} entrance={entrance} motion={motion} /> : undefined}
         />
         {view.phase === "before" && (
           <div className="pointer-events-none absolute inset-x-0 top-4 flex justify-center">
@@ -213,8 +233,12 @@ export default function Garden() {
         {view.phase !== "complete" && <QuickAdd onAdd={(name) => actions.addHabit(today, arc.id, { name })} />}
       </section>
 
+      {(() => {
+        const wk = latestRecap(state, arc, now);
+        return wk ? <RecapCard arc={arc} monday={wk} /> : null;
+      })()}
       {view.phase !== "before" && (
-        <BloomChain days={chainStrip(state, arc, today)} chain={view.chain} teaser="Keep the chain going. Kept days bring visitors to your garden." />
+        <BloomChain days={chainStrip(state, arc, today)} chain={view.chain} teaser={next ? teaser(next) : "Every visitor has found your garden this arc."} />
       )}
       <UndoToast toast={toast} onDone={closeToast} />
     </>

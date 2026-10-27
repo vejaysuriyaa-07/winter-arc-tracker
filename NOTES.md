@@ -9,7 +9,8 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Phase 2 (Garden tab): done. Header and arc switcher sheet, date heading, garden card, mood row, habit rows with the two-phase check animation and animated streak icons, edit mode (drag reorder, X with undo toast), quick add, bloom mini flower, progress line, full-bloom moment (live transition only, scrolls into view), bloom chain card, before-start and finished states, empty states. Screenshots reviewed: 3 looks x 4 seasons (top and bottom), full bloom, before start.
 - Phase 3 (Arcs, New arc, theme picker, switching, night in dark mode, arc complete): done. Screenshots reviewed in 3 looks x 2 seasons (arcs list, picker, New arc) plus arc complete.
 - Phase 4 (Progress, Month view, Plant detail): done. Screenshots reviewed in 3 looks x 2 seasons.
-- Next: phase 5, rewards: visitors (rules, art for four seasons, arrival in the garden), rare skies on real triggers, Sunday recap with share.
+- Phase 5 (rewards): done. Visitor rules and art for all 36, silent and live arrivals with garden entrances, rare skies (night, fireflies, bright stars, northern lights, rainbow, shooting star), Sunday recap with share. Screenshots reviewed: art sheet, visitors in 3 looks x 2 seasons, recap slides, skies.
+- Next: phase 6, Settings and data (full Settings screen, scoring explainer, export and import v3, reset this arc, sign-in prompt card hidden until Supabase exists).
 
 ## Open issues
 
@@ -25,7 +26,8 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 
 Phase 2: 136 unit tests, 44 e2e.
 Phase 3: 148 unit tests, 63 e2e. typecheck, test, build, e2e green.
-Phase 4: 159 unit tests, 80 e2e. typecheck, test, build, e2e green. typecheck, test, build, e2e green.
+Phase 4: 159 unit tests, 80 e2e. typecheck, test, build, e2e green.
+Phase 5: 188 unit tests, 95 e2e. typecheck, test, build, e2e green (two full e2e runs). typecheck, test, build, e2e green.
 
 Phase 1: 129 unit tests, 20 e2e. typecheck, test, build, e2e green.
 

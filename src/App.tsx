@@ -14,8 +14,11 @@ import Placeholder from "./pages/Placeholder";
 import NewArc from "./pages/NewArc";
 import Month from "./pages/Month";
 import PlantDetail from "./pages/PlantDetail";
+import Visitors from "./pages/Visitors";
+import Recap from "./pages/Recap";
 import ArcComplete from "./components/arcs/ArcComplete";
 import { arcToCelebrate } from "./lib/arcs";
+import VisitorWatcher from "./components/visitors/VisitorWatcher";
 
 // Screenshot target for the scene engine; compiled in only for e2e builds (VITE_SHOWCASE=1).
 const Showcase = import.meta.env.VITE_SHOWCASE === "1" ? lazy(() => import("./pages/dev/Showcase")) : null;
@@ -127,6 +130,14 @@ export default function App() {
             />
           )}
           <Route
+            path="/recap/:week"
+            element={
+              <Themed>
+                <Recap />
+              </Themed>
+            }
+          />
+          <Route
             path="/arcs/new"
             element={
               <Themed>
@@ -154,13 +165,13 @@ function Shell() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/month" element={<Month />} />
             <Route path="/plant/:id" element={<PlantDetail />} />
-            <Route path="/visitors" element={<Placeholder title="Visitors" />} />
-            <Route path="/recap/:week" element={<Placeholder title="Recap" />} />
+            <Route path="/visitors" element={<Visitors />} />
             <Route path="/signin" element={<Placeholder title="Sign in" />} />
           </Routes>
         </div>
         <TabBar />
         <CompleteGate />
+        <VisitorWatcher />
     </Themed>
   );
 }

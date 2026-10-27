@@ -161,3 +161,9 @@ for (const season of SEASONS) {
     }
   });
 }
+
+test("visitor art contact sheet", async ({ page }) => {
+  await page.goto("#/dev/showcase?view=visitors");
+  await expect(page.getByTestId("visitor-art")).toHaveCount(36);
+  await page.getByTestId("visitor-sheet").screenshot({ path: `${SHOTS}/p5-visitor-art.png` });
+});

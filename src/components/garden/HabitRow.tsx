@@ -30,6 +30,7 @@ const SPARKS = Array.from({ length: 7 }, (_, k) => {
 export default function HabitRow({ habit, done, streak, icon, index, last, editing, disabled, motion, onToggle, onRemove, onDragStart }: Props) {
   const th = useTheme();
   const [ph, setPh] = useState<0 | 1 | 2>(0);
+  const [played, setPlayed] = useState(0); // how many check animations ran (a stable signal for tests)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const raf = useRef(0);
   useEffect(
@@ -51,6 +52,7 @@ export default function HabitRow({ habit, done, streak, icon, index, last, editi
       return;
     }
     // Phase 1 jumps everything to its start with no transition; phase 2 (two frames later) animates out.
+    setPlayed((n) => n + 1);
     setPh(1);
     raf.current = requestAnimationFrame(() => {
       raf.current = requestAnimationFrame(() => setPh(2));
@@ -89,6 +91,7 @@ export default function HabitRow({ habit, done, streak, icon, index, last, editi
         aria-describedby={editing ? undefined : `streak-${habit.id}`}
         data-testid="habit-row"
         data-habit-id={habit.id}
+        data-anim-played={played}
         onClick={toggle}
         className="relative flex min-h-14 min-w-0 flex-1 items-center gap-3 text-left text-base"
         style={{ padding: `6px ${editing ? 4 : th.listWrap.padR}px 6px ${editing ? 0 : th.listWrap.padL}px`, color: th.t.text, opacity: disabled ? 0.55 : 1, cursor: disabled ? "default" : "pointer" }}

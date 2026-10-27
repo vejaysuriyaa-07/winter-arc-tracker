@@ -7,6 +7,9 @@ import { NO_EVENTS, sceneModel, type SkyEvents } from "../../lib/garden";
 import GardenScene from "../../scenes/GardenScene";
 import NightSky from "../../scenes/NightSky";
 import { ThemeScope, useTheme } from "../../theme/ThemeProvider";
+import VisitorArt from "../../components/visitors/VisitorArt";
+import { VISITORS } from "../../lib/visitors";
+import { SCENE_PALETTES } from "../../lib/garden";
 
 const RATES = [0.9, 0.75, 0.35, 0.95, 0.6, 0.85, 0.45, 0.8, 0.55];
 const LABELS = ["Wake up at 5 AM", "Meditation", "Gym"];
@@ -88,8 +91,28 @@ function Chrome({ mood, day, done, events }: { mood: Mood; day: number; done: nu
   );
 }
 
+function Sheet() {
+  return (
+    <div data-testid="visitor-sheet" className="flex flex-col gap-3 bg-[#F8F4EB] p-3">
+      {SEASONS.map((s) => (
+        <div key={s} className="grid grid-cols-5 gap-2">
+          {VISITORS[s].map((v) => (
+            <div key={v.id} className="flex flex-col items-center gap-1">
+              <span className="flex h-[66px] w-[66px] items-center justify-center rounded-xl" style={{ background: `linear-gradient(180deg, ${SCENE_PALETTES[s].sky.good[0]} 0%, ${SCENE_PALETTES[s].sky.good[1]} 100%)` }}>
+                <VisitorArt id={v.id} size={58} />
+              </span>
+              <span className="text-[10px] text-[#272520]">{v.name}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Showcase() {
   const [q] = useSearchParams();
+  if (q.get("view") === "visitors") return <Sheet />;
   const look: Look = pick(q.get("look"), LOOKS, "journal");
   const season: Season = pick(q.get("season"), SEASONS, "winter");
   const mood: Mood = pick(q.get("mood"), MOODS, "good");

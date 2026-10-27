@@ -8,11 +8,15 @@ import { activeArc, arcEnd, lifetimeCounts, weakestWeekday, weekBars } from "../
 import { fullGrowthDays, gardenFromState, NO_EVENTS } from "../lib/garden";
 import { arcStatus } from "../lib/arcs";
 import { formatMonthDay, minDay } from "../lib/dates";
+import { arcFound, nextVisitor, teaser } from "../lib/visitors";
 import { arcTiles, bestMonthLine, firstMonthLabel, MONTH_NAMES, plantsRanked, tallestTrees, timelapseDay, timelapseRange, treeRings, weekLine } from "../lib/progress";
 import GardenScene from "../scenes/GardenScene";
 import Header from "../components/garden/Header";
 import { Bar, MiniPlant, RowLink, SectionTitle, Segmented, Tile } from "../components/progress/Bits";
 import { ThemeScope, useTheme } from "../theme/ThemeProvider";
+import { RecapCard } from "./Recap";
+import { latestRecap } from "../lib/recap";
+import { useNow } from "../lib/today";
 import { LOOK_TOKENS } from "../theme/tokens";
 
 type View = "arc" | "all";
@@ -88,7 +92,9 @@ function ThisArc({ state, arc, today }: { state: AppState; arc: Arc; today: stri
   const bars = weekBars(state, arc, today);
   const weak = weakestWeekday(bars);
   const line = weekLine(state, arc, today);
-  const found = state.visitors.filter((v) => v.arcId === arc.id).length;
+  const foundIds = new Set(arcFound(state, arc).map((v) => v.visitorId));
+  const found = foundIds.size;
+  const next = nextVisitor(state, arc, today, foundIds);
   const started = tiles.daysSoFar > 0;
   return (
     <div className="flex flex-col gap-[18px]">
@@ -140,7 +146,7 @@ function ThisArc({ state, arc, today }: { state: AppState; arc: Arc; today: stri
         </div>
       </section>
 
-      <RowLink to="/visitors" title="Visitors" detail={`${found} of 9 found`} testId="visitors-link" />
+      <RowLink to="/visitors" title="Visitors" detail={`${found} of 9 found${next ? `. Next: ${teaser(next)}` : ""}`} testId="visitors-link" />
     </div>
   );
 }
@@ -271,6 +277,8 @@ export default function Progress() {
   const [q, setQ] = useSearchParams();
   const view: View = q.get("view") === "all" ? "all" : "arc";
   const since = firstMonthLabel(state);
+  const now = useNow();
+  const recapWeek = arc ? latestRecap(state, arc, now) : null;
   if (!arc) {
     return (
       <div className="flex flex-col gap-[18px]">
@@ -284,6 +292,7 @@ export default function Progress() {
     <div className="flex flex-col gap-[18px]">
       <Header state={state} arc={arc} today={today} onSwitch={(id) => actions.setActiveArc(id)} title="Progress" />
       {since && <p className="-mt-3 text-[14px]" style={{ color: th.t.muted }}>Growing since {since}</p>}
+      {recapWeek && arc && <RecapCard arc={arc} monday={recapWeek} />}
       <Segmented label="Progress view" value={view} onChange={(v) => setQ(v === "all" ? { view: "all" } : {}, { replace: true })} options={[{ value: "arc", label: "This arc" }, { value: "all", label: "All time" }]} />
       {view === "arc" ? <ThisArc state={state} arc={arc} today={today} /> : <AllTime state={state} today={today} />}
     </div>

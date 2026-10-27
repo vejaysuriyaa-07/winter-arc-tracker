@@ -1,10 +1,11 @@
 // Pure state transitions. The store applies these; tests call them directly.
 // Each returns the same object when nothing changes. Every change to a synced
 // record stamps `updatedAt = now` and queues one op per row (coalesced).
-import type { AppState, Arc, DayLog, Habit, Look, Mood, Season, Settings, SyncTable, UiState } from "../types";
+import type { AppState, Arc, DayLog, Habit, Look, Mood, Season, Settings, SyncTable, UiState, VisitorFound } from "../types";
 import { logKey } from "../types";
-import { isValidYMD, type YMD } from "./dates";
+import { addDays, isValidYMD, type YMD } from "./dates";
 import { newId } from "./ids";
+import { metVisitors } from "./visitors";
 
 /** The settings row has one fixed id locally; the sync layer keys it by user. */
 export const SETTINGS_ID = "settings";
@@ -311,4 +312,29 @@ export function setUiFlag(state: AppState, flag: "signInPrompted" | "notificatio
   if (state.ui[flag] === value) return state;
   const ui: UiState = { ...state.ui, [flag]: value };
   return { ...state, ui };
+}
+
+// ---------- visitor sync ----------
+
+/**
+ * Adds every visitor whose rule now holds and is not yet found, dated the day the
+ * rule first held. `silent` (load, import, sync pull) marks them celebrated so
+ * they never make an entrance; otherwise they are returned as live arrivals.
+ */
+export function syncVisitors(state: AppState, now: string, today: YMD, silent: boolean): { state: AppState; arrived: VisitorFound[] } {
+  let next = state;
+  const arrived: VisitorFound[] = [];
+  for (const arc of state.arcs) {
+    if (arc.deleted || today < arc.startDate) continue;
+    // Live checks skip finished arcs: their days can no longer change from the Garden.
+    if (!silent && today > addDays(arc.startDate, arc.lengthDays - 1)) continue;
+    const have = new Set(next.visitors.filter((x) => x.arcId === arc.id).map((x) => x.visitorId));
+    for (const met of metVisitors(next, arc, today, have)) {
+      next = addVisitor(next, now, arc.id, met.visitor.id, met.firstDay);
+      const v = next.visitors[next.visitors.length - 1]!;
+      if (silent) next = markCelebrated(next, `visitor:${v.id}`);
+      else arrived.push(v);
+    }
+  }
+  return { state: next, arrived };
 }
