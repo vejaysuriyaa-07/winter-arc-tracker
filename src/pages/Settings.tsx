@@ -16,7 +16,7 @@ import { ConfirmSheet, HabitsSheet, ScoringSheet } from "../components/settings/
 import { useTheme } from "../theme/ThemeProvider";
 import { useNavigate } from "react-router";
 import { signOut, statusText, syncNow, useSync } from "../lib/sync";
-import { allowNotifications, isNative, notificationsAllowed, shareText } from "../lib/native";
+import { allowNotifications, isNative, notificationsAllowed, shareTextFile } from "../lib/native";
 
 const WEEKDAY = new Intl.DateTimeFormat("en-US", { weekday: "long" });
 const MONTH_DAY = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" });
@@ -140,8 +140,9 @@ export default function Settings() {
           onClick={async () => {
             await flushWrites();
             if (native) {
-              // The iPhone app cannot download files; the share sheet can save the backup to Files or send it.
-              setNote((await shareText(backupFileName(today), serialize(state))) ? "Backup shared." : null);
+              // The iPhone app cannot download; the share sheet saves the backup file to Files or sends it.
+              const r = await shareTextFile(backupFileName(today), serialize(state), "Grove backup");
+              setNote(r === "shared" ? "Backup shared." : r === "failed" ? "Could not share the backup. Try again." : null);
               return;
             }
             download(serialize(state), backupFileName(today));

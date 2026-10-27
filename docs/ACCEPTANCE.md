@@ -20,6 +20,6 @@ Status as of 2026-10-26. "Pending" means it needs something only the owner can d
 | 14 | Scenes hold 60fps on an iPhone and freeze under reduced motion or the Settings toggle | Freeze: pass. 60fps: pending owner | e2e "the scene animates, then freezes under reduced motion", "the Settings motion toggle freezes the scene too", "the loop pauses while the page is hidden". Proxy (`scripts/perf-proxy.mjs`, run on its own): Chromium at 390x844, 3x pixels, CPU throttled 4x, winter blizzard at day 90 with 9 plants: median 16.7 ms, 95th percentile 16.8 ms, worst 16.8 ms per frame, in journal and night (2026-10-26). Real iPhone measurement pending |
 | 15 | typecheck, test, build and e2e pass, and the web deploy works | Commands: pass. Deploy: pending owner push | See the counts in NOTES.md; the deploy workflow runs all four plus the showcase and fake-host guards. The site updates after the owner pushes |
 
-## Known partial items
+## Sharing on iPhone
 
-- Recap image and backup file sharing in the iPhone app need `@capacitor/filesystem` (awaiting approval). Until then the iPhone shares the backup as text and the recap's title as text.
+- The recap image and the backup are shared as real files (PNG and JSON) through `@capacitor/filesystem` and `@capacitor/share`. Unit-tested helpers; the share sheet itself is part of the iPhone checks (row 13).

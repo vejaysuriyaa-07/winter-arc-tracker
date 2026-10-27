@@ -180,3 +180,56 @@ describe("share errors", () => {
     expect(shareOutcome(new Error("x"))).toBe("fallback");
   });
 });
+
+describe("iPhone sharing", () => {
+  it("bytes become base64 for the file write", async () => {
+    const { bytesToBase64 } = await import("./share");
+    expect(bytesToBase64(new Uint8Array([71, 114, 111, 118, 101]))).toBe("R3JvdmU=");
+    const big = new Uint8Array(100_000).map((_, i) => i % 256);
+    expect(atob(bytesToBase64(big)).length).toBe(100_000);
+  });
+
+  it("the share sheet's cancel is a cancel; other failures are failures", async () => {
+    const { nativeShareOutcome } = await import("./share");
+    expect(nativeShareOutcome(new Error("Share canceled"))).toBe("cancelled");
+    expect(nativeShareOutcome(new Error("Unable to write file"))).toBe("failed");
+  });
+
+  it("a native share that fails is reported as failed, not downloaded", async () => {
+    const { setNativeShare, shareBlob } = await import("./share");
+    setNativeShare(async () => "failed");
+    expect(await shareBlob(new Blob(["x"]), "a.png", "t")).toBe("failed");
+    setNativeShare(null);
+  });
+});
+
+describe("iPhone share as a file", () => {
+  const run = async (opts: { data?: () => Promise<string>; write?: () => Promise<string>; share?: () => Promise<void> }) => {
+    const { shareAsFile } = await import("./share");
+    const calls: string[] = [];
+    const r = await shareAsFile(
+      {
+        write: async (name, _d, kind) => (calls.push(`write ${name} ${kind}`), opts.write ? opts.write() : `file:///cache/share/${name}`),
+        share: async (o) => (calls.push(`share ${o.title} ${o.files.join(",")}`), opts.share?.()),
+      },
+      "a.png",
+      opts.data ?? (async () => "iVBOR"),
+      "base64",
+      "Week 4",
+    );
+    return { r, calls };
+  };
+
+  it("writes the file, then opens the share sheet with it", async () => {
+    expect(await run({})).toEqual({ r: "shared", calls: ["write a.png base64", "share Week 4 file:///cache/share/a.png"] });
+  });
+  it("closing the sheet is a cancel", async () => {
+    expect((await run({ share: () => Promise.reject(new Error("Share canceled")) })).r).toBe("cancelled");
+  });
+  it("a failed write or a failed conversion is a failure, and the sheet never opens", async () => {
+    const w = await run({ write: () => Promise.reject(new Error("disk full")) });
+    expect(w.r).toBe("failed");
+    const c = await run({ data: () => Promise.reject(new RangeError("out of memory")) });
+    expect(c).toEqual({ r: "failed", calls: [] });
+  });
+});

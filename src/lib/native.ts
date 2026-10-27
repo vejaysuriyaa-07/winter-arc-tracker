@@ -9,7 +9,8 @@ import { StatusBar, Style } from "@capacitor/status-bar";
 import { todayLocal } from "./dates";
 import { setFeedbackDriver } from "./feedback";
 import { applyPlan, hapticSteps, nudgePlan } from "./nudges";
-import { setNativeShare } from "./share";
+import { bytesToBase64, setNativeShare, shareAsFile, type ShareResult } from "./share";
+import { nativeFileWriter } from "./storage";
 import * as store from "./store";
 
 export function isNative(): boolean {
@@ -60,14 +61,18 @@ export async function allowNotifications(): Promise<boolean> {
 
 // ---------- share ----------
 
-/** Shares text through the iOS share sheet (backups until files can be shared). True when shared. */
-export async function shareText(title: string, text: string): Promise<boolean> {
-  try {
-    await Share.share({ title, text, dialogTitle: title });
-    return true;
-  } catch {
-    return false;
-  }
+/** Puts a file in the app's cache and opens the iOS share sheet with it (Save to Files, Photos, Messages...). */
+async function shareFile(name: string, data: () => Promise<string>, kind: "base64" | "text", title: string): Promise<ShareResult> {
+  const io = {
+    write: async (n: string, d: string, k: "base64" | "text") => (await nativeFileWriter())(n, d, k),
+    share: (o: { title: string; files: string[]; dialogTitle: string }) => Share.share(o),
+  };
+  return shareAsFile(io, name, data, kind, title);
+}
+
+/** Shares a text file, such as the backup. */
+export function shareTextFile(name: string, text: string, title: string): Promise<ShareResult> {
+  return shareFile(name, async () => text, "text", title);
 }
 
 // ---------- start ----------
@@ -87,8 +92,8 @@ export function startNative(): void {
   setFeedbackDriver((e) => void playHaptic(e).catch(() => undefined));
   followLook();
   void SplashScreen.hide().catch(() => undefined);
-  // Sharing a recap image needs file sharing; until then the share sheet gets the recap's title as text.
-  setNativeShare(async ({ title }) => shareText(title, `${title} in Grove`));
+  // The recap image goes to the share sheet as a real PNG file.
+  setNativeShare(({ name, blob, title }) => shareFile(name, async () => bytesToBase64(new Uint8Array(await blob.arrayBuffer())), "base64", title));
   replan();
   store.subscribe(replan);
   document.addEventListener("visibilitychange", () => document.visibilityState === "visible" && replan());

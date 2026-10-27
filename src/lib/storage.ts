@@ -72,6 +72,30 @@ export async function nativeStorage(): Promise<StorageAdapter> {
   return preferencesAdapter(Preferences);
 }
 
+export type ShareFileWriter = (name: string, data: string, kind: "base64" | "text") => Promise<string>;
+
+/**
+ * Writes a file for the iPhone share sheet into the app's cache folder (iOS
+ * may clear it; it is only a hand-off) and returns its file address.
+ */
+export function cacheFileWriter<D, E>(
+  fs: { writeFile(o: { path: string; data: string; directory: D; encoding?: E; recursive?: boolean }): Promise<{ uri: string }> },
+  cache: D,
+  utf8: E,
+): ShareFileWriter {
+  return async (name, data, kind) => {
+    const o: { path: string; data: string; directory: D; encoding?: E; recursive?: boolean } = { path: `share/${name}`, data, directory: cache, recursive: true };
+    if (kind === "text") o.encoding = utf8;
+    return (await fs.writeFile(o)).uri;
+  };
+}
+
+/** The iPhone app's writer, with the plugin loaded only there. */
+export async function nativeFileWriter(): Promise<ShareFileWriter> {
+  const { Filesystem, Directory, Encoding } = await import("@capacitor/filesystem");
+  return cacheFileWriter(Filesystem, Directory.Cache, Encoding.UTF8);
+}
+
 /** Prefix for the sign-in session, kept apart from app data. */
 export const AUTH_PREFIX = "grove:session:";
 

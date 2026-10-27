@@ -14,14 +14,14 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 - Phase 7 (sync): code done. SQL with RLS and a newest-wins trigger (`supabase/migrations/0001_grove.sql`), RLS check (`supabase/tests/rls_check.sql`, 17 checks, verified on PGlite with a stand-in auth schema), sync engine against a strict fake remote, email-code sign in with the rate-limit line, Settings sync rows, one-time sign-in card, deploy keys from secrets. Screenshots reviewed in 3 looks x 2 seasons.
 - Waiting on the owner: the steps in `docs/SYNC-SETUP.md` (project, SQL, RLS check output, email templates, keys, secrets). Then a two-device check after the next deploy.
 - Phase 8 (iPhone app): code done, not yet run on a device. Capacitor 8 with SPM (`ios/`, JSON config), Preferences storage, haptics, 8pm and Sunday notifications with a one-time reminders card, status bar follows the look, icon and splash, `npm run ios`, `npm run ios:reinstall` (`scripts/ios-reinstall.sh`).
-- Waiting on the owner: Xcode install and the iPhone steps; approval for `@capacitor/filesystem` (recap image and backup file sharing on iPhone, PARTIAL until then).
+- Waiting on the owner: Xcode install and the iPhone steps. `@capacitor/filesystem` approved and wired: recap PNG and backup JSON go to the share sheet as files.
 - Phase 9 (final): done in code. First-week flow e2e, every screen in 3 looks x 4 seasons (reviewed as contact sheets; fixed clipped Visitors tabs, stock focus ring, tiny young rings), `docs/ACCEPTANCE.md` (11 pass, sync partial, iPhone, 60fps on device and deploy pending the owner), frame-timing proxy `scripts/perf-proxy.mjs`.
-- Next: owner items only. Paste the RLS check output; install Xcode and run the iPhone steps; decide on `@capacitor/filesystem`; push to deploy. Then update `docs/ACCEPTANCE.md` rows 12 to 15 with what the owner reports.
+- Next: owner items only. Paste the RLS check output; install Xcode and run the iPhone steps (include sharing a recap and a backup); push to deploy. Then update `docs/ACCEPTANCE.md` rows 12 to 15 with what the owner reports.
 
 ## Open issues
 
 - RLS check has only run on PGlite with a stand-in auth schema; the real run on Supabase is the owner's step 5.
-- Phase 8 PARTIAL: iPhone share of the recap image and backup file needs `@capacitor/filesystem` (asked). The reinstall script is syntax-checked only; xcodebuild and devicectl need Xcode.
+- The reinstall script is syntax-checked only; xcodebuild and devicectl need Xcode. iPhone file sharing is unit-tested, not yet seen on a device.
 
 - Save banner clearing on the next good save is covered by `store.test.ts`; the e2e version returns in phase 2 when the Garden has check-offs.
 
@@ -33,6 +33,7 @@ Resume point for Grove (v2). Spec: `docs/SPEC-v2.md`. Designs: `docs/design/` (R
 
 ## Test counts
 
+iPhone file sharing: 255 unit tests, 175 e2e. typecheck, test, build, build:native, e2e green (two full e2e runs).
 Phase 2: 136 unit tests, 44 e2e.
 Phase 3: 148 unit tests, 63 e2e. typecheck, test, build, e2e green.
 Phase 4: 159 unit tests, 80 e2e. typecheck, test, build, e2e green.

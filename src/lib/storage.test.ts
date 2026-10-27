@@ -3,6 +3,7 @@ import { fixtureState } from "./fixtures/arc14";
 import {
   AUTH_PREFIX,
   backupBeforeSwitch,
+  cacheFileWriter,
   preferencesAdapter,
   readSyncUser,
   writeSyncUser,
@@ -198,5 +199,19 @@ describe("iPhone storage", () => {
     expect(await a.get(STORAGE_KEY)).toBe("{}");
     await a.remove(STORAGE_KEY);
     expect(box.has(STORAGE_KEY)).toBe(false);
+  });
+});
+
+describe("files to share on iPhone", () => {
+  it("writes into the cache folder and returns the file's address", async () => {
+    const calls: unknown[] = [];
+    const fs = { writeFile: async (o: { path: string; data: string; directory: string; encoding?: string; recursive?: boolean }) => (calls.push(o), { uri: `file:///cache/${o.path}` }) };
+    const write = cacheFileWriter(fs, "CACHE", "utf8");
+    expect(await write("grove-week-4.png", "iVBOR", "base64")).toBe("file:///cache/share/grove-week-4.png");
+    expect(await write("grove-backup.json", "{}", "text")).toBe("file:///cache/share/grove-backup.json");
+    expect(calls).toEqual([
+      { path: "share/grove-week-4.png", data: "iVBOR", directory: "CACHE", recursive: true },
+      { path: "share/grove-backup.json", data: "{}", directory: "CACHE", recursive: true, encoding: "utf8" },
+    ]);
   });
 });

@@ -184,7 +184,7 @@ function Story({ arc, monday }: { arc: Arc; monday: string }) {
               return;
             }
             const r = await shareBlob(blob, `grove-week-${m.weekNumber}.png`, `${arc.name}, week ${m.weekNumber}`);
-            setShareNote(r === "downloaded" ? "Saved the image." : null);
+            setShareNote(r === "downloaded" ? "Saved the image." : r === "failed" ? "Could not share the image. Try again." : null);
           }}
           className="h-12 flex-1 rounded-2xl text-[16px] font-semibold"
           style={{ boxShadow: `0 0 0 1px ${th.t.line}`, background: th.isNight ? "#1A1E17" : th.t.surface }}

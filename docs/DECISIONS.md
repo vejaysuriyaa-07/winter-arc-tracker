@@ -107,8 +107,9 @@ One line each: what was chosen and why. 1 to 18 are from the v1 build; v2 (Grove
 100. One 8pm nudge is pending at a time: today's while today is still open (planning stops two minutes before 20:00), otherwise tomorrow's with the chain carried over, so a day the app is never opened still gets it. Never on a day with nothing due. It is replanned on every change, on return to the front and every five minutes while open. The Sunday note repeats weekly. Both need a running arc.
 101. Reminders are offered once in the iPhone app with a card after the first full day ("Turn on" asks iOS for permission), shown after the sign-in card is answered. In Settings, turning a reminder on asks too; if iOS says no, Settings explains where to turn them on.
 102. No copy from browser storage into the iPhone app's storage: the app is a separate install that never had web data.
-103. PARTIAL: until files can be shared on the iPhone (needs @capacitor/filesystem, awaiting approval), the backup is shared as text (Save to Files keeps it) and the recap share sends its title as text.
+103. PARTIAL at first: until files could be shared on the iPhone (needs @capacitor/filesystem, then awaiting approval), the backup was shared as text and the recap share sent its title as text. Superseded by 108.
 104. The reminders card is skipped when a reminder is already on; Settings checks iOS permission when it opens.
 105. Tree rings zoom in on a young tree (up to 2.5x) so one or two months fill the card; ring proportions are unchanged.
 106. The Visitors season tabs are a four-column grid so all four fit at 390px.
 107. Focus rings use the look's accent instead of the browser's stock ring; text fields keep their own focus style.
+108. With @capacitor/filesystem (owner approved), the iPhone writes the recap image and the backup to the app's cache folder and hands them to the share sheet as real files (PNG and JSON). A closed share sheet counts as cancelled; any other failure, conversion included, shows a retry note. The cache folder is left for iOS to clear.

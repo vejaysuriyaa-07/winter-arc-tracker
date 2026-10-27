@@ -117,3 +117,9 @@ Save-failure banner: 114 unit tests, 28 e2e, all green.
 - Review fixes: focus rule layering, perf evidence committed, flow absence checks wait for the garden to render, real full-bloom check, reset checked through Progress, explicit -07:00 times, screenshot paths, per-tab fit check, reduced motion instead of a sleep for the arc-complete still.
 - Test expectation note: the flow expects four autumn visitors on day 3 because a 30-day arc scales the counts down (decision 6).
 - Counts: 248 unit, 175 e2e. Hygiene check passed.
+
+## 2026-10-26 iPhone file sharing, and a flaky test fixed
+
+- `@capacitor/filesystem` approved: the recap PNG and the backup JSON are written to the app cache and shared as files (`shareAsFile` in share.ts with injected writer and share, unit-tested for order, cancel, write failure and conversion failure). Decision 108 supersedes 103.
+- Flaky e2e found during the gate: "this arc: tiles, plants and week match the hand-worked numbers" failed in about 1 run in 20 under load. Cause: its arc id was random, and the rare visitor's 1-in-50 roll is seeded by the arc id, so on some ids a shooting star arrived and the "0 of 9 found" line read "1 of 9". Fix: the test data pins the arc id (`withArcId`); the first-week flow pins ids with a fixed `crypto.randomUUID` sequence kept across reloads. Verified with 15 and 5 repeated parallel runs.
+- Counts: 255 unit, 175 e2e. Hygiene check passed.
